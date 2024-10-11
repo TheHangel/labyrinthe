@@ -1,10 +1,8 @@
 #include <stdio.h>
-
-#define LENGTH 25
-#define WIDTH  11
-
-char labyrinth[LENGTH][WIDTH];
+#include "maze.h"
 
 int main(void) {
+    maze *m = new_maze();
+    display(m);
     return 0;
 }

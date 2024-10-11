@@ -1,5 +1,5 @@
-#define LENGTH 25
-#define WIDTH  11
+#define LENGTH 5
+#define WIDTH  7
 
 #define WALL   '#'
 #define PATH   ' '
@@ -14,3 +14,8 @@ typedef struct {
 typedef struct {
     box content[LENGTH][WIDTH];
 } maze;
+
+box* wall();
+void brick_maze(maze *m);
+maze* new_maze();
+void display(maze m);

@@ -3,6 +3,6 @@
 
 int main(void) {
     maze *m = new_maze();
-    display(m);
+    display(*m);
     return 0;
 }

@@ -13,7 +13,7 @@ $(APP): $(APP_OBJS)
 bin/main.o: src/main.c src/maze.c
 	$(CC) $(CPPFLAGS) -c src/main.c -o bin/main.o bin/maze.o
 
-bin/maze.o: src/main.c
+bin/maze.o: src/maze.c
 	$(CC) $(CPPFLAGS) -c src/maze.c -o bin/maze.o
 
 clean:

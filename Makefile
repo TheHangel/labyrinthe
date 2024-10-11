@@ -14,7 +14,7 @@ bin/maze.o: src/maze.c
 	$(CC) $(CPPFLAGS) -c src/maze.c -o bin/maze.o
 
 bin/main.o: src/main.c src/maze.c
-	$(CC) $(CPPFLAGS) -c src/main.c -o bin/main.o bin/maze.o
+	$(CC) $(CPPFLAGS) -c src/main.c -o bin/main.o
 
 clean:
 	rm -f bin/*.o bin/test/*.o $(APP) $(TEST_BIN)

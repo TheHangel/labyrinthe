@@ -44,7 +44,13 @@ maze* new_maze() {
 void display(maze m) {
     for(int i=0; i<LENGTH; i++) {
         for(int j=0; j<WIDTH; j++) {
-            printf("%c", m.content[i][j].symbol);
+            box b = m.content[i][j];
+            if(b.symbol == PATH) {
+                printf("%d", b.id);
+            }
+            else {
+                printf("%c", b.symbol);
+            }
         }
         printf("\n");
     }

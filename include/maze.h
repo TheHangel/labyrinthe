@@ -17,5 +17,6 @@ typedef struct {
 
 box* wall();
 void brick_maze(maze *m);
+void drill_maze(maze *m);
 maze* new_maze();
 void display(maze m);

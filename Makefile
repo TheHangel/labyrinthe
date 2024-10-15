@@ -17,6 +17,6 @@ bin/main.o: src/main.c src/maze.c
 	$(CC) $(CPPFLAGS) -c src/main.c -o bin/main.o
 
 clean:
-	rm -f bin/*.o bin/test/*.o $(APP) $(TEST_BIN)
+	rm -rf bin/*.o $(APP) $(TEST_BIN)
 
 .PHONY: clean

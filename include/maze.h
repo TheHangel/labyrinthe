@@ -25,3 +25,4 @@ void generate_maze(maze *m);
 maze* new_maze();
 void destroy_maze(maze *m);
 void display(maze m);
+void display_debug(maze m);

@@ -65,6 +65,14 @@ int all_paths_connected(maze *m) {
     return 1;
 }
 
+void place_player(maze *m) {
+    m->content[0][1].symbol = PLAYER;
+}
+
+void place_exit(maze *m) {
+    m->content[LENGTH-1][WIDTH-2].symbol = EXIT;
+}
+
 void generate_maze(maze *m) {
     int directions[4][2] = {{0, 2}, {0, -2}, {2, 0}, {-2, 0}};
 
@@ -80,6 +88,8 @@ void generate_maze(maze *m) {
             open_wall(m, i, j, directions[dir][0], directions[dir][1]);
         }
     }
+    place_player(m);
+    place_exit(m);
 }
 
 /**
@@ -97,6 +107,16 @@ void destroy_maze(maze *m) {
 }
 
 void display(maze m) {
+    for(int i=0; i<LENGTH; i++) {
+        for(int j=0; j<WIDTH; j++) {
+            box b = m.content[i][j];
+            printf("%c", b.symbol);
+        }
+        printf("\n");
+    }
+}
+
+void display_debug(maze m) {
     for(int i=0; i<LENGTH; i++) {
         for(int j=0; j<WIDTH; j++) {
             box b = m.content[i][j];

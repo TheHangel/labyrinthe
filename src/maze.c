@@ -215,10 +215,10 @@ void display_debug(maze m) {
         for(int j=0; j<width; j++) {
             box b = m.content[i][j];
             if(b.symbol == PATH) {
-                printf("%d", b.id);
+                printf("%2d", b.id);
             }
             else {
-                printf("%c", b.symbol);
+                printf("%c ", b.symbol);
             }
         }
         printf("\n");

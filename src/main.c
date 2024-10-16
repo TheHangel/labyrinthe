@@ -15,7 +15,7 @@ int main(void) {
     printf("result move: %d\n", t);
     display(*m);
     //show_player(m->player);
-    //display_debug(*m);
+    display_debug(*m);
     destroy_maze(m);
     return 0;
 }

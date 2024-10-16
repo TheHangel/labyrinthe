@@ -17,20 +17,19 @@ typedef struct {
 } box;
 
 typedef struct {
-    box content[LENGTH][WIDTH];
+    box **content;
+    int length;
+    int width;
     player *player;
 } maze;
 
 box* wall();
 void brick_maze(maze *m);
 void drill_maze(maze *m);
-void merge_paths(maze *m, int old_id, int new_id);
-void open_wall(maze *m, int i, int j, int di, int dj);
-int all_paths_connected(maze *m);
 int move_player(maze *m, int direction);
 void show_player(player *p);
 void generate_maze(maze *m);
-maze* new_maze();
+maze* new_maze(int length, int width);
 void destroy_maze(maze *m);
 void display(maze m);
 void display_debug(maze m);

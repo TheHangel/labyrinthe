@@ -101,38 +101,31 @@ void show_surrounding_player(maze *m) {
     printf("\n");
 }
 
-int move_player(maze *m, int direction) {
+int move_player(maze *m, direction dir) {
     show_surrounding_player(m);
     player *p = m->player;
-    // 0 = up, 1 = down, 2 = left, 3 = right
-    if(direction == 0) {
-        if(p->x == 0) {
-            return -1;
-        }
-        if(m->content[p->x+1][p->y].symbol != WALL) {
-            return (p->x += 1);
-        }
+
+    int direction_deltas[4][2] = {
+        {-1, 0}, // UP
+        {1, 0},  // DOWN
+        {0, -1}, // LEFT
+        {0, 1}   // RIGHT
+    };
+
+    int dx = direction_deltas[dir][0];
+    int dy = direction_deltas[dir][1];
+
+    int new_x = p->x + dx;
+    int new_y = p->y + dy;
+
+    if (new_x < 0 || new_x >= m->length || new_y < 0 || new_y >= m->width) {
+        return -1;
     }
-    if(direction == 1) {
-        char symbol = m->content[p->x+1][p->y].symbol;
-        printf("check at: %c\n", symbol);
-        if(symbol != WALL) {
-            return (p->x += 1);
-        }
-    }
-    if(direction == 2) {
-        char symbol = m->content[p->x][p->y-1].symbol;
-        printf("check at: %c\n", symbol);
-        if(symbol != WALL) {
-            return (p->y -= 1);
-        }
-    }
-    if(direction == 3) {
-        char symbol = m->content[p->x][p->y+1].symbol;
-        printf("check at: %c\n", symbol);
-        if(symbol != WALL) {
-            return (p->y += 1);
-        }
+
+    if (m->content[new_x][new_y].symbol != WALL) {
+        p->x = new_x;
+        p->y = new_y;
+        return 1;
     }
     return 0;
 }

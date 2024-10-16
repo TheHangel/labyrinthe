@@ -23,10 +23,17 @@ typedef struct {
     player *player;
 } maze;
 
+typedef enum {
+    UP,
+    DOWN,
+    LEFT,
+    RIGHT
+} direction;
+
 box* wall();
 void brick_maze(maze *m);
 void drill_maze(maze *m);
-int move_player(maze *m, int direction);
+int move_player(maze *m, direction dir);
 void show_player(player *p);
 void generate_maze(maze *m);
 maze* new_maze(int length, int width);

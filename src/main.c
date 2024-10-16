@@ -4,14 +4,14 @@
 #include "maze.h"
 
 int main(void) {
-    srand(time(NULL));
+    //srand(time(NULL));
     maze *m = new_maze(LENGTH, WIDTH);
     generate_maze(m);
     //int t = move_player(m, );
-    int t = move_player(m, 1);
-    t = move_player(m, 3);
-    t = move_player(m, 3);
-    t = move_player(m, 1);
+    int t = move_player(m, DOWN);
+    t = move_player(m, RIGHT);
+    t = move_player(m, RIGHT);
+    t = move_player(m, DOWN);
     printf("result move: %d\n", t);
     display(*m);
     //show_player(m->player);

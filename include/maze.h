@@ -27,7 +27,8 @@ typedef enum {
     UP,
     DOWN,
     LEFT,
-    RIGHT
+    RIGHT,
+    INVALID
 } direction;
 
 box* wall();

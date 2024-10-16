@@ -166,6 +166,7 @@ void generate_maze(maze *m) {
  * Give maze (functionnal)
  */
 maze* new_maze(int length, int width) {
+    if(!(length % 2) || !(width % 2)) return NULL;
     maze* m = (maze*) malloc(sizeof(maze));
     m->length = length;
     m->width = width;

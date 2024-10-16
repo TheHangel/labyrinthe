@@ -66,7 +66,55 @@ int all_paths_connected(maze *m) {
 }
 
 void place_player(maze *m) {
-    m->content[0][1].symbol = PLAYER;
+    player* p = (player*) malloc(sizeof(player));
+    p->x = 0;
+    p->y = 1;
+    m->player = p;
+}
+
+void show_surrunding_player(maze *m) {
+    player *p = m->player;
+    char pc = 'o';
+
+    char lu = m->content[p->x-1][p->y-1].symbol;
+    char u = m->content[p->x-1][p->y].symbol;
+    char ru = m->content[p->x-1][p->y+1].symbol;
+    char l = m->content[p->x][p->y-1].symbol;
+    char r = m->content[p->x][p->y+1].symbol;
+    char ld = m->content[p->x+1][p->y-1].symbol;
+    char d = m->content[p->x][p->y-1].symbol;
+    char rd = m->content[p->x+1][p->y+1].symbol;
+
+    printf("\n");
+    printf("%c%c%c\n", lu, u, ru);
+    printf("%c%c%c\n", l, pc, r);
+    printf("%c%c%c\n", ld, d, rd);
+    printf("\n");
+}
+
+int move_player(maze *m, int direction) {
+    show_surrunding_player(m);
+    player *p = m->player;
+    // 0 = up, 1 = down, 2 = left, 3 = right
+    if(direction == 0) {
+        if(m->content[p->x+1][p->y].symbol != WALL) {
+            p->x += 1;
+        }
+    }
+    if(direction == 1) {
+        char symbol = m->content[p->x-1][p->y].symbol;
+        printf("check at: %c\n", symbol);
+        if(symbol != WALL) {
+            return (p->x += 1);
+        }
+    }
+    return -1;
+}
+
+void show_player(player *p) {
+    printf("Player:\n");
+    printf("x:%d\n", p->x);
+    printf("y:%d\n", p->y);
 }
 
 void place_exit(maze *m) {
@@ -106,9 +154,18 @@ void destroy_maze(maze *m) {
     free(m);
 }
 
+int is_player_at(player p, int x, int y) {
+    return (p.x == x && p.y == y);
+}
+
 void display(maze m) {
+    player p = *m.player;
     for(int i=0; i<LENGTH; i++) {
         for(int j=0; j<WIDTH; j++) {
+            if(is_player_at(p, i, j)) {
+                printf("%c", PLAYER);
+                continue;
+            }
             box b = m.content[i][j];
             printf("%c", b.symbol);
         }

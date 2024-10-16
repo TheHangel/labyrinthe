@@ -38,8 +38,8 @@ void drill_maze(maze *m) {
 void merge_paths(maze *m, int old_id, int new_id) {
     int length = m->length;
     int width = m->width;
-    for (int i = 1; i < length; i += 2) {
-        for (int j = 1; j < width; j += 2) {
+    for (int i = 1; i < length; i++) {
+        for (int j = 1; j < width; j++) {
             if (m->content[i][j].id == old_id) {
                 m->content[i][j].id = new_id;
             }
@@ -83,7 +83,7 @@ void place_player(maze *m) {
 void show_surrounding_player(maze *m) {
     player *p = m->player;
     char pc = 'o';
-    
+
     for (int i = -1; i <= 1; i++) {
         for (int j = -1; j <= 1; j++) {
             if (p->x + i >= 0 && p->x + i < m->length && p->y + j >= 0 && p->y + j < m->width) {

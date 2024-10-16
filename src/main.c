@@ -8,11 +8,11 @@ int main(void) {
     maze *m = new_maze(LENGTH, WIDTH);
     generate_maze(m);
     //int t = move_player(m, );
-    /*int t = move_player(m, 1);
+    int t = move_player(m, 1);
     t = move_player(m, 3);
     t = move_player(m, 3);
     t = move_player(m, 1);
-    printf("result move: %d\n", t);*/
+    printf("result move: %d\n", t);
     display(*m);
     //show_player(m->player);
     //display_debug(*m);

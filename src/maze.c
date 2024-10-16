@@ -83,20 +83,21 @@ void place_player(maze *m) {
 void show_surrounding_player(maze *m) {
     player *p = m->player;
     char pc = 'o';
-
-    char lu = m->content[p->x-1][p->y-1].symbol;
-    char u = m->content[p->x-1][p->y].symbol;
-    char ru = m->content[p->x-1][p->y+1].symbol;
-    char l = m->content[p->x][p->y-1].symbol;
-    char r = m->content[p->x][p->y+1].symbol;
-    char ld = m->content[p->x+1][p->y-1].symbol;
-    char d = m->content[p->x][p->y-1].symbol;
-    char rd = m->content[p->x+1][p->y+1].symbol;
-
-    printf("\n");
-    printf("%c%c%c\n", lu, u, ru);
-    printf("%c%c%c\n", l, pc, r);
-    printf("%c%c%c\n", ld, d, rd);
+    
+    for (int i = -1; i <= 1; i++) {
+        for (int j = -1; j <= 1; j++) {
+            if (p->x + i >= 0 && p->x + i < m->length && p->y + j >= 0 && p->y + j < m->width) {
+                if (i == 0 && j == 0) {
+                    printf("%c", pc);
+                } else {
+                    printf("%c", m->content[p->x + i][p->y + j].symbol);
+                }
+            } else {
+                printf(" ");
+            }
+        }
+        printf("\n");
+    }
     printf("\n");
 }
 

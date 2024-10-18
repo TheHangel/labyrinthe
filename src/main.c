@@ -34,8 +34,8 @@ int main(void) {
     cbreak();
 
     srand(time(NULL));
-    int l = 9;
-    int w = 17;
+    int l = 5;
+    int w = 7;
     maze *m = new_maze(l, w);
     if (m == NULL) return EXIT_FAILURE;
 
@@ -43,14 +43,21 @@ int main(void) {
 
     while(1) {
         clear();
-        display(*m);
+        display_debug(*m);
+        show_player(*(m->player));
         refresh();
-        printw("Direction (z/q/s/d): ");
+
         char c = getch();
         direction d = get_direction_from_input(c);
 
         if (d != INVALID) {
             move_player(m, d);
+        }
+
+        if(is_player_at_exit(*m)) {
+            printw("YOU WIN!");
+            getch();
+            break;
         }
 
         refresh();

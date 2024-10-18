@@ -131,10 +131,18 @@ int move_player(maze *m, direction dir) {
     return 0;
 }
 
-void show_player(player *p) {
+void show_player(player p) {
     printw("Player:\n");
-    printw("x:%d\n", p->x);
-    printw("y:%d\n", p->y);
+    printw("x:%d\n", p.x);
+    printw("y:%d\n", p.y);
+}
+
+int is_player_at(player p, int x, int y) {
+    return (p.x == x && p.y == y);
+}
+
+int is_player_at_exit(maze m) {
+    return (is_player_at(*m.player, m.length-1, m.width-2));
 }
 
 void place_exit(maze *m) {
@@ -189,10 +197,6 @@ void destroy_maze(maze *m) {
     free(m);
 }
 
-int is_player_at(player p, int x, int y) {
-    return (p.x == x && p.y == y);
-}
-
 void display(maze m) {
     int length = m.length;
     int width = m.width;
@@ -213,16 +217,24 @@ void display(maze m) {
 void display_debug(maze m) {
     int length = m.length;
     int width = m.width;
+    player p = *m.player;
     for(int i=0; i<length; i++) {
         for(int j=0; j<width; j++) {
+            if(is_player_at(p, i, j)) {
+                printw(" %c", PLAYER);
+                continue;
+            }
             cell b = m.content[i][j];
             if(b.symbol == PATH) {
                 printw("%2d", b.id);
             }
             else {
-                printw("%c ", b.symbol);
+                printw(" %c", b.symbol);
             }
         }
         printw("\n");
     }
+    printw("Dimension:\n");
+    printw("Lentgh: %2d\n", length);
+    printw("Width: %2d\n", width);
 }

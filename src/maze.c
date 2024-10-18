@@ -146,10 +146,51 @@ int is_player_at_exit(maze m) {
     return (is_player_at(*m.player, m.length-1, m.width-2));
 }
 
+int is_player_on_key(maze m) {
+    return (is_player_at(*m.player, m.key.x, m.key.y));
+}
+
 void place_exit(maze *m) {
     int length = m->length;
     int width = m->width;
     m->content[length-1][width-2].symbol = EXIT;
+}
+
+cell* get_random_path(maze *m) {
+    int length = m->length;
+    int width = m->width;
+    int i = 0;
+    int j = 0;
+    do {
+        i = rand() % length;
+        j = rand() % width;
+    } while (m->content[i][j].symbol != PATH);
+    return &m->content[i][j];
+}
+
+void place_key(maze *m) {
+    cell *key = get_random_path(m);
+    key->symbol = KEY;
+    key->id = -2;
+}
+
+void remove_key(maze *m) {
+    key k = m->key;
+    cell *c = &m->content[k.x][k.y];
+    c->symbol = PATH;
+    c->id = 0;
+}
+
+int set_key(maze *m) {
+    for (int i = 1; i < m->length; i++) {
+        for (int j = 1; j < m->width; j++) {
+            if(m->content[i][j].symbol == KEY) {
+                m->key.x = i;
+                m->key.y = j;
+            }
+        }
+    }
+    return -1;
 }
 
 void generate_maze(maze *m) {
@@ -170,6 +211,8 @@ void generate_maze(maze *m) {
         }
     }
     place_exit(m);
+    place_key(m);
+    set_key(m);
 }
 
 /**

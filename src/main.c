@@ -69,6 +69,11 @@ int main(void) {
             break;
         }
 
+        if(is_player_on_key(*m)) {
+            remove_key(m);
+            m->player->has_key = 1;
+        }
+
         char c = getch();
 
         if (c == ESCAPE_KEY) {

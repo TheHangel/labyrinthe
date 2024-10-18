@@ -78,6 +78,7 @@ void place_player(maze *m) {
     player* p = (player*) malloc(sizeof(player));
     p->x = 0;
     p->y = 1;
+    p->moves = 0;
     m->player = p;
 }
 
@@ -125,12 +126,13 @@ int move_player(maze *m, direction dir) {
     if (m->content[new_x][new_y].symbol != WALL) {
         p->x = new_x;
         p->y = new_y;
+        p->moves++;
         return 1;
     }
     return 0;
 }
 
-void show_player(player p) {
+void display_player_debug(player p) {
     printw("Player:\n");
     printw("x:%d\n", p.x);
     printw("y:%d\n", p.y);
@@ -196,6 +198,10 @@ void destroy_maze(maze *m) {
     free(m);
 }
 
+int display_player(player p) {
+    return printw("Moves: %2d\n", p.moves);
+}
+
 void display(maze m) {
     int length = m.length;
     int width = m.width;
@@ -211,6 +217,7 @@ void display(maze m) {
         }
         printw("\n");
     }
+    display_player(*m.player);
 }
 
 void display_debug(maze m) {
@@ -233,7 +240,7 @@ void display_debug(maze m) {
         }
         printw("\n");
     }
-    show_player(*m.player);
+    display_player_debug(*m.player);
     printw("Dimension:\n");
     printw("Lentgh: %2d\n", length);
     printw("Width: %2d\n", width);

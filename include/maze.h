@@ -6,6 +6,7 @@
 typedef struct {
     int x;
     int y;
+    int moves;
 } player;
 
 typedef struct {
@@ -32,7 +33,7 @@ cell* wall();
 void brick_maze(maze *m);
 void drill_maze(maze *m);
 int move_player(maze *m, direction dir);
-void show_player(player p);
+void display_player_debug(player p);
 int is_player_at_exit(maze m);
 void generate_maze(maze *m);
 maze* new_maze(int length, int width);

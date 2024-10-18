@@ -103,7 +103,6 @@ void show_surrounding_player(maze *m) {
 }
 
 int move_player(maze *m, direction dir) {
-    show_surrounding_player(m);
     player *p = m->player;
 
     int direction_deltas[4][2] = {
@@ -234,6 +233,7 @@ void display_debug(maze m) {
         }
         printw("\n");
     }
+    show_player(*m.player);
     printw("Dimension:\n");
     printw("Lentgh: %2d\n", length);
     printw("Width: %2d\n", width);

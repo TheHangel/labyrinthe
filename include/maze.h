@@ -2,7 +2,7 @@
 #define WIDTH  17
 
 #define WALL   '#'
-#define PATH   '.'
+#define PATH   ' '
 #define PLAYER 'o'
 #define EXIT   '-'
 

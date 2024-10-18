@@ -64,7 +64,7 @@ int main(void) {
         display(*m);
         refresh();
 
-        if(is_player_at_exit(*m)) {
+        if(is_player_at_exit(*m) && m->player->has_key == 1) {
             player_exited++;
             break;
         }

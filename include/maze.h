@@ -1,6 +1,3 @@
-#define LENGTH 9
-#define WIDTH  17
-
 #define WALL   '#'
 #define PATH   ' '
 #define PLAYER 'o'

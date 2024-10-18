@@ -5,7 +5,7 @@
 #include "maze.h"
 
 #define ESCAPE_KEY 27
-#define ENTER_KEY 10
+#define ENTER_KEY  10
 
 void clear_buffer() {
     int c;

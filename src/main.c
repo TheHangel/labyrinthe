@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <ncurses.h>
 #include "maze.h"
 
 void clear_buffer() {
@@ -28,25 +29,34 @@ direction get_direction_from_input(char key) {
 }
 
 int main(void) {
+    initscr();
+    noecho();
+    cbreak();
+
     srand(time(NULL));
     int l = 9;
     int w = 17;
     maze *m = new_maze(l, w);
-    if(m == NULL) return EXIT_FAILURE;
+    if (m == NULL) return EXIT_FAILURE;
+
     generate_maze(m);
-    display(*m);
+
     while(1) {
-        printf("direction:");
-        char c = getchar();
-        direction d = get_direction_from_input(c);
-        printf("char: %c\n", c);
-        printf("dir: %c\n", (int)d);
-        move_player(m, d);
+        clear();
         display(*m);
-        clear_buffer();
+        refresh();
+        printw("Direction (z/q/s/d): ");
+        char c = getch();
+        direction d = get_direction_from_input(c);
+
+        if (d != INVALID) {
+            move_player(m, d);
+        }
+
+        refresh();
     }
-    //show_player(m->player);
-    //display_debug(*m);
+
+    endwin();
     destroy_maze(m);
     return 0;
 }

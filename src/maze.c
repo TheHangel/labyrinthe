@@ -1,9 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <ncurses.h>
 #include "maze.h"
 
-box* wall() {
-    box* b = (box*) malloc(sizeof(box));
+cell* wall() {
+    cell* b = (cell*) malloc(sizeof(cell));
     b->id = -1;
     b->symbol = WALL;
     return b;
@@ -14,7 +15,7 @@ void brick_maze(maze *m) {
     int width = m->width;
     for(int i=0; i<length; i++) {
         for(int j=0; j<width; j++) {
-            box* b = wall();
+            cell* b = wall();
             m->content[i][j] = *b;
         }
     }
@@ -26,7 +27,7 @@ void drill_maze(maze *m) {
     int id = 0;
     for(int i=1; i<length; i+=2) {
         for(int j=1; j<width; j+=2) {
-            box* b = (box*) malloc(sizeof(box));
+            cell* b = (cell*) malloc(sizeof(cell));
             b->id = id;
             b->symbol = PATH;
             m->content[i][j] = *b;
@@ -48,8 +49,8 @@ void merge_paths(maze *m, int old_id, int new_id) {
 }
 
 void open_wall(maze *m, int i, int j, int di, int dj) {
-    box *current = &m->content[i][j];
-    box *next = &m->content[i + di][j + dj];
+    cell *current = &m->content[i][j];
+    cell *next = &m->content[i + di][j + dj];
 
     if (current->id != next->id) {
         m->content[i + di / 2][j + dj / 2].symbol = PATH;
@@ -88,17 +89,17 @@ void show_surrounding_player(maze *m) {
         for (int j = -1; j <= 1; j++) {
             if (p->x + i >= 0 && p->x + i < m->length && p->y + j >= 0 && p->y + j < m->width) {
                 if (i == 0 && j == 0) {
-                    printf("%c", pc);
+                    printw("%c", pc);
                 } else {
-                    printf("%c", m->content[p->x + i][p->y + j].symbol);
+                    printw("%c", m->content[p->x + i][p->y + j].symbol);
                 }
             } else {
-                printf(" ");
+                printw(" ");
             }
         }
-        printf("\n");
+        printw("\n");
     }
-    printf("\n");
+    printw("\n");
 }
 
 int move_player(maze *m, direction dir) {
@@ -131,9 +132,9 @@ int move_player(maze *m, direction dir) {
 }
 
 void show_player(player *p) {
-    printf("Player:\n");
-    printf("x:%d\n", p->x);
-    printf("y:%d\n", p->y);
+    printw("Player:\n");
+    printw("x:%d\n", p->x);
+    printw("y:%d\n", p->y);
 }
 
 void place_exit(maze *m) {
@@ -170,9 +171,9 @@ maze* new_maze(int length, int width) {
     maze* m = (maze*) malloc(sizeof(maze));
     m->length = length;
     m->width = width;
-    m->content = (box**) malloc(length * sizeof(box*));
+    m->content = (cell**) malloc(length * sizeof(cell*));
     for (int i = 0; i < length; i++) {
-        m->content[i] = (box*) malloc(width * sizeof(box));
+        m->content[i] = (cell*) malloc(width * sizeof(cell));
     }
     place_player(m);
     brick_maze(m);
@@ -199,13 +200,13 @@ void display(maze m) {
     for(int i=0; i<length; i++) {
         for(int j=0; j<width; j++) {
             if(is_player_at(p, i, j)) {
-                printf("%c", PLAYER);
+                printw("%c", PLAYER);
                 continue;
             }
-            box b = m.content[i][j];
-            printf("%c", b.symbol);
+            cell b = m.content[i][j];
+            printw("%c", b.symbol);
         }
-        printf("\n");
+        printw("\n");
     }
 }
 
@@ -214,14 +215,14 @@ void display_debug(maze m) {
     int width = m.width;
     for(int i=0; i<length; i++) {
         for(int j=0; j<width; j++) {
-            box b = m.content[i][j];
+            cell b = m.content[i][j];
             if(b.symbol == PATH) {
-                printf("%2d", b.id);
+                printw("%2d", b.id);
             }
             else {
-                printf("%c ", b.symbol);
+                printw("%c ", b.symbol);
             }
         }
-        printf("\n");
+        printw("\n");
     }
 }

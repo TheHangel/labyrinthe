@@ -14,10 +14,10 @@ typedef struct {
 typedef struct {
     char symbol;
     int id;
-} box;
+} cell;
 
 typedef struct {
-    box **content;
+    cell **content;
     int length;
     int width;
     player *player;
@@ -31,7 +31,7 @@ typedef enum {
     INVALID
 } direction;
 
-box* wall();
+cell* wall();
 void brick_maze(maze *m);
 void drill_maze(maze *m);
 int move_player(maze *m, direction dir);

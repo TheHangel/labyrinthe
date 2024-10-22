@@ -81,6 +81,11 @@ int main(void) {
             m->player->has_key = 1;
         }
 
+        if(is_player_on_treasure(*m)) {
+            remove_treasure(m, m->player->x, m->player->y);
+            m->player->score++;
+        }
+
         char c = getch();
 
         if (c == ESCAPE_KEY) {

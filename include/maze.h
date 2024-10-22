@@ -11,6 +11,7 @@ typedef struct {
     int x;
     int y;
     int moves;
+    int score;
     int has_key;
 } player;
 
@@ -45,8 +46,10 @@ void brick_maze(maze *m);
 void drill_maze(maze *m);
 int move_player(maze *m, direction dir);
 void display_player_debug(player p);
+void remove_treasure(maze *m, int x, int y);
 int is_player_at_exit(maze m);
 int is_player_on_key(maze m);
+int is_player_on_treasure(maze m);
 void remove_key(maze *m);
 void generate_maze(maze *m);
 maze* new_maze(int length, int width);

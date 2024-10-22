@@ -56,8 +56,8 @@ int main(void) {
 
     time_t seed = time(NULL);
     srand(seed);
-    int l = 11;
-    int w = 25;
+    int l = 17;
+    int w = 75;
     maze *m = new_maze(l, w);
     if (m == NULL) return exit_labyrinthe(EXIT_FAILURE);
 

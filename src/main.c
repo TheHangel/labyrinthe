@@ -12,6 +12,11 @@ void clear_buffer() {
     while ((c = getchar()) != '\n' && c != EOF);
 }
 
+int exit_labyrinthe(int code) {
+    endwin();
+    return code;
+}
+
 direction get_direction_from_input(char key) {
     switch (key) {
         case 'z':
@@ -51,10 +56,10 @@ int main(void) {
 
     time_t seed = time(NULL);
     srand(seed);
-    int l = 25;
-    int w = 37;
+    int l = 11;
+    int w = 25;
     maze *m = new_maze(l, w);
-    if (m == NULL) return EXIT_FAILURE;
+    if (m == NULL) return exit_labyrinthe(EXIT_FAILURE);
 
     generate_maze(m);
 
@@ -96,7 +101,5 @@ int main(void) {
         wait_to_press_enter();
     }
 
-    endwin();
-    destroy_maze(m);
-    return EXIT_SUCCESS;
+    return exit_labyrinthe(EXIT_SUCCESS);
 }

@@ -49,9 +49,10 @@ int main(void) {
 
     timeout(100);
 
-    srand(time(NULL));
-    int l = 11;
-    int w = 25;
+    time_t seed = time(NULL);
+    srand(seed);
+    int l = 25;
+    int w = 37;
     maze *m = new_maze(l, w);
     if (m == NULL) return EXIT_FAILURE;
 
@@ -61,6 +62,7 @@ int main(void) {
 
     while(1) {
         clear();
+        printw("Seed: %ld\n", seed);
         display(*m);
         refresh();
 

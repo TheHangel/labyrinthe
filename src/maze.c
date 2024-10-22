@@ -138,6 +138,11 @@ void display_player_debug(player p) {
     printw("y:%d\n", p.y);
 }
 
+cell *get_cell_from_player_pos(maze *m) {
+    player *p = m->player;
+    return &m->content[p->x][p->y];
+}
+
 int is_player_at(player p, int x, int y) {
     return (p.x == x && p.y == y);
 }
@@ -147,7 +152,7 @@ int is_player_at_exit(maze m) {
 }
 
 int is_player_on_key(maze m) {
-    return (is_player_at(*m.player, m.key.x, m.key.y));
+    return (get_cell_from_player_pos(&m)->symbol == KEY);
 }
 
 void place_exit(maze *m) {
@@ -172,6 +177,15 @@ void place_key(maze *m) {
     cell *key = get_random_path(m);
     key->symbol = KEY;
     key->id = -2;
+}
+
+void place_treasures(maze *m) {
+    int size = m->length * m->width;
+    for (int i = 0; i < size / 50; i++) {
+        cell *key = get_random_path(m);
+        key->symbol = TREASURE;
+        key->id = -3;
+    }
 }
 
 void remove_key(maze *m) {
@@ -213,6 +227,7 @@ void generate_maze(maze *m) {
     place_exit(m);
     place_key(m);
     set_key(m);
+    place_treasures(m);
 }
 
 /**

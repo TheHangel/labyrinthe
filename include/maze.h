@@ -2,7 +2,10 @@
 #define PATH   ' '
 #define PLAYER 'o'
 #define EXIT   '-'
-#define KEY    '+'
+
+#define KEY      '+'
+#define TREASURE 'T'
+#define TRAP     '*'
 
 typedef struct {
     int x;

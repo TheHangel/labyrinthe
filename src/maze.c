@@ -160,6 +160,10 @@ int is_player_on_treasure(maze m) {
     return (get_cell_from_player_pos(&m)->symbol == TREASURE);
 }
 
+int is_player_on_trap(maze m) {
+    return (get_cell_from_player_pos(&m)->symbol == TRAP);
+}
+
 void place_exit(maze *m) {
     int length = m->length;
     int width = m->width;
@@ -193,6 +197,15 @@ void place_treasures(maze *m) {
     }
 }
 
+void place_traps(maze *m) {
+    int size = m->length * m->width;
+    for (int i = 0; i < size / 70; i++) {
+        cell *key = get_random_path(m);
+        key->symbol = TRAP;
+        key->id = -4;
+    }
+}
+
 void remove_key(maze *m) {
     key k = m->key;
     cell *c = &m->content[k.x][k.y];
@@ -200,7 +213,7 @@ void remove_key(maze *m) {
     c->id = 0;
 }
 
-void remove_treasure(maze *m, int x, int y) {
+void remove_cell(maze *m, int x, int y) {
     cell *c = &m->content[x][y];
     c->symbol = PATH;
     c->id = 0;
@@ -239,6 +252,7 @@ void generate_maze(maze *m) {
     place_key(m);
     set_key(m);
     place_treasures(m);
+    place_traps(m);
 }
 
 /**

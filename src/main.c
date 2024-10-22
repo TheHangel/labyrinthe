@@ -82,8 +82,13 @@ int main(void) {
         }
 
         if(is_player_on_treasure(*m)) {
-            remove_treasure(m, m->player->x, m->player->y);
+            remove_cell(m, m->player->x, m->player->y);
             m->player->score++;
+        }
+
+        if(is_player_on_trap(*m)) {
+            remove_cell(m, m->player->x, m->player->y);
+            m->player->score--;
         }
 
         char c = getch();

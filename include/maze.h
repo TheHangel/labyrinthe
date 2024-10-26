@@ -1,11 +1,9 @@
-#define WALL   '#'
-#define PATH   ' '
-#define PLAYER 'o'
-#define EXIT   '-'
-
-#define KEY      '+'
-#define TREASURE 'T'
-#define TRAP     '*'
+#define PATH      0
+#define WALL     -1
+#define KEY      -2
+#define TREASURE -3
+#define TRAP     -4
+#define EXIT     -5
 
 typedef struct {
     int x;
@@ -16,7 +14,6 @@ typedef struct {
 } player;
 
 typedef struct {
-    char symbol;
     int id;
 } cell;
 
@@ -50,4 +47,3 @@ void generate_maze(maze *m);
 maze* new_maze(int length, int width);
 void destroy_maze(maze *m);
 void display(maze m);
-void display_debug(maze m);

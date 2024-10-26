@@ -5,8 +5,7 @@
 
 cell* wall() {
     cell* b = (cell*) malloc(sizeof(cell));
-    b->id = -1;
-    b->symbol = WALL;
+    b->id = WALL;
     return b;
 }
 
@@ -25,12 +24,9 @@ void drill_maze(maze *m) {
     int length = m->length;
     int width = m->width;
     int id = 0;
-    for(int i=1; i<length; i+=2) {
-        for(int j=1; j<width; j+=2) {
-            cell* b = (cell*) malloc(sizeof(cell));
-            b->id = id;
-            b->symbol = PATH;
-            m->content[i][j] = *b;
+    for (int i = 1; i < length; i += 2) {
+        for (int j = 1; j < width; j += 2) {
+            m->content[i][j].id = id;
             id++;
         }
     }
@@ -53,7 +49,6 @@ void open_wall(maze *m, int i, int j, int di, int dj) {
     cell *next = &m->content[i + di][j + dj];
 
     if (current->id != next->id) {
-        m->content[i + di / 2][j + dj / 2].symbol = PATH;
         m->content[i + di / 2][j + dj / 2].id = current->id;
         merge_paths(m, next->id, current->id);
     }
@@ -93,7 +88,7 @@ void show_surrounding_player(maze *m) {
                 if (i == 0 && j == 0) {
                     printw("%c", pc);
                 } else {
-                    printw("%c", m->content[p->x + i][p->y + j].symbol);
+                    printw("%d", m->content[p->x + i][p->y + j].id);
                 }
             } else {
                 printw(" ");
@@ -124,7 +119,7 @@ int move_player(maze *m, direction dir) {
         return -1;
     }
 
-    if (m->content[new_x][new_y].symbol != WALL) {
+    if (m->content[new_x][new_y].id != WALL) {
         p->x = new_x;
         p->y = new_y;
         p->moves++;
@@ -149,25 +144,25 @@ int is_player_at(player p, int x, int y) {
 }
 
 int is_player_at_exit(maze m) {
-    return (get_cell_from_player_pos(&m)->symbol == EXIT);
+    return (get_cell_from_player_pos(&m)->id == EXIT);
 }
 
 int is_player_on_key(maze m) {
-    return (get_cell_from_player_pos(&m)->symbol == KEY);
+    return (get_cell_from_player_pos(&m)->id == KEY);
 }
 
 int is_player_on_treasure(maze m) {
-    return (get_cell_from_player_pos(&m)->symbol == TREASURE);
+    return (get_cell_from_player_pos(&m)->id == TREASURE);
 }
 
 int is_player_on_trap(maze m) {
-    return (get_cell_from_player_pos(&m)->symbol == TRAP);
+    return (get_cell_from_player_pos(&m)->id == TRAP);
 }
 
 void place_exit(maze *m) {
     int length = m->length;
     int width = m->width;
-    m->content[length-1][width-2].symbol = EXIT;
+    m->content[length-1][width-2].id = EXIT;
 }
 
 cell* get_random_path(maze *m) {
@@ -178,22 +173,20 @@ cell* get_random_path(maze *m) {
     do {
         i = rand() % length;
         j = rand() % width;
-    } while (m->content[i][j].symbol != PATH);
+    } while (m->content[i][j].id < PATH);
     return &m->content[i][j];
 }
 
 void place_key(maze *m) {
     cell *key = get_random_path(m);
-    key->symbol = KEY;
-    key->id = -2;
+    key->id = KEY;
 }
 
 void place_treasures(maze *m) {
     int size = m->length * m->width;
     for (int i = 0; i < size / 50; i++) {
         cell *c = get_random_path(m);
-        c->symbol = TREASURE;
-        c->id = -3;
+        c->id = TREASURE;
     }
 }
 
@@ -201,23 +194,20 @@ void place_traps(maze *m) {
     int size = m->length * m->width;
     for (int i = 0; i < size / 70; i++) {
         cell *c = get_random_path(m);
-        c->symbol = TRAP;
-        c->id = -4;
+        c->id = TRAP;
     }
 }
 
 void remove_cell(maze *m, int x, int y) {
     cell *c = &m->content[x][y];
-    c->symbol = PATH;
-    c->id = 0;
+    c->id = PATH;
 }
 
 void remove_cell_at_player(maze *m) {
     int x = m->player->x;
     int y = m->player->y;
     cell *c = &m->content[x][y];
-    c->symbol = PATH;
-    c->id = 0;
+    c->id = PATH;
 }
 
 void generate_maze(maze *m) {
@@ -298,27 +288,27 @@ void display(maze m) {
             }
 
             cell b = m.content[i][j];
-            if (b.symbol == WALL) {
+            if (b.id == WALL) {
                 attron(COLOR_PAIR(1));
                 printw("  ");
                 attroff(COLOR_PAIR(1));
-            } else if (b.symbol == PATH) {
+            } else if (b.id >= PATH) {
                 attron(COLOR_PAIR(2));
                 printw("  ");
                 attroff(COLOR_PAIR(2));
-            } else if (b.symbol == KEY) {
+            } else if (b.id == KEY) {
                 attron(COLOR_PAIR(4));
                 printw("  ");
                 attroff(COLOR_PAIR(4));
-            } else if (b.symbol == TREASURE) {
+            } else if (b.id == TREASURE) {
                 attron(COLOR_PAIR(5));
                 printw("  ");
                 attroff(COLOR_PAIR(5));
-            } else if (b.symbol == TRAP) {
+            } else if (b.id == TRAP) {
                 attron(COLOR_PAIR(6));
                 printw("  ");
                 attroff(COLOR_PAIR(6));
-            } else if (b.symbol == EXIT) {
+            } else if (b.id == EXIT) {
                 attron(COLOR_PAIR(7));
                 printw("  ");
                 attroff(COLOR_PAIR(7));
@@ -328,30 +318,4 @@ void display(maze m) {
     }
 
     display_player_data(*m.player);
-}
-
-void display_debug(maze m) {
-    int length = m.length;
-    int width = m.width;
-    player p = *m.player;
-    for(int i=0; i<length; i++) {
-        for(int j=0; j<width; j++) {
-            if(is_player_at(p, i, j)) {
-                printw(" %c", PLAYER);
-                continue;
-            }
-            cell b = m.content[i][j];
-            if(b.symbol == PATH) {
-                printw("%2d", b.id);
-            }
-            else {
-                printw(" %c", b.symbol);
-            }
-        }
-        printw("\n");
-    }
-    display_player_debug(*m.player);
-    printw("Dimension:\n");
-    printw("Lentgh: %2d\n", length);
-    printw("Width: %2d\n", width);
 }

@@ -191,44 +191,25 @@ void place_key(maze *m) {
 void place_treasures(maze *m) {
     int size = m->length * m->width;
     for (int i = 0; i < size / 50; i++) {
-        cell *key = get_random_path(m);
-        key->symbol = TREASURE;
-        key->id = -3;
+        cell *c = get_random_path(m);
+        c->symbol = TREASURE;
+        c->id = -3;
     }
 }
 
 void place_traps(maze *m) {
     int size = m->length * m->width;
     for (int i = 0; i < size / 70; i++) {
-        cell *key = get_random_path(m);
-        key->symbol = TRAP;
-        key->id = -4;
+        cell *c = get_random_path(m);
+        c->symbol = TRAP;
+        c->id = -4;
     }
-}
-
-void remove_key(maze *m) {
-    key k = m->key;
-    cell *c = &m->content[k.x][k.y];
-    c->symbol = PATH;
-    c->id = 0;
 }
 
 void remove_cell(maze *m, int x, int y) {
     cell *c = &m->content[x][y];
     c->symbol = PATH;
     c->id = 0;
-}
-
-int set_key(maze *m) {
-    for (int i = 1; i < m->length; i++) {
-        for (int j = 1; j < m->width; j++) {
-            if(m->content[i][j].symbol == KEY) {
-                m->key.x = i;
-                m->key.y = j;
-            }
-        }
-    }
-    return -1;
 }
 
 void generate_maze(maze *m) {
@@ -250,7 +231,6 @@ void generate_maze(maze *m) {
     }
     place_exit(m);
     place_key(m);
-    set_key(m);
     place_treasures(m);
     place_traps(m);
 }
@@ -277,6 +257,7 @@ void destroy_maze(maze *m) {
     for (int i = 0; i < m->length; i++) {
         free(m->content[i]);
     }
+    free(m->player);
     free(m->content);
     free(m);
 }

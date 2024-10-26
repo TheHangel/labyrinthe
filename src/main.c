@@ -57,7 +57,7 @@ int main(void) {
     time_t seed = time(NULL);
     srand(seed);
     int l = 17;
-    int w = 75;
+    int w = 35;
     maze *m = new_maze(l, w);
     if (m == NULL) return exit_labyrinthe(EXIT_FAILURE);
 
@@ -77,16 +77,14 @@ int main(void) {
         }
 
         if(is_player_on_key(*m)) {
-            remove_key(m);
+            remove_cell(m, m->player->x, m->player->y);
             m->player->has_key = 1;
         }
-
-        if(is_player_on_treasure(*m)) {
+        else if(is_player_on_treasure(*m)) {
             remove_cell(m, m->player->x, m->player->y);
             m->player->score++;
         }
-
-        if(is_player_on_trap(*m)) {
+        else if(is_player_on_trap(*m)) {
             remove_cell(m, m->player->x, m->player->y);
             m->player->score--;
         }

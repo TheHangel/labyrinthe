@@ -21,16 +21,10 @@ typedef struct {
 } cell;
 
 typedef struct {
-    int x;
-    int y;
-} key;
-
-typedef struct {
     cell **content;
     int length;
     int width;
     player *player;
-    key key;
 } maze;
 
 typedef enum {
@@ -51,7 +45,6 @@ int is_player_at_exit(maze m);
 int is_player_on_key(maze m);
 int is_player_on_treasure(maze m);
 int is_player_on_trap(maze m);
-void remove_key(maze *m);
 void generate_maze(maze *m);
 maze* new_maze(int length, int width);
 void destroy_maze(maze *m);

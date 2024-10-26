@@ -32,6 +32,6 @@ void remove_cell(maze *m, int x, int y);
 void generate_maze(maze *m);
 maze* new_maze(int length, int width);
 void destroy_maze(maze *m);
-void display(maze m);
+void display(maze *m);
 
 #endif

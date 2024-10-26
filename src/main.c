@@ -46,9 +46,19 @@ int main(void) {
     cbreak();
     curs_set(0);
     keypad(stdscr, TRUE);
-    printw("Debut\n");
 
     timeout(100);
+
+    start_color();
+
+    init_pair(-(WALL),     0, COLOR_WHITE);
+    init_pair(  PATH,      0, COLOR_BLACK);
+    init_pair(-(KEY),      0, COLOR_YELLOW);
+    init_pair(-(TREASURE), 0, COLOR_GREEN);
+    init_pair(-(TRAP),     0, COLOR_RED);
+    init_pair(-(EXIT),     0, COLOR_MAGENTA);
+
+    init_pair(10, COLOR_WHITE, COLOR_CYAN);
 
     time_t seed = time(NULL);
     srand(seed);
@@ -57,17 +67,14 @@ int main(void) {
     maze *m = new_maze(l, w);
     if (m == NULL) return exit_labyrinthe(EXIT_FAILURE);
 
-    printw("Avant generate_maze\n");
     generate_maze(m);
-    printw("Après generate_maze\n");
-    display(*m);
 
     int player_exited = 0;
 
     while(1) {
         clear();
         printw("Seed: %ld\n", seed);
-        display(*m);
+        display(m);
         refresh();
 
         if(is_player_on(m, EXIT) && m->player->has_key == 1) {

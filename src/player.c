@@ -60,6 +60,6 @@ void remove_cell_at_player(maze *m) {
     m->content[x][y] = PATH;
 }
 
-int display_player_data(player p) {
-    return printw("Moves: %2d - Score: %2d\n", p.moves, p.score);
+int display_player_data(player *p) {
+    return printw("Moves: %2d - Score: %2d\n", p->moves, p->score);
 }

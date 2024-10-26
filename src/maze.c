@@ -155,58 +155,27 @@ void destroy_maze(maze *m) {
     free(m);
 }
 
-void display(maze m) {
-    start_color();
-    init_pair(1, COLOR_BLACK, COLOR_WHITE);
-    init_pair(2, COLOR_WHITE, COLOR_BLACK);
-    init_pair(3, COLOR_WHITE, COLOR_BLUE);
-    init_pair(4, COLOR_WHITE, COLOR_YELLOW);
-    init_pair(5, COLOR_WHITE, COLOR_GREEN);
-    init_pair(6, COLOR_WHITE, COLOR_RED);
-    init_pair(7, COLOR_WHITE, COLOR_MAGENTA);
-
-    int length = m.length;
-    int width = m.width;
-    player p = *m.player;
+void display(maze *m) {
+    int length = m->length;
+    int width = m->width;
+    player p = *m->player;
 
     for (int i = 0; i < length; i++) {
         for (int j = 0; j < width; j++) {
             if (is_player_at(p, i, j)) {
-                attron(COLOR_PAIR(3));
+                attron(COLOR_PAIR(10));
                 printw("  ");
-                attroff(COLOR_PAIR(3));
+                attroff(COLOR_PAIR(10));
                 continue;
             }
 
-            cell b = m.content[i][j];
-            if (b == WALL) {
-                attron(COLOR_PAIR(1));
-                printw("  ");
-                attroff(COLOR_PAIR(1));
-            } else if (b >= PATH) {
-                attron(COLOR_PAIR(2));
-                printw("  ");
-                attroff(COLOR_PAIR(2));
-            } else if (b == KEY) {
-                attron(COLOR_PAIR(4));
-                printw("  ");
-                attroff(COLOR_PAIR(4));
-            } else if (b == TREASURE) {
-                attron(COLOR_PAIR(5));
-                printw("  ");
-                attroff(COLOR_PAIR(5));
-            } else if (b == TRAP) {
-                attron(COLOR_PAIR(6));
-                printw("  ");
-                attroff(COLOR_PAIR(6));
-            } else if (b == EXIT) {
-                attron(COLOR_PAIR(7));
-                printw("  ");
-                attroff(COLOR_PAIR(7));
-            }
+            cell b = m->content[i][j];
+            attron(COLOR_PAIR(-(b)));
+            printw("  ");
+            attroff(COLOR_PAIR(-(b)));
         }
         printw("\n");
     }
 
-    display_player_data(*m.player);
+    display_player_data(m->player);
 }

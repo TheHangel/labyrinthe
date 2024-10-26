@@ -1,3 +1,9 @@
+#ifndef MAZE_H
+#define MAZE_H
+
+#include "game.h"
+#include "player.h"
+
 #define PATH      0
 #define WALL     -1
 #define KEY      -2
@@ -5,42 +11,27 @@
 #define TRAP     -4
 #define EXIT     -5
 
-typedef int cell;
-
-typedef struct {
-    int x;
-    int y;
-    int moves;
-    int score;
-    int has_key;
-} player;
-
-typedef struct {
+struct maze {
     cell **content;
     int length;
     int width;
     player *player;
-} maze;
-
-typedef enum {
-    UP,
-    DOWN,
-    LEFT,
-    RIGHT,
-    INVALID
-} direction;
+};
 
 void brick_maze(maze *m);
 void drill_maze(maze *m);
-int move_player(maze *m, direction dir);
-void display_player_debug(player p);
+void merge_paths(maze *m, int old_id, int new_id);
+void open_wall(maze *m, int i, int j, int di, int dj);
+int all_paths_connected(maze *m);
+void place_exit(maze *m);
+cell* get_random_path(maze *m);
+void place_key(maze *m);
+void place_treasures(maze *m);
+void place_traps(maze *m);
 void remove_cell(maze *m, int x, int y);
-void remove_cell_at_player(maze *m);
-int is_player_at_exit(maze m);
-int is_player_on_key(maze m);
-int is_player_on_treasure(maze m);
-int is_player_on_trap(maze m);
 void generate_maze(maze *m);
 maze* new_maze(int length, int width);
 void destroy_maze(maze *m);
 void display(maze m);
+
+#endif

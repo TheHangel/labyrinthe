@@ -1,22 +1,25 @@
 CC=gcc
-CPPFLAGS=-Wall -Wextra -Iinclude
+CFLAGS=-Wall -Wextra -Iinclude
 LDFLAGS=-lncurses
 
 APP=bin/app
 TEST_BIN=bin/test/
 
-APP_OBJS=bin/main.o bin/maze.o
+APP_OBJS=bin/main.o bin/maze.o bin/player.o
 
 all: $(APP)
 
 $(APP): $(APP_OBJS)
-	$(CC) $(CPPFLAGS) -o $(APP) $(APP_OBJS) $(LDFLAGS)
+	$(CC) $(CFLAGS) -o $(APP) $(APP_OBJS) $(LDFLAGS)
 
 bin/maze.o: src/maze.c include/maze.h
-	$(CC) $(CPPFLAGS) -c src/maze.c -o bin/maze.o
+	$(CC) $(CFLAGS) -c src/maze.c -o bin/maze.o
 
-bin/main.o: src/main.c src/maze.c include/maze.h
-	$(CC) $(CPPFLAGS) -c src/main.c -o bin/main.o
+bin/player.o: src/player.c include/player.h
+	$(CC) $(CFLAGS) -c src/player.c -o bin/player.o
+
+bin/main.o: src/main.c src/maze.c include/maze.h src/player.c include/player.h
+	$(CC) $(CFLAGS) -c src/main.c -o bin/main.o
 
 clean:
 	rm -rf bin/*.o $(APP) $(TEST_BIN)

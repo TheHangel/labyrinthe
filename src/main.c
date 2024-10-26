@@ -49,7 +49,6 @@ int main(void) {
 
         // Données du joueur
         display_player_data(m->player, player_data_win);
-        mvwprintw(player_data_win, 1, 1, "Player data:");
         draw_borders(player_data_win);
         wrefresh(player_data_win);
 

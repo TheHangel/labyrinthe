@@ -7,11 +7,6 @@
 #define ESCAPE_KEY 27
 #define ENTER_KEY  10
 
-void clear_buffer() {
-    int c;
-    while ((c = getchar()) != '\n' && c != EOF);
-}
-
 int exit_labyrinthe(int code) {
     endwin();
     return code;
@@ -75,20 +70,20 @@ int main(void) {
         display(*m);
         refresh();
 
-        if(is_player_at_exit(*m) && m->player->has_key == 1) {
+        if(is_player_on(m, EXIT) && m->player->has_key == 1) {
             player_exited++;
             break;
         }
 
-        if(is_player_on_key(*m)) {
+        if(is_player_on(m, KEY)) {
             remove_cell_at_player(m);
             m->player->has_key = 1;
         }
-        else if(is_player_on_treasure(*m)) {
+        else if(is_player_on(m, TREASURE)) {
             remove_cell_at_player(m);
             m->player->score++;
         }
-        else if(is_player_on_trap(*m)) {
+        else if(is_player_on(m, TRAP)) {
             remove_cell_at_player(m);
             m->player->score--;
         }

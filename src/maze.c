@@ -212,6 +212,14 @@ void remove_cell(maze *m, int x, int y) {
     c->id = 0;
 }
 
+void remove_cell_at_player(maze *m) {
+    int x = m->player->x;
+    int y = m->player->y;
+    cell *c = &m->content[x][y];
+    c->symbol = PATH;
+    c->id = 0;
+}
+
 void generate_maze(maze *m) {
     int length = m->length;
     int width = m->width;

@@ -77,15 +77,15 @@ int main(void) {
         }
 
         if(is_player_on_key(*m)) {
-            remove_cell(m, m->player->x, m->player->y);
+            remove_cell_at_player(m);
             m->player->has_key = 1;
         }
         else if(is_player_on_treasure(*m)) {
-            remove_cell(m, m->player->x, m->player->y);
+            remove_cell_at_player(m);
             m->player->score++;
         }
         else if(is_player_on_trap(*m)) {
-            remove_cell(m, m->player->x, m->player->y);
+            remove_cell_at_player(m);
             m->player->score--;
         }
 

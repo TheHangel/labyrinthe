@@ -41,6 +41,7 @@ void drill_maze(maze *m);
 int move_player(maze *m, direction dir);
 void display_player_debug(player p);
 void remove_cell(maze *m, int x, int y);
+void remove_cell_at_player(maze *m);
 int is_player_at_exit(maze m);
 int is_player_on_key(maze m);
 int is_player_on_treasure(maze m);

@@ -10,9 +10,11 @@ struct player {
     int moves;
     int score;
     int has_key;
+    int exited;
 };
 
 int move_player(maze *m, direction dir);
+int check_player_pos(maze *m);
 void place_player(maze *m);
 cell *get_cell_from_player_pos(maze *m);
 int is_player_at(player p, int x, int y);

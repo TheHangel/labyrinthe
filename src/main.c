@@ -15,31 +15,13 @@ int main(void) {
 
     generate_maze(m);
 
-    int player_exited = 0;
-
     while(1) {
         clear();
         printw("Seed: %ld\n", seed);
         display(m);
         refresh();
 
-        if(is_player_on(m, EXIT) && m->player->has_key == 1) {
-            player_exited++;
-            break;
-        }
-
-        if(is_player_on(m, KEY)) {
-            remove_cell_at_player(m);
-            m->player->has_key = 1;
-        }
-        else if(is_player_on(m, TREASURE)) {
-            remove_cell_at_player(m);
-            m->player->score++;
-        }
-        else if(is_player_on(m, TRAP)) {
-            remove_cell_at_player(m);
-            m->player->score--;
-        }
+        if(check_player_pos(m)) break;
 
         char c = getch();
 
@@ -54,7 +36,7 @@ int main(void) {
         }
     }
 
-    if(player_exited) {
+    if(m->player->exited) {
         printw("YOU WIN!\n");
         wait_to_press_enter();
     }

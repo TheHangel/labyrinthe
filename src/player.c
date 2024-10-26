@@ -32,12 +32,35 @@ int move_player(maze *m, direction dir) {
     return 0;
 }
 
+int check_player_pos(maze *m) {
+    player *p = m->player;
+    if(is_player_on(m, EXIT) && p->has_key == 1) {
+            p->exited++;
+            return 1;
+        }
+
+        if(is_player_on(m, KEY)) {
+            remove_cell_at_player(m);
+            p->has_key = 1;
+        }
+        else if(is_player_on(m, TREASURE)) {
+            remove_cell_at_player(m);
+            p->score++;
+        }
+        else if(is_player_on(m, TRAP)) {
+            remove_cell_at_player(m);
+            p->score--;
+        }
+    return 0;
+}
+
 void place_player(maze *m) {
     player* p = (player*) malloc(sizeof(player));
     p->x = 0;
     p->y = 1;
-    p->moves = 0;
-    p->score = 0;
+    p->moves  = 0;
+    p->score  = 0;
+    p->exited = 0;
     m->player = p;
 }
 

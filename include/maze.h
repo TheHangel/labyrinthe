@@ -5,6 +5,8 @@
 #define TRAP     -4
 #define EXIT     -5
 
+typedef int cell;
+
 typedef struct {
     int x;
     int y;
@@ -12,10 +14,6 @@ typedef struct {
     int score;
     int has_key;
 } player;
-
-typedef struct {
-    int id;
-} cell;
 
 typedef struct {
     cell **content;
@@ -32,7 +30,6 @@ typedef enum {
     INVALID
 } direction;
 
-cell* wall();
 void brick_maze(maze *m);
 void drill_maze(maze *m);
 int move_player(maze *m, direction dir);

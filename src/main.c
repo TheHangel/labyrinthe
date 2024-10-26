@@ -51,6 +51,7 @@ int main(void) {
     cbreak();
     curs_set(0);
     keypad(stdscr, TRUE);
+    printw("Debut\n");
 
     timeout(100);
 
@@ -61,7 +62,10 @@ int main(void) {
     maze *m = new_maze(l, w);
     if (m == NULL) return exit_labyrinthe(EXIT_FAILURE);
 
+    printw("Avant generate_maze\n");
     generate_maze(m);
+    printw("Après generate_maze\n");
+    display(*m);
 
     int player_exited = 0;
 

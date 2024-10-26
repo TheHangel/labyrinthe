@@ -4,13 +4,6 @@
 #include "game.h"
 #include "player.h"
 
-#define PATH      0
-#define WALL     -1
-#define KEY      -2
-#define TREASURE -3
-#define TRAP     -4
-#define EXIT     -5
-
 struct maze {
     cell **content;
     int length;

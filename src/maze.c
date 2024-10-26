@@ -155,7 +155,7 @@ void destroy_maze(maze *m) {
     free(m);
 }
 
-void display(maze *m) {
+void display(maze *m, WINDOW* w) {
     int length = m->length;
     int width = m->width;
     player p = *m->player;
@@ -163,19 +163,16 @@ void display(maze *m) {
     for (int i = 0; i < length; i++) {
         for (int j = 0; j < width; j++) {
             if (is_player_at(p, i, j)) {
-                attron(COLOR_PAIR(10));
-                printw("  ");
-                attroff(COLOR_PAIR(10));
+                wattron(w, COLOR_PAIR(10));
+                mvwprintw(w, i + 1, j * 2 + 1, "  ");
+                wattroff(w, COLOR_PAIR(10));
                 continue;
             }
 
             cell b = m->content[i][j];
-            attron(COLOR_PAIR(-(b)));
-            printw("  ");
-            attroff(COLOR_PAIR(-(b)));
+            wattron(w, COLOR_PAIR(-(b)));
+            mvwprintw(w, i + 1, j * 2 + 1, "  ");
+            wattroff(w, COLOR_PAIR(-(b)));
         }
-        printw("\n");
     }
-
-    display_player_data(m->player);
 }

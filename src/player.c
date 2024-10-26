@@ -83,6 +83,6 @@ void remove_cell_at_player(maze *m) {
     m->content[x][y] = PATH;
 }
 
-int display_player_data(player *p) {
-    return printw("Moves: %2d - Score: %2d\n", p->moves, p->score);
+int display_player_data(player *p, WINDOW *w) {
+    return mvwprintw(w, 1, 1, "Moves: %2d - Score: %2d\n", p->moves, p->score);
 }

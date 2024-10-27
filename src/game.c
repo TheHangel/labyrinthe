@@ -61,28 +61,18 @@ void wait_to_press_enter(WINDOW* w) {
     } while(c != '\n' && c != '\r');
 }
 
-int menu_selection(WINDOW* w) {
-    // Options du menu
-    const char *options[] = {
-        "Play again",
-        "Quit to Main Menu",
-        "Quit game"
-    };
-    int n_options = sizeof(options) / sizeof(options[0]);
-    int choice = 0;  // L'option sélectionnée (index)
+int menu_selection(WINDOW* w, const char *options[], int n_options) {
+    int choice = 0;
     int ch;
 
-    // Position de départ pour les options du menu, sous le texte "YOU WIN!"
     int menu_start_row = 3;
 
-    // Affiche les options du menu
     while (1) {
-        // Dessine uniquement les options du menu, sans effacer la fenêtre
         for (int i = 0; i < n_options; i++) {
             int width = getmaxx(w);
             int start_col = (width - strlen(options[i])) / 2;
             if (i == choice) {
-                wattron(w, A_REVERSE);  // Inverse les couleurs pour montrer l'option sélectionnée
+                wattron(w, A_REVERSE);
                 mvwprintw(w, menu_start_row + i, start_col, "%s", options[i]);
                 wattroff(w, A_REVERSE);
             } else {
@@ -92,7 +82,6 @@ int menu_selection(WINDOW* w) {
 
         wrefresh(w);
 
-        // Récupère l'entrée de l'utilisateur
         ch = getch();
         switch (ch) {
             case KEY_UP:
@@ -101,7 +90,7 @@ int menu_selection(WINDOW* w) {
             case KEY_DOWN:
                 choice = (choice == n_options - 1) ? 0 : choice + 1;
                 break;
-            case '\n': // Appui sur Entrée
+            case '\n':
                 return choice;
         }
     }

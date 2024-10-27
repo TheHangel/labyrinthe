@@ -82,7 +82,15 @@ int main(void) {
 
         wrefresh(popup_win);
 
-        menu_selection(popup_win);
+        const char *options[] = {
+            "Play again",
+            "Quit to Main Menu",
+            "Quit game"
+        };
+        int n_options = sizeof(options) / sizeof(options[0]);
+
+
+        menu_selection(popup_win, options, n_options);
 
         delwin(popup_win);
     }

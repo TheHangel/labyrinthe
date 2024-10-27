@@ -1,6 +1,7 @@
 #include <ncurses.h>
 #include <string.h>
 #include "game.h"
+#include "maze.h"
 
 void init_labyrinthe() {
     initscr();
@@ -94,4 +95,35 @@ int menu_selection(WINDOW* w, const char *options[], int n_options) {
                 return choice;
         }
     }
+}
+
+void display_end_window(maze *m) {
+    int height, width;
+    getmaxyx(stdscr, height, width);
+
+    int win_height = 7;
+    int win_width = 25;
+    int starty = (height - win_height) / 2;
+    int startx = (width - win_width) / 2;
+
+    WINDOW *popup_win = newwin(win_height, win_width, starty, startx);
+
+    box(popup_win, 0, 0);
+
+    player *p = m->player;
+    mvwprintw(popup_win, 1, (win_width - strlen("YOU WIN!")) / 2, "YOU WIN!");
+    mvwprintw(popup_win, 2, (win_width - 20) / 2, "Score: %d", get_final_score(p));
+
+    wrefresh(popup_win);
+
+    const char *options[] = {
+        "Play again",
+        "Quit to Main Menu",
+        "Quit game"
+    };
+    int n_options = sizeof(options) / sizeof(options[0]);
+
+    menu_selection(popup_win, options, n_options);
+
+    delwin(popup_win);
 }

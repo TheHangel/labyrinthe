@@ -86,3 +86,10 @@ void remove_cell_at_player(maze *m) {
 int display_player_data(player *p, WINDOW *w) {
     return mvwprintw(w, 1, 1, "Moves: %2d - Score: %2d\n", p->moves, p->score);
 }
+
+int get_final_score(player *p) {
+    int moves = p->moves;
+    int points = p->score;
+    int final_score = (points * 10) - moves;
+    return final_score;
+}

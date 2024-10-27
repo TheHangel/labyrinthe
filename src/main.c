@@ -82,7 +82,7 @@ int main(void) {
 
         wrefresh(popup_win);
 
-        wait_to_press_enter(popup_win);
+        menu_selection(popup_win);
 
         delwin(popup_win);
     }

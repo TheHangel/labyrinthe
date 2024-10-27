@@ -93,3 +93,9 @@ int get_final_score(player *p) {
     int final_score = (points * 10) - moves;
     return final_score;
 }
+
+char *convert_score_to_string(int score) {
+    char *str = (char *) malloc(20);
+    sprintf(str, "Score: %d", score);
+    return str;
+}

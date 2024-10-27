@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include <ncurses.h>
 #include <string.h>
 #include "game.h"
@@ -110,9 +112,14 @@ void display_end_window(maze *m) {
 
     box(popup_win, 0, 0);
 
-    player *p = m->player;
     mvwprintw(popup_win, 1, (win_width - strlen("YOU WIN!")) / 2, "YOU WIN!");
-    mvwprintw(popup_win, 2, (win_width - 20) / 2, "Score: %d", get_final_score(p));
+
+    player *p = m->player;
+    int score = get_final_score(p);
+    char *score_str = convert_score_to_string(score);
+
+    mvwprintw(popup_win, 2, (win_width - strlen(score_str)) / 2, score_str);
+    free(score_str);
 
     wrefresh(popup_win);
 

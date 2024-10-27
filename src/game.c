@@ -1,4 +1,5 @@
 #include <ncurses.h>
+#include <string.h>
 #include "game.h"
 
 void init_labyrinthe() {
@@ -46,11 +47,16 @@ direction get_direction_from_input(char key) {
     }
 }
 
-void wait_to_press_enter() {
-    printw("Press enter...");
+void wait_to_press_enter(WINDOW* w) {
+    int width = getmaxx(w);
+    int start_col = (width - strlen("Press enter...")) / 2;
+
+    mvwprintw(w, 3, start_col, "Press enter...");
+
+    wrefresh(w);
+
     char c = 0;
     do {
         c = getch();
-    }
-    while(c != ENTER_KEY);
+    } while(c != '\n' && c != '\r');
 }

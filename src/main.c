@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <ncurses.h>
+#include <string.h>
 #include "maze.h"
 
 void draw_borders(WINDOW *win) {
@@ -68,8 +69,22 @@ int main(void) {
     }
 
     if (m->player->exited) {
-        mvprintw(height - 2, (width - 8) / 2, "YOU WIN!");
-        wait_to_press_enter();
+        int win_height = 7;
+        int win_width = 25;
+        int starty = (height - win_height) / 2;
+        int startx = (width - win_width) / 2;
+
+        WINDOW *popup_win = newwin(win_height, win_width, starty, startx);
+
+        box(popup_win, 0, 0);
+
+        mvwprintw(popup_win, 1, (win_width - strlen("YOU WIN!")) / 2, "YOU WIN!");
+
+        wrefresh(popup_win);
+
+        wait_to_press_enter(popup_win);
+
+        delwin(popup_win);
     }
 
     return exit_labyrinthe(EXIT_SUCCESS);

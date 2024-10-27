@@ -26,6 +26,6 @@ typedef enum {
 void init_labyrinthe();
 int exit_labyrinthe(int code);
 direction get_direction_from_input(char key);
-void wait_to_press_enter();
+void wait_to_press_enter(WINDOW *w);
 
 #endif

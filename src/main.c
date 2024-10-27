@@ -19,7 +19,6 @@ int main(void) {
 
     generate_maze(m);
 
-    // Dimensions des fenêtres
     int height, width;
     getmaxyx(stdscr, height, width);
 
@@ -28,37 +27,8 @@ int main(void) {
     WINDOW *player_data_win = newwin(3, width, height - 7, 0);
     WINDOW *placeholder_win = newwin(3, width, height - 3, 0);
 
-    // Affichage initial
+    int has_moved = 1;
     while (1) {
-        // Nettoyage des fenêtres
-        wclear(title_win);
-        wclear(game_win);
-        wclear(player_data_win);
-        wclear(placeholder_win);
-
-        // Titre
-        mvwprintw(title_win, 1, (width - 10) / 2, "Labyrinthe");
-        draw_borders(title_win);
-        wrefresh(title_win);
-
-        // Jeu
-        display(m, game_win);
-        mvwprintw(game_win, 0, 1, "Seed: %ld", seed);
-        draw_borders(game_win);
-        wrefresh(game_win);
-
-        // Données du joueur
-        display_player_data(m->player, player_data_win);
-        draw_borders(player_data_win);
-        wrefresh(player_data_win);
-
-        // Placeholder
-        mvwprintw(placeholder_win, 1, 1, "Placeholder text");
-        draw_borders(placeholder_win);
-        wrefresh(placeholder_win);
-
-        if (check_player_pos(m)) break;
-
         char c = getch();
         if (c == ESCAPE_KEY) {
             break;
@@ -66,8 +36,35 @@ int main(void) {
 
         direction d = get_direction_from_input(c);
         if (d != INVALID) {
+            int old_x = m->player->x;
+            int old_y = m->player->y;
             move_player(m, d);
+            has_moved = (old_x != m->player->x || old_y != m->player->y);
         }
+
+        if (has_moved) {
+            mvwprintw(title_win, 1, (width - 10) / 2, "Labyrinthe");
+            draw_borders(title_win);
+            wrefresh(title_win);
+
+            wclear(game_win);
+            display(m, game_win);
+            draw_borders(game_win);
+            wrefresh(game_win);
+
+            wclear(player_data_win);
+            display_player_data(m->player, player_data_win);
+            draw_borders(player_data_win);
+            wrefresh(player_data_win);
+
+            mvwprintw(placeholder_win, 1, 1, "Placeholder text");
+            draw_borders(placeholder_win);
+            wrefresh(placeholder_win);
+
+            has_moved = 0;
+        }
+
+        if (check_player_pos(m)) break;
     }
 
     if (m->player->exited) {
@@ -75,6 +72,5 @@ int main(void) {
         wait_to_press_enter();
     }
 
-    endwin();
     return exit_labyrinthe(EXIT_SUCCESS);
 }

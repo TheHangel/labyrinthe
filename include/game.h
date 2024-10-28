@@ -1,8 +1,11 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include <ncurses.h>
+
 typedef struct player player;
 typedef struct maze maze;
+typedef struct leaderboard leaderboard;
 typedef int cell;
 
 #define PATH      0

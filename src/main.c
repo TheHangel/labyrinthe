@@ -4,6 +4,7 @@
 #include <ncurses.h>
 #include <string.h>
 #include "maze.h"
+#include "leaderboard.h"
 
 void draw_borders(WINDOW *win) {
     box(win, 0, 0);

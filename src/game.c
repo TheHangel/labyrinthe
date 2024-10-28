@@ -4,6 +4,8 @@
 #include <string.h>
 #include "game.h"
 #include "maze.h"
+#include "file.h"
+#include "leaderboard.h"
 
 void init_labyrinthe() {
     initscr();
@@ -112,8 +114,6 @@ void display_end_window(maze *m) {
 
     box(popup_win, 0, 0);
 
-    mvwprintw(popup_win, 1, (win_width - strlen("YOU WIN!")) / 2, "YOU WIN!");
-
     player *p = m->player;
     int score = get_final_score(p);
     char *score_str = convert_score_to_string(score);
@@ -123,14 +123,43 @@ void display_end_window(maze *m) {
 
     wrefresh(popup_win);
 
+    char *filepath = get_project_root_path("leaderboard.score");
+
+    leaderboard lb = load_leaderboard_from_file(filepath);
+    int last_score = lb.players[lb.count - 1].score;
+
+    int is_winner = (score > last_score) || (lb.count < MAX_PLAYERS);
+    const char *message = (is_winner) ? "NEW HIGH SCORE!" : "YOU WIN!";
+
+    if(is_winner) {
+        mvwprintw(popup_win, 1, (win_width - strlen(message)) / 2, message);
+
+        char name[20];
+        mvwprintw(popup_win, 4, 1, "Enter your name: ");
+        echo();
+        wgetnstr(popup_win, name, 20);
+        noecho();
+
+        add_player_to_leaderboard(&lb, name, score);
+        sort_leaderboard(&lb);
+        save_leaderboard_to_file(filepath, &lb);
+
+        werase(popup_win);
+        box(popup_win, 0, 0);
+        wrefresh(popup_win);
+    }
+
+    mvwprintw(popup_win, 1, (win_width - strlen(message)) / 2, message);
+
     const char *options[] = {
         "Play again",
         "Quit to Main Menu",
         "Quit game"
     };
-    int n_options = sizeof(options) / sizeof(options[0]);
+    int n_options = 3;
 
     menu_selection(popup_win, options, n_options);
 
+    destroy_leaderboard(&lb);
     delwin(popup_win);
 }

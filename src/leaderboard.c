@@ -62,7 +62,7 @@ int save_leaderboard_to_file(const char *filename, leaderboard *lb) {
         }
         return fclose(file);
     }
-    return 0;
+    return EXIT_FAILURE;
 }
 
 int compare_scores(const void *a, const void *b) {

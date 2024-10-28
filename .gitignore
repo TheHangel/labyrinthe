@@ -54,3 +54,6 @@ dkms.conf
 bin/
 .vscode
 src/test
+
+.DS_STORE
+leaderboard.score

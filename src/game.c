@@ -105,8 +105,8 @@ void display_end_window(maze *m) {
     int height, width;
     getmaxyx(stdscr, height, width);
 
-    int win_height = 7;
-    int win_width = 25;
+    int win_height = 8;
+    int win_width = 35;
     int starty = (height - win_height) / 2;
     int startx = (width - win_width) / 2;
 
@@ -153,10 +153,11 @@ void display_end_window(maze *m) {
 
     const char *options[] = {
         "Play again",
+        "Display Leaderboard",
         "Quit to Main Menu",
         "Quit game"
     };
-    int n_options = 3;
+    int n_options = 4;
 
     menu_selection(popup_win, options, n_options);
 

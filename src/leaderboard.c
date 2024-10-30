@@ -3,8 +3,6 @@
 #include <string.h>
 #include "leaderboard.h"
 
-#include <stdio.h>
-
 void display_leaderboard(leaderboard *lb) {
     printf("Leaderboard:\n");
     printf("%-20s %10s\n", "Pseudo", "Score");

@@ -3,13 +3,43 @@
 #include <string.h>
 #include "leaderboard.h"
 
-void display_leaderboard(leaderboard *lb) {
-    printf("Leaderboard:\n");
-    printf("%-20s %10s\n", "Pseudo", "Score");
+void display_leaderboard(WINDOW *win, leaderboard *lb, const char *highlight_name) {
+    int width, height;
+    getmaxyx(win, height, width);
 
-    for (int i = 0; i < lb->count; i++) {
-        printf("%-20s %10d\n", lb->players[i].name, lb->players[i].score);
+    const char *title = "Leaderboard";
+    mvwprintw(win, 1, (width - strlen(title)) / 2, "%s", title);
+
+    int col_pseudo = 2;
+    int col_score = width - 12;
+    mvwprintw(win, 3, col_pseudo, "Players");
+    mvwprintw(win, 3, col_score , "Score");
+
+    for (int i = 4; i < height - 1; i++) {
+        mvwaddch(win, i, col_score - 2, ACS_VLINE);
     }
+
+    for (int i = 0; i < lb->count && i < height - 5; i++) {
+        int y = 4 + i;
+
+        if (highlight_name && strcmp(lb->players[i].name, highlight_name) == 0) {
+            wattron(win, A_REVERSE);
+        }
+
+        mvwprintw(win, y, col_pseudo, "%-20s", lb->players[i].name);
+        mvwprintw(win, y, col_score , "%10d" , lb->players[i].score);
+
+        wattroff(win, A_REVERSE);
+    }
+
+    wattron(win, A_REVERSE);
+    mvwprintw(win, height - 2, (width - strlen("Continue")) / 2, "Continue");
+    wattroff(win, A_REVERSE);
+
+    wrefresh(win);
+
+    int ch;
+    while ((ch = wgetch(win)) != '\n' && ch != ENTER_KEY);
 }
 
 void add_player_to_leaderboard(leaderboard *lb, const char *name, int score) {

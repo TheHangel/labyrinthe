@@ -15,7 +15,7 @@ struct leaderboard {
     int count;
 };
 
-void display_leaderboard(leaderboard *lb);
+void display_leaderboard(WINDOW *win, leaderboard *lb, const char *highlight_name);
 void add_player_to_leaderboard(leaderboard *lb, const char *name, int score);
 leaderboard load_leaderboard_from_file(const char *filename);
 int save_leaderboard_to_file(const char *filename, leaderboard *lb);

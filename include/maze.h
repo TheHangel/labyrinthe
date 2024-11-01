@@ -3,12 +3,15 @@
 
 #include "game.h"
 #include "player.h"
+#include "monster.h"
 
 struct maze {
     cell **content;
     int length;
     int width;
     player *player;
+    monster *monsters;
+    int n_monsters;
 };
 
 void brick_maze(maze *m);

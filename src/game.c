@@ -17,14 +17,19 @@ void init_labyrinthe() {
 
     start_color();
 
+    //init_color(-(M_OGRE), 200, 800, 200);
+
     init_pair(-(WALL),     0, COLOR_WHITE);
     init_pair(  PATH,      0, COLOR_BLACK);
     init_pair(-(KEY),      0, COLOR_YELLOW);
     init_pair(-(TREASURE), 0, COLOR_GREEN);
     init_pair(-(TRAP),     0, COLOR_RED);
     init_pair(-(EXIT),     0, COLOR_MAGENTA);
+    init_pair(-(M_GHOST),  0, COLOR_BLUE);
+    init_pair(-(M_OGRE),   0, COLOR_MAGENTA);
 
-    init_pair(10, COLOR_WHITE, COLOR_CYAN);
+    // Player colors
+    init_pair(PLAYER, COLOR_WHITE, COLOR_CYAN);
 }
 
 int exit_labyrinthe(int code) {

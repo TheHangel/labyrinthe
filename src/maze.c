@@ -162,13 +162,14 @@ void generate_maze(maze *m, difficulty d) {
             open_wall(m, i, j, directions[dir][0], directions[dir][1]);
         }
     }
+    if(d == HARD) {
+        destroy_walls(m, length * width / 10);
+    }
     place_exit(m);
     place_key(m);
     place_treasures(m);
     place_traps(m);
-    if(d == HARD) {
-        destroy_walls(m, length * width / 10);
-    }
+    place_monsters(m);
 }
 
 /**
@@ -195,6 +196,7 @@ void destroy_maze(maze *m) {
     }
     free(m->player);
     free(m->content);
+    free(m->monsters);
     free(m);
 }
 
@@ -212,10 +214,22 @@ void display(maze *m, WINDOW* w) {
                 continue;
             }
 
+            for (int k = 0; k < m->n_monsters; k++) {
+                monster mon = m->monsters[k];
+                if (mon.x == i && mon.y == j) {
+                    wattron(w, COLOR_PAIR(-(mon.move_monster(0, 0))));
+                    mvwprintw(w, i + 1, j * 2 + 1, "  ");
+                    wattroff(w, COLOR_PAIR(-(mon.move_monster(0, 0))));
+                    continue;
+                }
+            }
+
             cell b = m->content[i][j];
             wattron(w, COLOR_PAIR(-(b)));
             mvwprintw(w, i + 1, j * 2 + 1, "  ");
             wattroff(w, COLOR_PAIR(-(b)));
         }
     }
+
+    display_monsters(m, w);
 }

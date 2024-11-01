@@ -44,6 +44,8 @@ int main(void) {
         }
 
         if (has_moved) {
+            move_monsters(m);
+
             mvwprintw(title_win, 1, (width - 10) / 2, "Labyrinthe");
             draw_borders(title_win);
             wrefresh(title_win);

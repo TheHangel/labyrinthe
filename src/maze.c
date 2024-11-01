@@ -96,6 +96,21 @@ cell* get_random_wall(maze *m) {
     return get_random_cell(m, is_wall);
 }
 
+void get_coords_from_cell(maze *m, cell *c, int *x, int *y) {
+    int length = m->length;
+    int width = m->width;
+
+    for (int i = 0; i < length; i++) {
+        for (int j = 0; j < width; j++) {
+            if (&m->content[i][j] == c) {
+                *y = i;
+                *x = j;
+                return;
+            }
+        }
+    }
+}
+
 int is_wall_a_border(maze *m, cell *c) {
     int length = m->length;
     int width = m->width;
@@ -212,16 +227,6 @@ void display(maze *m, WINDOW* w) {
                 mvwprintw(w, i + 1, j * 2 + 1, "  ");
                 wattroff(w, COLOR_PAIR(10));
                 continue;
-            }
-
-            for (int k = 0; k < m->n_monsters; k++) {
-                monster mon = m->monsters[k];
-                if (mon.x == i && mon.y == j) {
-                    wattron(w, COLOR_PAIR(-(mon.move_monster(0, 0))));
-                    mvwprintw(w, i + 1, j * 2 + 1, "  ");
-                    wattroff(w, COLOR_PAIR(-(mon.move_monster(0, 0))));
-                    continue;
-                }
             }
 
             cell b = m->content[i][j];

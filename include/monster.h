@@ -7,12 +7,13 @@ struct monster {
     int x;
     int y;
     int type;
-    int (*move_monster)(int, int);
+    int (*move_monster)(monster *m, maze *mze);
 };
 
 void place_monsters(maze *m);
 void display_monsters(maze *m, WINDOW *w);
-int move_ghost(int x, int y);
-int move_ogre(int x, int y);
+int move_ghost(monster *m, maze *mze);
+int move_ogre(monster *m, maze *mze);
+void move_monsters(maze *m);
 
 #endif

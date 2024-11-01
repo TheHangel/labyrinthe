@@ -26,6 +26,11 @@ typedef enum {
     INVALID
 } direction;
 
+typedef enum {
+    NORMAL,
+    HARD
+} difficulty;
+
 void init_labyrinthe();
 int exit_labyrinthe(int code);
 direction get_direction_from_input(char key);

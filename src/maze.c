@@ -68,7 +68,7 @@ void place_exit(maze *m) {
     m->content[length - 1][width - 2] = EXIT;
 }
 
-cell* get_random_path(maze *m) {
+cell* get_random_cell(maze *m, int (*condition)(int)) {
     int length = m->length;
     int width = m->width;
     int i = 0;
@@ -76,8 +76,48 @@ cell* get_random_path(maze *m) {
     do {
         i = rand() % length;
         j = rand() % width;
-    } while (m->content[i][j] < PATH);
+    } while (!condition(m->content[i][j]));
     return &m->content[i][j];
+}
+
+int is_path(cell cell) {
+    return cell >= PATH;
+}
+
+int is_wall(cell cell) {
+    return cell == WALL;
+}
+
+cell* get_random_path(maze *m) {
+    return get_random_cell(m, is_path);
+}
+
+cell* get_random_wall(maze *m) {
+    return get_random_cell(m, is_wall);
+}
+
+int is_wall_a_border(maze *m, cell *c) {
+    int length = m->length;
+    int width = m->width;
+
+    int i, j;
+    for (i = 0; i < length; i++) {
+        for (j = 0; j < width; j++) {
+            if (&m->content[i][j] == c) {
+                return i == 0 || i == length - 1 || j == 0 || j == width - 1;
+            }
+        }
+    }
+    return 0;
+}
+
+void destroy_walls(maze *m, int n) {
+    for (int i = 0; i < n; i++) {
+        cell *c = get_random_wall(m);
+        if(!is_wall_a_border(m, c)) {
+            *c = PATH;
+        }
+    }
 }
 
 void place_key(maze *m) {
@@ -105,7 +145,7 @@ void remove_cell(maze *m, int x, int y) {
     m->content[x][y] = PATH;
 }
 
-void generate_maze(maze *m) {
+void generate_maze(maze *m, difficulty d) {
     int length = m->length;
     int width = m->width;
     int directions[4][2] = {{0, 2}, {0, -2}, {2, 0}, {-2, 0}};
@@ -126,6 +166,9 @@ void generate_maze(maze *m) {
     place_key(m);
     place_treasures(m);
     place_traps(m);
+    if(d == HARD) {
+        destroy_walls(m, length * width / 10);
+    }
 }
 
 /**

@@ -22,7 +22,7 @@ void place_key(maze *m);
 void place_treasures(maze *m);
 void place_traps(maze *m);
 void remove_cell(maze *m, int x, int y);
-void generate_maze(maze *m);
+void generate_maze(maze *m, difficulty d);
 maze* new_maze(int length, int width);
 void destroy_maze(maze *m);
 void display(maze *m, WINDOW *w);

@@ -19,7 +19,7 @@ int main(void) {
     maze *m = new_maze(l, w);
     if (m == NULL) return exit_labyrinthe(EXIT_FAILURE);
 
-    generate_maze(m);
+    generate_maze(m, HARD);
 
     int height, width;
     getmaxyx(stdscr, height, width);

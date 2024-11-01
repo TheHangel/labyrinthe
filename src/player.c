@@ -35,22 +35,22 @@ int move_player(maze *m, direction dir) {
 int check_player_pos(maze *m) {
     player *p = m->player;
     if(is_player_on(m, EXIT) && p->has_key == 1) {
-            p->exited++;
-            return 1;
-        }
+        p->exited++;
+        return 1;
+    }
 
-        if(is_player_on(m, KEY)) {
-            remove_cell_at_player(m);
-            p->has_key = 1;
-        }
-        else if(is_player_on(m, TREASURE)) {
-            remove_cell_at_player(m);
-            p->score++;
-        }
-        else if(is_player_on(m, TRAP)) {
-            remove_cell_at_player(m);
-            p->score--;
-        }
+    if(is_player_on(m, KEY)) {
+        remove_cell_at_player(m);
+        p->has_key = 1;
+    }
+    else if(is_player_on(m, TREASURE)) {
+        remove_cell_at_player(m);
+        p->score++;
+    }
+    else if(is_player_on(m, TRAP)) {
+        remove_cell_at_player(m);
+        p->score--;
+    }
     return 0;
 }
 

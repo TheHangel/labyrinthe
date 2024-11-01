@@ -45,6 +45,7 @@ int main(void) {
 
         if (has_moved) {
             move_monsters(m);
+            if (check_player_pos(m)) break;
 
             mvwprintw(title_win, 1, (width - 10) / 2, "Labyrinthe");
             draw_borders(title_win);
@@ -62,8 +63,6 @@ int main(void) {
 
             has_moved = 0;
         }
-
-        if (check_player_pos(m)) break;
     }
 
     if (m->player->exited) {

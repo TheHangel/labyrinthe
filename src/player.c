@@ -114,3 +114,7 @@ char *convert_score_to_string(int score) {
     sprintf(str, "Score: %d", score);
     return str;
 }
+
+void destroy_player(maze *m) {
+    free(m->player);
+}

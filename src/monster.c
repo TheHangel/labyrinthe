@@ -3,6 +3,24 @@
 #include "monster.h"
 #include "maze.h"
 
+monster* create_monster(int x, int y, int type, int penalty, int (*move_monster)(monster *m, maze *mze)) {
+    monster *m = malloc(sizeof(monster));
+    m->x = x;
+    m->y = y;
+    m->type = type;
+    m->penalty = penalty;
+    m->move_monster = move_monster;
+    return m;
+}
+
+monster* create_ghost(int x, int y) {
+    return create_monster(x, y, M_GHOST, 1, move_ghost);
+}
+
+monster* create_ogre(int x, int y) {
+    return create_monster(x, y, M_OGRE, 2, move_ogre);
+}
+
 void place_monsters(maze *m) {
     m->n_monsters = (m->width * m->length) / 200;
     if (m->n_monsters < 1) m->n_monsters = 1;
@@ -14,17 +32,10 @@ void place_monsters(maze *m) {
         int x, y;
         get_coords_from_cell(m, c, &x, &y);
 
-        m->monsters[i].x = x;
-        m->monsters[i].y = y;
-
         if (rand() % 2 == 0) {
-            m->monsters[i].type = M_GHOST;
-            m->monsters[i].penalty = 1;
-            m->monsters[i].move_monster = move_ghost;
+            *(m->monsters + i) = *create_ghost(x, y);
         } else {
-            m->monsters[i].type = M_OGRE;
-            m->monsters[i].penalty = 2;
-            m->monsters[i].move_monster = move_ogre;
+            *(m->monsters + i) = *create_ogre(x, y);
         }
     }
 }
@@ -77,4 +88,8 @@ void move_monsters(maze *m) {
         monster *mon = &m->monsters[k];
         mon->move_monster(mon, m);
     }
+}
+
+void destroy_monsters(maze *m) {
+    free(m->monsters);
 }

@@ -24,5 +24,6 @@ void remove_cell_at_player(maze *m);
 int display_player_data(player *p, WINDOW *w);
 int get_final_score(player *p);
 char *convert_score_to_string(int score);
+void destroy_player(maze *m);
 
 #endif

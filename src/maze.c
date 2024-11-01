@@ -209,9 +209,9 @@ void destroy_maze(maze *m) {
     for (int i = 0; i < m->length; i++) {
         free(m->content[i]);
     }
-    free(m->player);
     free(m->content);
-    free(m->monsters);
+    destroy_player(m);
+    destroy_monsters(m);
     free(m);
 }
 

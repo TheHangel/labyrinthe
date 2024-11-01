@@ -205,11 +205,15 @@ maze* new_maze(int length, int width) {
     return m;
 }
 
-void destroy_maze(maze *m) {
+void destroy_cells(maze *m) {
     for (int i = 0; i < m->length; i++) {
         free(m->content[i]);
     }
     free(m->content);
+}
+
+void destroy_maze(maze *m) {
+    destroy_cells(m);
     destroy_player(m);
     destroy_monsters(m);
     free(m);

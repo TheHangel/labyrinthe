@@ -39,6 +39,7 @@ int check_player_pos(maze *m) {
         return 1;
     }
 
+    int m_check = is_player_on_monster(m);
     if(is_player_on(m, KEY)) {
         remove_cell_at_player(m);
         p->has_key = 1;
@@ -50,6 +51,9 @@ int check_player_pos(maze *m) {
     else if(is_player_on(m, TRAP)) {
         remove_cell_at_player(m);
         p->score--;
+    }
+    else if(m_check) {
+        p->score -= m->monsters[m_check - 1].penalty;
     }
     return 0;
 }
@@ -75,6 +79,17 @@ int is_player_at(player p, int x, int y) {
 
 int is_player_on(maze *m, cell c) {
     return (*get_cell_from_player_pos(m) == c);
+}
+
+int is_player_on_monster(maze *m) {
+    player *p = m->player;
+    for (int i = 0; i < m->n_monsters; i++) {
+        monster *mon = &m->monsters[i];
+        if (mon->x == p->x && mon->y == p->y) {
+            return i + 1;
+        }
+    }
+    return 0;
 }
 
 void remove_cell_at_player(maze *m) {

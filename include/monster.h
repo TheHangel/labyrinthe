@@ -7,6 +7,7 @@ struct monster {
     int x;
     int y;
     int type;
+    int penalty;
     int (*move_monster)(monster *m, maze *mze);
 };
 

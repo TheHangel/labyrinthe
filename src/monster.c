@@ -4,7 +4,7 @@
 #include "maze.h"
 
 void place_monsters(maze *m) {
-    m->n_monsters = (m->width * m->length) / 50;
+    m->n_monsters = (m->width * m->length) / 200;
     if (m->n_monsters < 1) m->n_monsters = 1;
 
     m->monsters = (monster*) malloc(m->n_monsters * sizeof(monster));
@@ -19,9 +19,11 @@ void place_monsters(maze *m) {
 
         if (rand() % 2 == 0) {
             m->monsters[i].type = M_GHOST;
+            m->monsters[i].penalty = 1;
             m->monsters[i].move_monster = move_ghost;
         } else {
             m->monsters[i].type = M_OGRE;
+            m->monsters[i].penalty = 2;
             m->monsters[i].move_monster = move_ogre;
         }
     }

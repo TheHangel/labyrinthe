@@ -51,6 +51,17 @@ void add_player_to_leaderboard(leaderboard *lb, const char *name, int score) {
             lb->count++;
         }
     }
+    else {
+        player_score *last_player = &lb->players[lb->count - 1];
+        if (score > last_player->score) {
+            free(last_player->name);
+            last_player->name = malloc(strlen(name) + 1);
+            if (last_player->name != NULL) {
+                strcpy(last_player->name, name);
+                last_player->score = score;
+            }
+        }
+    }
 }
 
 leaderboard load_leaderboard_from_file(const char *filename) {

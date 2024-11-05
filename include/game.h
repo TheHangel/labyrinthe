@@ -22,6 +22,8 @@ typedef int cell;
 #define ESCAPE_KEY 27
 #define ENTER_KEY  10
 
+#define LEADERBOARD_FILE "data/leaderboard.score"
+
 typedef enum {
     UP,
     DOWN,

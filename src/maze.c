@@ -242,3 +242,59 @@ void display(maze *m, WINDOW* w) {
 
     display_monsters(m, w);
 }
+
+void load_monster_functions(maze *m) {
+    for (int i = 0; i < m->n_monsters; i++) {
+        if (m->monsters[i].type == M_GHOST) {
+            m->monsters[i].move_monster = move_ghost;
+        } else if (m->monsters[i].type == M_OGRE) {
+            m->monsters[i].move_monster = move_ogre;
+        }
+    }
+}
+
+int save_maze_to_file(const char *filename, maze *m) {
+    FILE *file = fopen(filename, "wb");
+    if (!file) return -1;
+
+    fwrite(&m->length, sizeof(int), 1, file);
+    fwrite(&m->width, sizeof(int), 1, file);
+
+    for (int i = 0; i < m->length; i++) {
+        fwrite(m->content[i], sizeof(cell), m->width, file);
+    }
+
+    fwrite(m->player, sizeof(player), 1, file);
+
+    fwrite(&m->n_monsters, sizeof(int), 1, file);
+    fwrite(m->monsters, sizeof(monster), m->n_monsters, file);
+
+    return fclose(file);
+}
+
+maze* load_maze_from_file(const char *filename) {
+    FILE *file = fopen(filename, "rb");
+    if (!file) return NULL;
+
+    maze *m = (maze*) malloc(sizeof(maze));
+    fread(&m->length, sizeof(int), 1, file);
+    fread(&m->width, sizeof(int), 1, file);
+
+    m->content = (cell**) malloc(m->length * sizeof(cell*));
+    for (int i = 0; i < m->length; i++) {
+        m->content[i] = (cell*) malloc(m->width * sizeof(cell));
+        fread(m->content[i], sizeof(cell), m->width, file);
+    }
+
+    m->player = (player*) malloc(sizeof(player));
+    fread(m->player, sizeof(player), 1, file);
+
+    fread(&m->n_monsters, sizeof(int), 1, file);
+    m->monsters = (monster*) malloc(m->n_monsters * sizeof(monster));
+    fread(m->monsters, sizeof(monster), m->n_monsters, file);
+
+    fclose(file);
+
+    load_monster_functions(m);
+    return m;
+}

@@ -127,9 +127,7 @@ void display_end_window(maze *m) {
 
     wrefresh(popup_win);
 
-    char *filepath = "leaderboard.score";
-
-    leaderboard lb = load_leaderboard_from_file(filepath);
+    leaderboard lb = load_leaderboard_from_file(LEADERBOARD_FILE);
     int last_score = lb.players[lb.count - 1].score;
 
     int is_winner = (score > last_score) || (lb.count < MAX_PLAYERS);
@@ -147,7 +145,7 @@ void display_end_window(maze *m) {
 
         add_player_to_leaderboard(&lb, name, score);
         sort_leaderboard(&lb);
-        save_leaderboard_to_file(filepath, &lb);
+        save_leaderboard_to_file(LEADERBOARD_FILE, &lb);
 
         werase(popup_win);
         box(popup_win, 0, 0);

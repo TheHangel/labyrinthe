@@ -30,5 +30,7 @@ void generate_maze(maze *m, difficulty d);
 maze* new_maze(int length, int width);
 void destroy_maze(maze *m);
 void display(maze *m, WINDOW *w);
+int save_maze_to_file(const char *filename, maze *m);
+maze* load_maze_from_file(const char *filename);
 
 #endif

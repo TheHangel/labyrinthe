@@ -14,12 +14,10 @@ int main(void) {
     init_labyrinthe();
     time_t seed = time(NULL);
     srand(seed);
-    int l = 17;
-    int w = 35;
-    maze *m = new_maze(l, w);
+    //int l = 17;
+    //int w = 35;
+    maze *m = load_maze_from_file("data/maze.cfg");
     if (m == NULL) return exit_labyrinthe(EXIT_FAILURE);
-
-    generate_maze(m, HARD);
 
     int height, width;
     getmaxyx(stdscr, height, width);

@@ -55,6 +55,7 @@ bin/
 .vscode
 src/test
 
+data/
+
 .DS_STORE
-leaderboard.score
 log.txt

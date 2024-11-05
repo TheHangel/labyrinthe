@@ -86,7 +86,7 @@ void display_end_window(maze *m) {
 
     WINDOW *popup_win = newwin(win_height, win_width, starty, startx);
 
-    box(popup_win, 0, 0);
+    draw_borders(popup_win);
 
     player *p = m->player;
     int score = get_final_score(p);
@@ -118,7 +118,7 @@ void display_end_window(maze *m) {
         save_leaderboard_to_file(LEADERBOARD_FILE, &lb);
 
         werase(popup_win);
-        box(popup_win, 0, 0);
+        draw_borders(popup_win);
         wrefresh(popup_win);
     }
 
@@ -144,7 +144,7 @@ void display_end_window(maze *m) {
     switch (res) {
         case DISPLAY_LEADERBOARD: {
             WINDOW *lb_w = newwin(win_height*2, win_width, starty, startx);
-            box(lb_w, 0, 0);
+            draw_borders(lb_w);
             display_leaderboard(lb_w, &lb, name);
             break;
         }

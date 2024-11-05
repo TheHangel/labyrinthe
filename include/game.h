@@ -37,11 +37,6 @@ typedef enum {
     HARD
 } difficulty;
 
-void init_labyrinthe();
-int exit_labyrinthe(int code);
 direction get_direction_from_input(char key);
-void wait_to_press_enter(WINDOW *w);
-int menu_selection(WINDOW* w, const char *options[], int n_options);
-void display_end_window(maze *m);
 
 #endif

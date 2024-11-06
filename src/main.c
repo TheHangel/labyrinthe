@@ -3,13 +3,11 @@
 #include <time.h>
 #include <ncurses.h>
 #include <string.h>
-#include <locale.h>
 #include "maze.h"
 #include "leaderboard.h"
 #include "display.h"
 
 int main(void) {
-    setlocale(LC_ALL, "");
     init_curses();
     //time_t seed = time(NULL);
     //srand(seed);

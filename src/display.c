@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ncurses.h>
+#include <locale.h>
 #include <string.h>
 #include "display.h"
 #include "game.h"
@@ -8,6 +9,7 @@
 #include "leaderboard.h"
 
 void init_curses() {
+    setlocale(LC_ALL, "");
     initscr();
     noecho();
     cbreak();
@@ -135,7 +137,7 @@ void display_end_window(maze *m) {
 
     int res = menu_selection(popup_win, options, n_options, menu_start_row);
 
-    enum menu_res {
+    enum {
         PLAY_AGAIN,
         DISPLAY_LEADERBOARD,
         QUIT_MAIN_MENU,
@@ -236,12 +238,50 @@ void display_main_menu() {
 
     display_title(win);
 
-    const char *options[] = { "Play", "How to play", "Quit" };
-    int n_options = sizeof(options) / sizeof(options[0]);
+    int win_height = 10;
+    int win_width = 35;
+    int starty = (height - win_height) / 2;
+    int startx = (width - win_width) / 2;
 
-    int menu_start_row = 12;
-    menu_selection(win, options, n_options, menu_start_row);
+    WINDOW *sel_win = newwin(win_height, win_width, starty, startx);
+    draw_borders(sel_win);
+
+    wrefresh(sel_win);
+
+    const char *options[] = { "Play", "How to play", "Quit" };
+    int n_options = 3;
+
+    int menu_start_row = (win_height - n_options) / 2;
+    int selection = menu_selection(sel_win, options, n_options, menu_start_row);
+
+    enum {
+        PLAY,
+        HOW_TO_PLAY,
+        QUIT
+    };
+
+    switch (selection) {
+        case PLAY: {
+            WINDOW *maze_win = newwin(win_height, win_width, starty, startx);
+            draw_borders(maze_win);
+            wrefresh(maze_win);
+
+            const char *options_maze[] = { "maze1", "maze2", "maze3" };
+            int n_options_maze = 3;
+            int menu_start_row_maze = (win_height - n_options_maze) / 2;
+
+            menu_selection(maze_win, options_maze, n_options_maze, menu_start_row_maze);
+
+            delwin(maze_win);
+
+            break;
+        }
+
+        default:
+            break;
+    }
 
     delwin(win);
+    delwin(sel_win);
     endwin();
 }

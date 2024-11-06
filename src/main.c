@@ -3,23 +3,27 @@
 #include <time.h>
 #include <ncurses.h>
 #include <string.h>
+#include <locale.h>
 #include "maze.h"
 #include "leaderboard.h"
 #include "display.h"
 
 int main(void) {
+    setlocale(LC_ALL, "");
     init_curses();
-    time_t seed = time(NULL);
-    srand(seed);
+    //time_t seed = time(NULL);
+    //srand(seed);
     //int l = 17;
     //int w = 35;
-    maze *m = load_maze_from_file("data/maze.cfg");
-    if (m == NULL) return EXIT_FAILURE;
+    //maze *m = load_maze_from_file("data/maze.cfg");
+    //if (m == NULL) return EXIT_FAILURE;
 
-    display_game(m);
+    //display_game(m);
 
-    destroy_maze(m);
-    destroy_curses();
+    display_main_menu();
+
+    //destroy_maze(m);
+    //destroy_curses();
 
     return EXIT_SUCCESS;
 }

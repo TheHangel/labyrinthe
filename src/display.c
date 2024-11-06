@@ -11,7 +11,7 @@ void init_curses() {
     initscr();
     noecho();
     cbreak();
-    curs_set(0);
+    curs_set(FALSE);
     keypad(stdscr, TRUE);
 
     timeout(100);
@@ -40,11 +40,11 @@ void draw_borders(WINDOW *win) {
     box(win, 0, 0);
 }
 
-int menu_selection(WINDOW* w, const char *options[], int n_options) {
+int menu_selection(WINDOW* w, const char *options[], int n_options, int menu_start_row) {
     int choice = 0;
     int ch;
 
-    int menu_start_row = 3;
+    keypad(w, TRUE);
 
     while (1) {
         for (int i = 0; i < n_options; i++) {
@@ -61,7 +61,7 @@ int menu_selection(WINDOW* w, const char *options[], int n_options) {
 
         wrefresh(w);
 
-        ch = getch();
+        ch = wgetch(w);
         switch (ch) {
             case KEY_UP:
                 choice = (choice == 0) ? n_options - 1 : choice - 1;
@@ -79,7 +79,7 @@ void display_end_window(maze *m) {
     int height, width;
     getmaxyx(stdscr, height, width);
 
-    int win_height = 8;
+    int win_height = 10;
     int win_width = 35;
     int starty = (height - win_height) / 2;
     int startx = (width - win_width) / 2;
@@ -131,8 +131,9 @@ void display_end_window(maze *m) {
         "Quit game"
     };
     int n_options = 4;
+    int menu_start_row = 4;
 
-    int res = menu_selection(popup_win, options, n_options);
+    int res = menu_selection(popup_win, options, n_options, menu_start_row);
 
     enum menu_res {
         PLAY_AGAIN,
@@ -205,4 +206,42 @@ void display_game(maze *m) {
     if (m->player->exited) {
         display_end_window(m);
     }
+}
+
+void display_title(WINDOW *win) {
+    const char *title[] = {
+        "██╗      █████╗ ██████╗ ██╗   ██╗██████╗ ██╗███╗   ██╗████████╗██╗  ██╗███████╗",
+        "██║     ██╔══██╗██╔══██╗╚██╗ ██╔╝██╔══██╗██║████╗  ██║╚══██╔══╝██║  ██║██╔════╝",
+        "██║     ███████║██████╔╝ ╚████╔╝ ██████╔╝██║██╔██╗ ██║   ██║   ███████║█████╗",
+        "██║     ██╔══██║██╔══██╗  ╚██╔╝  ██╔══██╗██║██║╚██╗██║   ██║   ██╔══██║██╔══╝",
+        "███████╗██║  ██║██████╔╝   ██║   ██║  ██║██║██║ ╚████║   ██║   ██║  ██║███████╗",
+        "╚══════╝╚═╝  ╚═╝╚═════╝    ╚═╝   ╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝   ╚═╝   ╚═╝  ╚═╝╚══════╝"
+    };
+
+    int start_row = 1;
+    int width = getmaxx(win);
+
+    for (int i = 0; i < 6; i++) {
+        int start_col = (width / 2) - 38;
+        mvwprintw(win, start_row + i, start_col, "%s", title[i]);
+    }
+    wrefresh(win);
+}
+
+void display_main_menu() {
+    int height, width;
+    getmaxyx(stdscr, height, width);
+    WINDOW *win = newwin(height, width, 0, 0);
+    draw_borders(win);
+
+    display_title(win);
+
+    const char *options[] = { "Play", "How to play", "Quit" };
+    int n_options = sizeof(options) / sizeof(options[0]);
+
+    int menu_start_row = 12;
+    menu_selection(win, options, n_options, menu_start_row);
+
+    delwin(win);
+    endwin();
 }

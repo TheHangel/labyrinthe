@@ -8,7 +8,7 @@
 #include "display.h"
 
 int main(void) {
-    //init_curses();
+    init_curses();
     //time_t seed = time(NULL);
     //srand(seed);
     //int l = 17;
@@ -18,17 +18,10 @@ int main(void) {
 
     //display_game(m);
 
-    //display_main_menu();
-    int file_count;
-    char **saves = list_saves_files("data/", &file_count);
-    for (int i = 0; i < file_count; i++) {
-        printf("%s\n", saves[i]);
-        free(saves[i]); // Libérer chaque nom de fichier
-    }
-    free(saves); // Libérer le tableau principal
+    display_main_menu();
 
     //destroy_maze(m);
-    //destroy_curses();
+    destroy_curses();
 
     return EXIT_SUCCESS;
 }

@@ -266,13 +266,17 @@ void display_main_menu() {
             draw_borders(maze_win);
             wrefresh(maze_win);
 
-            const char *options_maze[] = { "maze1", "maze2", "maze3" };
-            int n_options_maze = 3;
-            int menu_start_row_maze = (win_height - n_options_maze) / 2;
+            int file_count;
+            char **saves = list_saves_files("data/", &file_count);
+            int menu_start_row_maze = (win_height - file_count) / 2;
 
-            menu_selection(maze_win, options_maze, n_options_maze, menu_start_row_maze);
+            menu_selection(maze_win, (const char **)saves, file_count, menu_start_row_maze);
 
             delwin(maze_win);
+            for (int i = 0; i < file_count; i++) {
+                free(saves[i]);
+            }
+            free(saves);
 
             break;
         }

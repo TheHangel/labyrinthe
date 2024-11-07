@@ -177,10 +177,7 @@ void display_game(maze *m) {
 
         direction d = get_direction_from_input(c);
         if (d != INVALID) {
-            int old_x = m->player->x;
-            int old_y = m->player->y;
-            move_player(m, d);
-            has_moved = (old_x != m->player->x || old_y != m->player->y);
+            has_moved = move_player(m, d);
         }
 
         if (has_moved) {

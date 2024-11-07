@@ -20,7 +20,7 @@ int move_player(maze *m, direction dir) {
     int new_y = p->y + dy;
 
     if (new_x < 0 || new_x >= m->length || new_y < 0 || new_y >= m->width) {
-        return -1;
+        return 0;
     }
 
     if (m->content[new_x][new_y] != WALL) {

@@ -267,14 +267,29 @@ void display_main_menu() {
             char **saves = list_saves_files("data/", &file_count);
             int menu_start_row_maze = (win_height - file_count) / 2;
 
-            menu_selection(maze_win, (const char **)saves, file_count, menu_start_row_maze);
+            int res_maze = menu_selection(maze_win, (const char **)saves, file_count, menu_start_row_maze);
+
+            size_t total_length = strlen("data/") + strlen(saves[res_maze]) + strlen(".cfg") + 1;
+            char *filename = malloc(total_length);
+
+            strcpy(filename, "data/");
+            strcat(filename, saves[res_maze]);
+            strcat(filename, ".cfg");
+
+            maze *m = load_maze_from_file(filename);
+            if (m == NULL) {
+                break;
+            }
 
             delwin(maze_win);
             for (int i = 0; i < file_count; i++) {
                 free(saves[i]);
             }
+            free(filename);
             free(saves);
 
+            display_game(m);
+            destroy_maze(m);
             break;
         }
 

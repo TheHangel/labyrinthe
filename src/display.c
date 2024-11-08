@@ -227,6 +227,43 @@ void display_title(WINDOW *win) {
     wrefresh(win);
 }
 
+maze *display_maze_selection() {
+    int height, width;
+    getmaxyx(stdscr, height, width);
+    int win_height = 10;
+    int win_width = 35;
+    int starty = (height - win_height) / 2;
+    int startx = (width - win_width) / 2;
+
+    WINDOW *maze_win = newwin(win_height, win_width, starty, startx);
+    draw_borders(maze_win);
+    wrefresh(maze_win);
+
+    int file_count;
+    char **saves = list_saves_files("data/", &file_count);
+    int menu_start_row_maze = (win_height - file_count) / 2;
+
+    int res_maze = menu_selection(maze_win, (const char **)saves, file_count, menu_start_row_maze);
+
+    size_t total_length = strlen("data/") + strlen(saves[res_maze]) + strlen(".cfg") + 1;
+    char *filename = malloc(total_length);
+
+    strcpy(filename, "data/");
+    strcat(filename, saves[res_maze]);
+    strcat(filename, ".cfg");
+
+    maze *m = load_maze_from_file(filename);
+
+    delwin(maze_win);
+    for (int i = 0; i < file_count; i++) {
+        free(saves[i]);
+    }
+    free(filename);
+    free(saves);
+
+    return m;
+}
+
 void display_main_menu() {
     int height, width;
     getmaxyx(stdscr, height, width);
@@ -259,34 +296,9 @@ void display_main_menu() {
 
     switch (selection) {
         case PLAY: {
-            WINDOW *maze_win = newwin(win_height, win_width, starty, startx);
-            draw_borders(maze_win);
-            wrefresh(maze_win);
+            maze *m = display_maze_selection();
 
-            int file_count;
-            char **saves = list_saves_files("data/", &file_count);
-            int menu_start_row_maze = (win_height - file_count) / 2;
-
-            int res_maze = menu_selection(maze_win, (const char **)saves, file_count, menu_start_row_maze);
-
-            size_t total_length = strlen("data/") + strlen(saves[res_maze]) + strlen(".cfg") + 1;
-            char *filename = malloc(total_length);
-
-            strcpy(filename, "data/");
-            strcat(filename, saves[res_maze]);
-            strcat(filename, ".cfg");
-
-            maze *m = load_maze_from_file(filename);
-            if (m == NULL) {
-                break;
-            }
-
-            delwin(maze_win);
-            for (int i = 0; i < file_count; i++) {
-                free(saves[i]);
-            }
-            free(filename);
-            free(saves);
+            if(m == NULL) break;
 
             display_game(m);
             destroy_maze(m);

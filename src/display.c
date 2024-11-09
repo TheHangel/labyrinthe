@@ -35,7 +35,7 @@ void init_curses() {
     // Player colors
     init_pair(PLAYER, COLOR_WHITE, COLOR_CYAN);
 
-    init_pair(10, COLOR_WHITE, COLOR_BLACK);
+    init_pair(11, COLOR_WHITE, COLOR_BLACK);
 }
 
 int destroy_curses() {
@@ -244,13 +244,13 @@ void draw_textbox(WINDOW *win, int width, const char *label, char *text) {
     werase(win);
     box(win, 0, 0);
 
-    wattron(win, COLOR_PAIR(10));
+    wattron(win, COLOR_PAIR(11));
 
     mvwprintw(win, 0, 1, "%s", label);
 
     mvwprintw(win, 1, 1, "%-*s", width - 2, text);
 
-    wattroff(win, COLOR_PAIR(10));
+    wattroff(win, COLOR_PAIR(11));
 
     wrefresh(win);
 }
@@ -352,6 +352,12 @@ maze *display_create_maze() {
                     difficulty d = checkbox_checked ? HARD : NORMAL;
                     maze *m = new_maze(length, width);
                     generate_maze(m, d);
+                    // get file name from input_name
+                    char* filename = malloc(strlen(input_name) + 10);
+                    strcpy(filename, "data/");
+                    strcat(filename, input_name);
+                    strcat(filename, ".cfg");
+                    save_maze_to_file(filename, m);
                     return m;
                 }
                 break;

@@ -372,6 +372,12 @@ maze *display_create_maze() {
                     maze *m = new_maze(length, width);
                     generate_maze(m, d);
                     delwin(center_win);
+                    char* filename = malloc(strlen(input_name) + 10);
+                    strcpy(filename, "data/");
+                    strcat(filename, input_name);
+                    strcat(filename, ".cfg");
+                    save_maze_to_file(filename, m);
+                    free(filename);
                     return m;
                 }
                 break;

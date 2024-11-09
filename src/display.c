@@ -236,13 +236,47 @@ void draw_textbox(WINDOW *win, int y, int x, int width, char *text) {
 }
 
 void draw_checkbox(WINDOW *win, int y, int x, int checked) {
-    mvwprintw(win, y, x, "[%c] Case à cocher", checked ? 'X' : ' ');
+    mvwprintw(win, y, x, "[%c] Difficile", checked ? 'X' : ' ');
     wrefresh(win);
 }
 
 void draw_button(WINDOW *win, int y, int x, char *label) {
     mvwprintw(win, y, x, "[ %s ]", label);
     wrefresh(win);
+}
+
+void display_message_window(const char *message) {
+    int height, width;
+    getmaxyx(stdscr, height, width);
+
+    int win_height = 7;
+    int win_width = strlen(message) + 6;
+    if (win_width < 20) win_width = 20;
+
+    int starty = (height - win_height) / 2;
+    int startx = (width - win_width) / 2;
+
+    WINDOW *msg_win = newwin(win_height, win_width, starty, startx);
+    box(msg_win, 0, 0);
+
+    mvwprintw(msg_win, 2, (win_width - strlen(message)) / 2, "%s", message);
+
+    const char *button_label = "[ OK ]";
+    mvwprintw(msg_win, 4, (win_width - strlen(button_label)) / 2, "%s", button_label);
+
+    wrefresh(msg_win);
+
+    int ch;
+    while (1) {
+        ch = getch();
+        if (ch == '\n' || ch == 27) {
+            break;
+        }
+    }
+
+    delwin(msg_win);
+    touchwin(stdscr);
+    refresh();
 }
 
 maze *display_create_maze() {
@@ -281,6 +315,16 @@ maze *display_create_maze() {
                     refresh();
                     int length = atoi(input_length);
                     int width = atoi(input_width);
+                    if(length < 0 || width < 0) {
+                        display_message_window("Les dimensions doivent être valides.");
+                        break;
+                    }
+                    if (length < 5 || width < 5) {
+                        display_message_window("Les dimensions doivent être supérieures à 5.");
+                        break;
+                    }
+                    if (length % 2 == 0) length++;
+                    if (width % 2 == 0) width++;
                     difficulty d = checkbox_checked ? HARD : NORMAL;
                     maze *m = new_maze(length, width);
                     generate_maze(m, d);

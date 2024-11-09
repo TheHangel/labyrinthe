@@ -8,6 +8,8 @@
 #include "maze.h"
 #include "leaderboard.h"
 
+#define MAX_INPUT 50
+
 void init_curses() {
     setlocale(LC_ALL, "");
     initscr();
@@ -227,10 +229,134 @@ void display_title(WINDOW *win) {
     wrefresh(win);
 }
 
+void draw_textbox(WINDOW *win, int y, int x, int width, char *text) {
+    box(win, 0, 0);
+    mvwprintw(win, 1, 1, "%-*s", width - 2, text);
+    wrefresh(win);
+}
+
+void draw_checkbox(WINDOW *win, int y, int x, int checked) {
+    mvwprintw(win, y, x, "[%c] Case à cocher", checked ? 'X' : ' ');
+    wrefresh(win);
+}
+
+void draw_button(WINDOW *win, int y, int x, char *label) {
+    mvwprintw(win, y, x, "[ %s ]", label);
+    wrefresh(win);
+}
+
+maze *display_create_maze() {
+    char input_length[MAX_INPUT] = "";
+    char input_width[MAX_INPUT] = "";
+    int checkbox_checked = 0;
+    int choice = 0;
+
+    WINDOW *textbox_length_win = newwin(3, 40, 5, 10);
+    WINDOW *textbox_width_win = newwin(3, 40, 9, 10);
+    WINDOW *checkbox_win = newwin(3, 20, 12, 10);
+    WINDOW *button_win = newwin(3, 20, 15, 10);
+
+    draw_textbox(textbox_length_win, 5, 10, 40, input_length);
+    draw_textbox(textbox_width_win, 5, 10, 40, input_width);
+    draw_checkbox(checkbox_win, 1, 1, checkbox_checked);
+    draw_button(button_win, 1, 1, "Confirmer");
+
+    int ch;
+    int cursor_pos_length = 0, cursor_pos_width = 0;
+    while (1) {
+        ch = getch();
+        switch (ch) {
+            case KEY_UP:
+                if (choice > 0) choice--;
+                break;
+            case KEY_DOWN:
+                if (choice < 3) choice++;
+                break;
+            case ' ':
+            case '\n':
+                if (choice == 2) {
+                    checkbox_checked = !checkbox_checked;
+                    draw_checkbox(checkbox_win, 1, 1, checkbox_checked);
+                } else if (choice == 3 && ch == '\n') { // Appuyer sur le bouton "Confirmer"
+                    refresh();
+                    int length = atoi(input_length);
+                    int width = atoi(input_width);
+                    difficulty d = checkbox_checked ? HARD : NORMAL;
+                    maze *m = new_maze(length, width);
+                    generate_maze(m, d);
+                    return m;
+                }
+                break;
+            case KEY_BACKSPACE:
+            case 127:  // Pour certains terminaux, la touche backspace peut renvoyer 127
+            case 8:    // Pour d'autres, c'est 8
+                if (choice == 0 && cursor_pos_length > 0) {
+                    input_length[--cursor_pos_length] = '\0';
+                    draw_textbox(textbox_length_win, 5, 10, 40, input_length);
+                } else if (choice == 1 && cursor_pos_width > 0) {
+                    input_width[--cursor_pos_width] = '\0';
+                    draw_textbox(textbox_width_win, 5, 10, 40, input_width);
+                }
+                break;
+            default:
+                if (ch >= 32 && ch <= 126) {
+                    if (choice == 0 && cursor_pos_length < MAX_INPUT - 1) {
+                        input_length[cursor_pos_length++] = ch;
+                        input_length[cursor_pos_length] = '\0';
+                        draw_textbox(textbox_length_win, 5, 10, 40, input_length);
+                    } else if (choice == 1 && cursor_pos_width < MAX_INPUT - 1) {
+                        input_width[cursor_pos_width++] = ch;
+                        input_width[cursor_pos_width] = '\0';
+                        draw_textbox(textbox_width_win, 5, 10, 40, input_width);
+                    }
+                }
+                break;
+        }
+
+        if (choice == 0) {
+            wattron(textbox_length_win, A_REVERSE);
+            draw_textbox(textbox_length_win, 5, 10, 40, input_length);
+            wattroff(textbox_length_win, A_REVERSE);
+        } else {
+            draw_textbox(textbox_length_win, 5, 10, 40, input_length);
+        }
+
+        if (choice == 1) {
+            wattron(textbox_width_win, A_REVERSE);
+            draw_textbox(textbox_width_win, 5, 10, 40, input_width);
+            wattroff(textbox_width_win, A_REVERSE);
+        } else {
+            draw_textbox(textbox_width_win, 5, 10, 40, input_width);
+        }
+
+        if (choice == 2) {
+            wattron(checkbox_win, A_REVERSE);
+            draw_checkbox(checkbox_win, 1, 1, checkbox_checked);
+            wattroff(checkbox_win, A_REVERSE);
+        } else {
+            draw_checkbox(checkbox_win, 1, 1, checkbox_checked);
+        }
+
+        if (choice == 3) {
+            wattron(button_win, A_REVERSE);
+            draw_button(button_win, 1, 1, "Confirmer");
+            wattroff(button_win, A_REVERSE);
+        } else {
+            draw_button(button_win, 1, 1, "Confirmer");
+        }
+    }
+
+    delwin(textbox_length_win);
+    delwin(textbox_width_win);
+    delwin(checkbox_win);
+    delwin(button_win);
+    return NULL;
+}
+
 maze *display_maze_selection() {
     int height, width;
     getmaxyx(stdscr, height, width);
-    int win_height = 10;
+    int win_height = 12;
     int win_width = 35;
     int starty = (height - win_height) / 2;
     int startx = (width - win_width) / 2;
@@ -241,24 +367,36 @@ maze *display_maze_selection() {
 
     int file_count;
     char **saves = list_saves_files("data/", &file_count);
-    int menu_start_row_maze = (win_height - file_count) / 2;
+    int menu_start_row_maze = (win_height - file_count - 1) / 2;
 
-    int res_maze = menu_selection(maze_win, (const char **)saves, file_count, menu_start_row_maze);
+    const char *menu_options[file_count + 1];
+    for (int i = 0; i < file_count; i++) {
+        menu_options[i] = saves[i];
+    }
+    menu_options[file_count] = "Create maze";
 
-    size_t total_length = strlen("data/") + strlen(saves[res_maze]) + strlen(".cfg") + 1;
-    char *filename = malloc(total_length);
+    int res_maze = menu_selection(maze_win, menu_options, file_count + 1, menu_start_row_maze);
 
-    strcpy(filename, "data/");
-    strcat(filename, saves[res_maze]);
-    strcat(filename, ".cfg");
+    maze *m = NULL;
+    if (res_maze == file_count) {
+        m = display_create_maze();
+    } else {
+        size_t total_length = strlen("data/") + strlen(saves[res_maze]) + strlen(".cfg") + 1;
+        char *filename = malloc(total_length);
 
-    maze *m = load_maze_from_file(filename);
+        strcpy(filename, "data/");
+        strcat(filename, saves[res_maze]);
+        strcat(filename, ".cfg");
+
+        m = load_maze_from_file(filename);
+
+        free(filename);
+    }
 
     delwin(maze_win);
     for (int i = 0; i < file_count; i++) {
         free(saves[i]);
     }
-    free(filename);
     free(saves);
 
     return m;

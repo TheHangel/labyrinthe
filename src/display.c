@@ -268,7 +268,7 @@ void display_message_window(const char *message) {
 
     int ch;
     while (1) {
-        ch = getch();
+        ch = wgetch(msg_win);
         if (ch == '\n' || ch == 27) {
             break;
         }
@@ -480,12 +480,19 @@ void display_main_menu() {
         case PLAY: {
             maze *m = display_maze_selection();
 
-            if(m == NULL) break;
+            if(m == NULL) {
+                display_message_window("Problème de chargement du labyrinthe.");
+                break;
+            }
 
             display_game(m);
             destroy_maze(m);
             break;
         }
+
+        case HOW_TO_PLAY:
+            display_message_window("Utilisez les touches fléchées pour vous déplacer.\nTrouvez la sortie pour gagner.");
+            break;
 
         default:
             break;
@@ -493,5 +500,4 @@ void display_main_menu() {
 
     delwin(win);
     delwin(sel_win);
-    endwin();
 }

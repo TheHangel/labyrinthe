@@ -281,21 +281,71 @@ maze* load_maze_from_file(const char *filename) {
     if (!file) return NULL;
 
     maze *m = (maze*) malloc(sizeof(maze));
-    fread(&m->length, sizeof(int), 1, file);
-    fread(&m->width, sizeof(int), 1, file);
+    if (!m) {
+        fclose(file);
+        return NULL;
+    }
+
+    if (fread(&m->length, sizeof(int), 1, file) != 1 || fread(&m->width, sizeof(int), 1, file) != 1) {
+        fclose(file);
+        free(m);
+        return NULL;
+    }
 
     m->content = (cell**) malloc(m->length * sizeof(cell*));
+    if (!m->content) {
+        fclose(file);
+        free(m);
+        return NULL;
+    }
     for (int i = 0; i < m->length; i++) {
         m->content[i] = (cell*) malloc(m->width * sizeof(cell));
-        fread(m->content[i], sizeof(cell), m->width, file);
+        if (!m->content[i] || fread(m->content[i], sizeof(cell), m->width, file) != (size_t)m->width) {
+            for (int j = 0; j <= i; j++) {
+                free(m->content[j]);
+            }
+            free(m->content);
+            free(m);
+            fclose(file);
+            return NULL;
+        }
     }
 
     m->player = (player*) malloc(sizeof(player));
-    fread(m->player, sizeof(player), 1, file);
+    if (!m->player || fread(m->player, sizeof(player), 1, file) != 1) {
+        for (int i = 0; i < m->length; i++) {
+            free(m->content[i]);
+        }
+        free(m->content);
+        free(m->player);
+        free(m);
+        fclose(file);
+        return NULL;
+    }
 
-    fread(&m->n_monsters, sizeof(int), 1, file);
+    if (fread(&m->n_monsters, sizeof(int), 1, file) != 1) {
+        free(m->player);
+        for (int i = 0; i < m->length; i++) {
+            free(m->content[i]);
+        }
+        free(m->content);
+        free(m);
+        fclose(file);
+        return NULL;
+    }
+
     m->monsters = (monster*) malloc(m->n_monsters * sizeof(monster));
-    fread(m->monsters, sizeof(monster), m->n_monsters, file);
+    if (!m->monsters || fread(m->monsters, sizeof(monster), m->n_monsters, file) != (size_t)m->n_monsters) {
+        free(m->monsters);
+        free(m->player);
+        for (int i = 0; i < m->length; i++) {
+            free(m->content[i]);
+        }
+        free(m->content);
+        free(m);
+        fclose(file);
+        return NULL;
+    }
 
     fclose(file);
 
@@ -307,7 +357,7 @@ char** list_saves_files(const char *directory, int *file_count) {
     DIR *dir;
     struct dirent *entry;
     char **file_names = malloc(MAX_FILES * sizeof(char*));
-    *file_count = 0; // Initialiser le compteur de fichiers
+    *file_count = 0;
 
     if ((dir = opendir(directory)) == NULL) {
         perror("Erreur lors de l'ouverture du dossier");
@@ -316,21 +366,20 @@ char** list_saves_files(const char *directory, int *file_count) {
     }
 
     while ((entry = readdir(dir)) != NULL) {
-        if (entry->d_type == DT_REG) { // Vérifier si c'est un fichier
+        if (entry->d_type == DT_REG) {
             char *dot = strrchr(entry->d_name, '.');
-            if (dot && strcmp(dot, ".cfg") == 0) { // Vérifier l'extension .cfg
+            if (dot && strcmp(dot, ".cfg") == 0) {
                 size_t name_len = dot - entry->d_name;
                 file_names[*file_count] = malloc((name_len + 1) * sizeof(char));
                 strncpy(file_names[*file_count], entry->d_name, name_len);
                 file_names[*file_count][name_len] = '\0';
                 (*file_count)++;
-                if (*file_count >= MAX_FILES) break; // Limite de sécurité
+                if (*file_count >= MAX_FILES) break;
             }
         }
     }
     closedir(dir);
 
-    // Redimensionner le tableau pour libérer la mémoire inutile si besoin
     file_names = realloc(file_names, *file_count * sizeof(char*));
 
     return file_names;

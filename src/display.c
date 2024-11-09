@@ -296,7 +296,6 @@ void display_message_window(const char *message) {
 
     delwin(msg_win);
     touchwin(stdscr);
-    refresh();
 }
 
 maze *display_create_maze() {
@@ -336,6 +335,14 @@ maze *display_create_maze() {
     while (1) {
         ch = wgetch(center_win);
         switch (ch) {
+            case 27:
+                delwin(textbox_name_win);
+                delwin(textbox_length_win);
+                delwin(textbox_width_win);
+                delwin(checkbox_win);
+                delwin(button_win);
+                delwin(center_win);
+                return (maze*) -1; // Indiquer un retour en arrière
             case KEY_UP:
                 if (choice > 0) choice--;
                 break;
@@ -348,7 +355,6 @@ maze *display_create_maze() {
                     checkbox_checked = !checkbox_checked;
                     draw_checkbox(checkbox_win, 1, 1, checkbox_checked);
                 } else if (choice == 4 && ch == '\n') { // Appuyer sur le bouton "Confirmer"
-                    refresh();
                     int length = atoi(input_length);
                     int width = atoi(input_width);
                     if (length == 0 || width == 0) {
@@ -359,6 +365,7 @@ maze *display_create_maze() {
                         display_message_window("Dimensions must be greater or equal to 5.");
                         break;
                     }
+                    refresh();
                     if (length % 2 == 0) length++;
                     if (width % 2 == 0) width++;
                     difficulty d = checkbox_checked ? HARD : NORMAL;
@@ -478,6 +485,13 @@ maze *display_maze_selection() {
     maze *m = NULL;
     if (res_maze == file_count) {
         m = display_create_maze();
+        if(m == NULL) {
+            for (int i = 0; i < file_count; i++) {
+                free(saves[i]);
+            }
+            free(saves);
+            return (maze*) -1;
+        }
     } else {
         size_t total_length = strlen("data/") + strlen(saves[res_maze]) + strlen(".cfg") + 1;
         char *filename = malloc(total_length);
@@ -533,8 +547,12 @@ void display_main_menu() {
             case PLAY: {
                 maze *m = display_maze_selection();
 
+                if (m == (maze*) -1) {  // Retour en arrière sans message d'erreur
+                    break;
+                }
+
                 if (m == NULL) {
-                    display_message_window("Problème de chargement du labyrinthe.");
+                    display_message_window("Cannot load maze file.");
                     break;
                 }
 
@@ -544,7 +562,7 @@ void display_main_menu() {
             }
 
             case HOW_TO_PLAY:
-                display_message_window("Utilisez les touches fléchées pour vous déplacer.\nTrouvez la sortie pour gagner.");
+                display_message_window("Use arrow keys to move. Press ESC to quit.");
                 break;
 
             case QUIT:

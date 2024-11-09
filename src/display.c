@@ -568,7 +568,7 @@ void display_main_menu() {
             }
 
             case HOW_TO_PLAY:
-                display_message_window("Use arrow keys to move. Press ESC to quit.");
+                display_message_window("Use ZQSD to move. Press ESC to quit.");
                 break;
 
             case QUIT:

@@ -229,7 +229,7 @@ void display_title(WINDOW *win) {
     wrefresh(win);
 }
 
-void draw_textbox(WINDOW *win, int y, int x, int width, char *text) {
+void draw_textbox(WINDOW *win, int width, char *text) {
     box(win, 0, 0);
     mvwprintw(win, 1, 1, "%-*s", width - 2, text);
     wrefresh(win);
@@ -290,8 +290,8 @@ maze *display_create_maze() {
     WINDOW *checkbox_win = newwin(3, 20, 12, 10);
     WINDOW *button_win = newwin(3, 20, 15, 10);
 
-    draw_textbox(textbox_length_win, 5, 10, 40, input_length);
-    draw_textbox(textbox_width_win, 5, 10, 40, input_width);
+    draw_textbox(textbox_length_win, 40, input_length);
+    draw_textbox(textbox_width_win, 40, input_width);
     draw_checkbox(checkbox_win, 1, 1, checkbox_checked);
     draw_button(button_win, 1, 1, "Confirmer");
 
@@ -315,12 +315,12 @@ maze *display_create_maze() {
                     refresh();
                     int length = atoi(input_length);
                     int width = atoi(input_width);
-                    if(length < 0 || width < 0) {
+                    if(length == 0 || width == 0) {
                         display_message_window("Les dimensions doivent être valides.");
                         break;
                     }
-                    if (length < 5 || width < 5) {
-                        display_message_window("Les dimensions doivent être supérieures à 5.");
+                    else if (length < 5 || width < 5) {
+                        display_message_window("Les dimensions doivent être supérieures ou égales à 5.");
                         break;
                     }
                     if (length % 2 == 0) length++;
@@ -336,10 +336,10 @@ maze *display_create_maze() {
             case 8:    // Pour d'autres, c'est 8
                 if (choice == 0 && cursor_pos_length > 0) {
                     input_length[--cursor_pos_length] = '\0';
-                    draw_textbox(textbox_length_win, 5, 10, 40, input_length);
+                    draw_textbox(textbox_length_win, 40, input_length);
                 } else if (choice == 1 && cursor_pos_width > 0) {
                     input_width[--cursor_pos_width] = '\0';
-                    draw_textbox(textbox_width_win, 5, 10, 40, input_width);
+                    draw_textbox(textbox_width_win, 40, input_width);
                 }
                 break;
             default:
@@ -347,11 +347,11 @@ maze *display_create_maze() {
                     if (choice == 0 && cursor_pos_length < MAX_INPUT - 1) {
                         input_length[cursor_pos_length++] = ch;
                         input_length[cursor_pos_length] = '\0';
-                        draw_textbox(textbox_length_win, 5, 10, 40, input_length);
+                        draw_textbox(textbox_length_win, 40, input_length);
                     } else if (choice == 1 && cursor_pos_width < MAX_INPUT - 1) {
                         input_width[cursor_pos_width++] = ch;
                         input_width[cursor_pos_width] = '\0';
-                        draw_textbox(textbox_width_win, 5, 10, 40, input_width);
+                        draw_textbox(textbox_width_win, 40, input_width);
                     }
                 }
                 break;
@@ -359,18 +359,18 @@ maze *display_create_maze() {
 
         if (choice == 0) {
             wattron(textbox_length_win, A_REVERSE);
-            draw_textbox(textbox_length_win, 5, 10, 40, input_length);
+            draw_textbox(textbox_length_win, 40, input_length);
             wattroff(textbox_length_win, A_REVERSE);
         } else {
-            draw_textbox(textbox_length_win, 5, 10, 40, input_length);
+            draw_textbox(textbox_length_win, 40, input_length);
         }
 
         if (choice == 1) {
             wattron(textbox_width_win, A_REVERSE);
-            draw_textbox(textbox_width_win, 5, 10, 40, input_width);
+            draw_textbox(textbox_width_win, 40, input_width);
             wattroff(textbox_width_win, A_REVERSE);
         } else {
-            draw_textbox(textbox_width_win, 5, 10, 40, input_width);
+            draw_textbox(textbox_width_win, 40, input_width);
         }
 
         if (choice == 2) {

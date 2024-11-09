@@ -449,55 +449,57 @@ maze *display_maze_selection() {
 void display_main_menu() {
     int height, width;
     getmaxyx(stdscr, height, width);
-    WINDOW *win = newwin(height, width, 0, 0);
-    draw_borders(win);
 
-    display_title(win);
+    while (1) {
+        WINDOW *win = newwin(height, width, 0, 0);
+        draw_borders(win);
+        display_title(win);
 
-    int win_height = 10;
-    int win_width = 35;
-    int starty = (height - win_height) / 2;
-    int startx = (width - win_width) / 2;
+        int win_height = 10;
+        int win_width = 35;
+        int starty = (height - win_height) / 2;
+        int startx = (width - win_width) / 2;
+        WINDOW *sel_win = newwin(win_height, win_width, starty, startx);
+        draw_borders(sel_win);
 
-    WINDOW *sel_win = newwin(win_height, win_width, starty, startx);
-    draw_borders(sel_win);
+        wrefresh(sel_win);
 
-    wrefresh(sel_win);
+        const char *options[] = { "Play", "How to play", "Quit" };
+        int n_options = 3;
+        int menu_start_row = (win_height - n_options) / 2;
+        int selection = menu_selection(sel_win, options, n_options, menu_start_row);
 
-    const char *options[] = { "Play", "How to play", "Quit" };
-    int n_options = 3;
+        enum {
+            PLAY,
+            HOW_TO_PLAY,
+            QUIT
+        };
 
-    int menu_start_row = (win_height - n_options) / 2;
-    int selection = menu_selection(sel_win, options, n_options, menu_start_row);
+        switch (selection) {
+            case PLAY: {
+                maze *m = display_maze_selection();
 
-    enum {
-        PLAY,
-        HOW_TO_PLAY,
-        QUIT
-    };
+                if (m == NULL) {
+                    display_message_window("Problème de chargement du labyrinthe.");
+                    break;
+                }
 
-    switch (selection) {
-        case PLAY: {
-            maze *m = display_maze_selection();
-
-            if(m == NULL) {
-                display_message_window("Problème de chargement du labyrinthe.");
+                display_game(m);
+                destroy_maze(m);
                 break;
             }
 
-            display_game(m);
-            destroy_maze(m);
-            break;
+            case HOW_TO_PLAY:
+                display_message_window("Utilisez les touches fléchées pour vous déplacer.\nTrouvez la sortie pour gagner.");
+                break;
+
+            case QUIT:
+                delwin(win);
+                delwin(sel_win);
+                return;
         }
 
-        case HOW_TO_PLAY:
-            display_message_window("Utilisez les touches fléchées pour vous déplacer.\nTrouvez la sortie pour gagner.");
-            break;
-
-        default:
-            break;
+        delwin(win);
+        delwin(sel_win);
     }
-
-    delwin(win);
-    delwin(sel_win);
 }

@@ -255,9 +255,8 @@ void draw_textbox(WINDOW *win, int width, const char *label, char *text) {
     wrefresh(win);
 }
 
-
 void draw_checkbox(WINDOW *win, int y, int x, int checked) {
-    mvwprintw(win, y, x, "[%c] Difficile", checked ? 'X' : ' ');
+    mvwprintw(win, y, x, "[%c] Hard Mode", checked ? 'X' : ' ');
     wrefresh(win);
 }
 
@@ -301,28 +300,41 @@ void display_message_window(const char *message) {
 }
 
 maze *display_create_maze() {
+    int win_height = 20;
+    int win_width = 50;
+    int height, width;
+    getmaxyx(stdscr, height, width);
+    int starty = (height - win_height) / 2;
+    int startx = (width - win_width) / 2;
+
+    WINDOW *center_win = newwin(win_height, win_width, starty, startx);
+    box(center_win, 0, 0);
+    wrefresh(center_win);
+
+    keypad(center_win, TRUE);
+
     char input_name[MAX_INPUT] = "";
     char input_length[MAX_INPUT] = "";
     char input_width[MAX_INPUT] = "";
     int checkbox_checked = 0;
     int choice = 0;
 
-    WINDOW *textbox_name_win = newwin(3, 40, 3, 10);
-    WINDOW *textbox_length_win = newwin(3, 40, 7, 10);
-    WINDOW *textbox_width_win = newwin(3, 40, 11, 10);
-    WINDOW *checkbox_win = newwin(3, 20, 15, 10);
-    WINDOW *button_win = newwin(3, 20, 18, 10);
+    WINDOW *textbox_name_win = derwin(center_win, 3, win_width - 2, 2, 1);
+    WINDOW *textbox_length_win = derwin(center_win, 3, win_width - 2, 6, 1);
+    WINDOW *textbox_width_win = derwin(center_win, 3, win_width - 2, 10, 1);
+    WINDOW *checkbox_win = derwin(center_win, 3, win_width - 2, 14, 1);
+    WINDOW *button_win = derwin(center_win, 3, win_width - 2, 16, 1);
 
-    draw_textbox(textbox_name_win, 40, "Nom", input_name);
-    draw_textbox(textbox_length_win, 40, "Longueur", input_length);
-    draw_textbox(textbox_width_win, 40, "Largeur", input_width);
+    draw_textbox(textbox_name_win, win_width - 4, "Name:", input_name);
+    draw_textbox(textbox_length_win, win_width - 4, "Length:", input_length);
+    draw_textbox(textbox_width_win, win_width - 4, "Width:", input_width);
     draw_checkbox(checkbox_win, 1, 1, checkbox_checked);
-    draw_button(button_win, 1, 1, "Confirmer");
+    draw_button(button_win, 1, 1, "Create");
 
     int ch;
     int cursor_pos_name = 0, cursor_pos_length = 0, cursor_pos_width = 0;
     while (1) {
-        ch = getch();
+        ch = wgetch(center_win);
         switch (ch) {
             case KEY_UP:
                 if (choice > 0) choice--;
@@ -340,11 +352,11 @@ maze *display_create_maze() {
                     int length = atoi(input_length);
                     int width = atoi(input_width);
                     if (length == 0 || width == 0) {
-                        display_message_window("Les dimensions doivent être valides.");
+                        display_message_window("Invalid Dimensions.");
                         break;
                     }
                     else if (length < 5 || width < 5) {
-                        display_message_window("Les dimensions doivent être supérieures ou égales à 5.");
+                        display_message_window("Dimensions must be greater or equal to 5.");
                         break;
                     }
                     if (length % 2 == 0) length++;
@@ -352,12 +364,7 @@ maze *display_create_maze() {
                     difficulty d = checkbox_checked ? HARD : NORMAL;
                     maze *m = new_maze(length, width);
                     generate_maze(m, d);
-                    // get file name from input_name
-                    char* filename = malloc(strlen(input_name) + 10);
-                    strcpy(filename, "data/");
-                    strcat(filename, input_name);
-                    strcat(filename, ".cfg");
-                    save_maze_to_file(filename, m);
+                    delwin(center_win);
                     return m;
                 }
                 break;
@@ -366,13 +373,13 @@ maze *display_create_maze() {
             case 8:
                 if (choice == 0 && cursor_pos_name > 0) {
                     input_name[--cursor_pos_name] = '\0';
-                    draw_textbox(textbox_name_win, 40, "Nom", input_name);
+                    draw_textbox(textbox_name_win, win_width - 4, "Name:", input_name);
                 } else if (choice == 1 && cursor_pos_length > 0) {
                     input_length[--cursor_pos_length] = '\0';
-                    draw_textbox(textbox_length_win, 40, "Longueur", input_length);
+                    draw_textbox(textbox_length_win, win_width - 4, "Length:", input_length);
                 } else if (choice == 2 && cursor_pos_width > 0) {
                     input_width[--cursor_pos_width] = '\0';
-                    draw_textbox(textbox_width_win, 40, "Largeur", input_width);
+                    draw_textbox(textbox_width_win, win_width - 4, "Width:", input_width);
                 }
                 break;
             default:
@@ -380,15 +387,15 @@ maze *display_create_maze() {
                     if (choice == 0 && cursor_pos_name < MAX_INPUT - 1) {
                         input_name[cursor_pos_name++] = ch;
                         input_name[cursor_pos_name] = '\0';
-                        draw_textbox(textbox_name_win, 40, "Nom", input_name);
+                        draw_textbox(textbox_name_win, win_width - 4, "Name:", input_name);
                     } else if (choice == 1 && cursor_pos_length < MAX_INPUT - 1) {
                         input_length[cursor_pos_length++] = ch;
                         input_length[cursor_pos_length] = '\0';
-                        draw_textbox(textbox_length_win, 40, "Longueur", input_length);
+                        draw_textbox(textbox_length_win, win_width - 4, "Length:", input_length);
                     } else if (choice == 2 && cursor_pos_width < MAX_INPUT - 1) {
                         input_width[cursor_pos_width++] = ch;
                         input_width[cursor_pos_width] = '\0';
-                        draw_textbox(textbox_width_win, 40, "Largeur", input_width);
+                        draw_textbox(textbox_width_win, win_width - 4, "Width:", input_width);
                     }
                 }
                 break;
@@ -396,26 +403,26 @@ maze *display_create_maze() {
 
         if (choice == 0) {
             wattron(textbox_name_win, A_REVERSE);
-            draw_textbox(textbox_name_win, 40, "Nom", input_name);
+            draw_textbox(textbox_name_win, win_width - 4, "Name:", input_name);
             wattroff(textbox_name_win, A_REVERSE);
         } else {
-            draw_textbox(textbox_name_win, 40, "Nom", input_name);
+            draw_textbox(textbox_name_win, win_width - 4, "Name:", input_name);
         }
 
         if (choice == 1) {
             wattron(textbox_length_win, A_REVERSE);
-            draw_textbox(textbox_length_win, 40, "Longueur", input_length);
+            draw_textbox(textbox_length_win, win_width - 4, "Length:", input_length);
             wattroff(textbox_length_win, A_REVERSE);
         } else {
-            draw_textbox(textbox_length_win, 40, "Longueur", input_length);
+            draw_textbox(textbox_length_win, win_width - 4, "Length:", input_length);
         }
 
         if (choice == 2) {
             wattron(textbox_width_win, A_REVERSE);
-            draw_textbox(textbox_width_win, 40, "Largeur", input_width);
+            draw_textbox(textbox_width_win, win_width - 4, "Width:", input_width);
             wattroff(textbox_width_win, A_REVERSE);
         } else {
-            draw_textbox(textbox_width_win, 40, "Largeur", input_width);
+            draw_textbox(textbox_width_win, win_width - 4, "Width:", input_width);
         }
 
         if (choice == 3) {
@@ -428,10 +435,10 @@ maze *display_create_maze() {
 
         if (choice == 4) {
             wattron(button_win, A_REVERSE);
-            draw_button(button_win, 1, 1, "Confirmer");
+            draw_button(button_win, 1, 1, "Create");
             wattroff(button_win, A_REVERSE);
         } else {
-            draw_button(button_win, 1, 1, "Confirmer");
+            draw_button(button_win, 1, 1, "Create");
         }
     }
 
@@ -440,6 +447,7 @@ maze *display_create_maze() {
     delwin(textbox_width_win);
     delwin(checkbox_win);
     delwin(button_win);
+    delwin(center_win);
     return NULL;
 }
 

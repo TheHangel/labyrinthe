@@ -34,6 +34,8 @@ void init_curses() {
 
     // Player colors
     init_pair(PLAYER, COLOR_WHITE, COLOR_CYAN);
+
+    init_pair(10, COLOR_WHITE, COLOR_BLACK);
 }
 
 int destroy_curses() {
@@ -238,11 +240,21 @@ void display_title(WINDOW *win) {
     wrefresh(win);
 }
 
-void draw_textbox(WINDOW *win, int width, char *text) {
+void draw_textbox(WINDOW *win, int width, const char *label, char *text) {
+    werase(win);
     box(win, 0, 0);
+
+    wattron(win, COLOR_PAIR(10));
+
+    mvwprintw(win, 0, 1, "%s", label);
+
     mvwprintw(win, 1, 1, "%-*s", width - 2, text);
+
+    wattroff(win, COLOR_PAIR(10));
+
     wrefresh(win);
 }
+
 
 void draw_checkbox(WINDOW *win, int y, int x, int checked) {
     mvwprintw(win, y, x, "[%c] Difficile", checked ? 'X' : ' ');
@@ -289,23 +301,26 @@ void display_message_window(const char *message) {
 }
 
 maze *display_create_maze() {
+    char input_name[MAX_INPUT] = "";
     char input_length[MAX_INPUT] = "";
     char input_width[MAX_INPUT] = "";
     int checkbox_checked = 0;
     int choice = 0;
 
-    WINDOW *textbox_length_win = newwin(3, 40, 5, 10);
-    WINDOW *textbox_width_win = newwin(3, 40, 9, 10);
-    WINDOW *checkbox_win = newwin(3, 20, 12, 10);
-    WINDOW *button_win = newwin(3, 20, 15, 10);
+    WINDOW *textbox_name_win = newwin(3, 40, 3, 10);
+    WINDOW *textbox_length_win = newwin(3, 40, 7, 10);
+    WINDOW *textbox_width_win = newwin(3, 40, 11, 10);
+    WINDOW *checkbox_win = newwin(3, 20, 15, 10);
+    WINDOW *button_win = newwin(3, 20, 18, 10);
 
-    draw_textbox(textbox_length_win, 40, input_length);
-    draw_textbox(textbox_width_win, 40, input_width);
+    draw_textbox(textbox_name_win, 40, "Nom", input_name);
+    draw_textbox(textbox_length_win, 40, "Longueur", input_length);
+    draw_textbox(textbox_width_win, 40, "Largeur", input_width);
     draw_checkbox(checkbox_win, 1, 1, checkbox_checked);
     draw_button(button_win, 1, 1, "Confirmer");
 
     int ch;
-    int cursor_pos_length = 0, cursor_pos_width = 0;
+    int cursor_pos_name = 0, cursor_pos_length = 0, cursor_pos_width = 0;
     while (1) {
         ch = getch();
         switch (ch) {
@@ -313,18 +328,18 @@ maze *display_create_maze() {
                 if (choice > 0) choice--;
                 break;
             case KEY_DOWN:
-                if (choice < 3) choice++;
+                if (choice < 4) choice++;
                 break;
             case ' ':
             case '\n':
-                if (choice == 2) {
+                if (choice == 3) {  // Toggle la case à cocher
                     checkbox_checked = !checkbox_checked;
                     draw_checkbox(checkbox_win, 1, 1, checkbox_checked);
-                } else if (choice == 3 && ch == '\n') { // Appuyer sur le bouton "Confirmer"
+                } else if (choice == 4 && ch == '\n') { // Appuyer sur le bouton "Confirmer"
                     refresh();
                     int length = atoi(input_length);
                     int width = atoi(input_width);
-                    if(length == 0 || width == 0) {
+                    if (length == 0 || width == 0) {
                         display_message_window("Les dimensions doivent être valides.");
                         break;
                     }
@@ -341,48 +356,63 @@ maze *display_create_maze() {
                 }
                 break;
             case KEY_BACKSPACE:
-            case 127:  // Pour certains terminaux, la touche backspace peut renvoyer 127
-            case 8:    // Pour d'autres, c'est 8
-                if (choice == 0 && cursor_pos_length > 0) {
+            case 127:
+            case 8:
+                if (choice == 0 && cursor_pos_name > 0) {
+                    input_name[--cursor_pos_name] = '\0';
+                    draw_textbox(textbox_name_win, 40, "Nom", input_name);
+                } else if (choice == 1 && cursor_pos_length > 0) {
                     input_length[--cursor_pos_length] = '\0';
-                    draw_textbox(textbox_length_win, 40, input_length);
-                } else if (choice == 1 && cursor_pos_width > 0) {
+                    draw_textbox(textbox_length_win, 40, "Longueur", input_length);
+                } else if (choice == 2 && cursor_pos_width > 0) {
                     input_width[--cursor_pos_width] = '\0';
-                    draw_textbox(textbox_width_win, 40, input_width);
+                    draw_textbox(textbox_width_win, 40, "Largeur", input_width);
                 }
                 break;
             default:
                 if (ch >= 32 && ch <= 126) {
-                    if (choice == 0 && cursor_pos_length < MAX_INPUT - 1) {
+                    if (choice == 0 && cursor_pos_name < MAX_INPUT - 1) {
+                        input_name[cursor_pos_name++] = ch;
+                        input_name[cursor_pos_name] = '\0';
+                        draw_textbox(textbox_name_win, 40, "Nom", input_name);
+                    } else if (choice == 1 && cursor_pos_length < MAX_INPUT - 1) {
                         input_length[cursor_pos_length++] = ch;
                         input_length[cursor_pos_length] = '\0';
-                        draw_textbox(textbox_length_win, 40, input_length);
-                    } else if (choice == 1 && cursor_pos_width < MAX_INPUT - 1) {
+                        draw_textbox(textbox_length_win, 40, "Longueur", input_length);
+                    } else if (choice == 2 && cursor_pos_width < MAX_INPUT - 1) {
                         input_width[cursor_pos_width++] = ch;
                         input_width[cursor_pos_width] = '\0';
-                        draw_textbox(textbox_width_win, 40, input_width);
+                        draw_textbox(textbox_width_win, 40, "Largeur", input_width);
                     }
                 }
                 break;
         }
 
         if (choice == 0) {
-            wattron(textbox_length_win, A_REVERSE);
-            draw_textbox(textbox_length_win, 40, input_length);
-            wattroff(textbox_length_win, A_REVERSE);
+            wattron(textbox_name_win, A_REVERSE);
+            draw_textbox(textbox_name_win, 40, "Nom", input_name);
+            wattroff(textbox_name_win, A_REVERSE);
         } else {
-            draw_textbox(textbox_length_win, 40, input_length);
+            draw_textbox(textbox_name_win, 40, "Nom", input_name);
         }
 
         if (choice == 1) {
-            wattron(textbox_width_win, A_REVERSE);
-            draw_textbox(textbox_width_win, 40, input_width);
-            wattroff(textbox_width_win, A_REVERSE);
+            wattron(textbox_length_win, A_REVERSE);
+            draw_textbox(textbox_length_win, 40, "Longueur", input_length);
+            wattroff(textbox_length_win, A_REVERSE);
         } else {
-            draw_textbox(textbox_width_win, 40, input_width);
+            draw_textbox(textbox_length_win, 40, "Longueur", input_length);
         }
 
         if (choice == 2) {
+            wattron(textbox_width_win, A_REVERSE);
+            draw_textbox(textbox_width_win, 40, "Largeur", input_width);
+            wattroff(textbox_width_win, A_REVERSE);
+        } else {
+            draw_textbox(textbox_width_win, 40, "Largeur", input_width);
+        }
+
+        if (choice == 3) {
             wattron(checkbox_win, A_REVERSE);
             draw_checkbox(checkbox_win, 1, 1, checkbox_checked);
             wattroff(checkbox_win, A_REVERSE);
@@ -390,7 +420,7 @@ maze *display_create_maze() {
             draw_checkbox(checkbox_win, 1, 1, checkbox_checked);
         }
 
-        if (choice == 3) {
+        if (choice == 4) {
             wattron(button_win, A_REVERSE);
             draw_button(button_win, 1, 1, "Confirmer");
             wattroff(button_win, A_REVERSE);
@@ -399,6 +429,7 @@ maze *display_create_maze() {
         }
     }
 
+    delwin(textbox_name_win);
     delwin(textbox_length_win);
     delwin(textbox_width_win);
     delwin(checkbox_win);

@@ -88,30 +88,22 @@ void display_end_window(maze *m) {
     int starty = (height - win_height) / 2;
     int startx = (width - win_width) / 2;
 
-    WINDOW *popup_win = newwin(win_height, win_width, starty, startx);
-
-    draw_borders(popup_win);
+    leaderboard lb = load_leaderboard_from_file(LEADERBOARD_FILE);
 
     player *p = m->player;
     int score = get_final_score(p);
     char *score_str = convert_score_to_string(score);
 
-    mvwprintw(popup_win, 2, (win_width - strlen(score_str)) / 2, score_str);
-    free(score_str);
-
-    wrefresh(popup_win);
-
-    leaderboard lb = load_leaderboard_from_file(LEADERBOARD_FILE);
     int last_score = lb.players[lb.count - 1].score;
-
     int is_winner = (score > last_score) || (lb.count < MAX_PLAYERS);
     const char *message = (is_winner) ? "NEW HIGH SCORE!" : "YOU WIN!";
 
-    char name[20];
+    char name[20] = "";
 
-    if(is_winner) {
-        mvwprintw(popup_win, 1, (win_width - strlen(message)) / 2, message);
-
+    if (is_winner) {
+        WINDOW *popup_win = newwin(win_height, win_width, starty, startx);
+        draw_borders(popup_win);
+        mvwprintw(popup_win, 2, (win_width - strlen(message)) / 2, message);
         mvwprintw(popup_win, 4, 1, "Enter your name: ");
         echo();
         wgetnstr(popup_win, name, 20);
@@ -124,42 +116,59 @@ void display_end_window(maze *m) {
         werase(popup_win);
         draw_borders(popup_win);
         wrefresh(popup_win);
+        delwin(popup_win);
     }
 
-    mvwprintw(popup_win, 1, (win_width - strlen(message)) / 2, message);
+    free(score_str);
 
-    const char *options[] = {
-        "Play again",
-        "Display Leaderboard",
-        "Quit to Main Menu",
-        "Quit game"
-    };
-    int n_options = 4;
-    int menu_start_row = 4;
+    while (1) {
+        WINDOW *popup_win = newwin(win_height, win_width, starty, startx);
+        draw_borders(popup_win);
 
-    int res = menu_selection(popup_win, options, n_options, menu_start_row);
+        mvwprintw(popup_win, 2, (win_width - strlen(message)) / 2, message);
+        const char *options[] = {
+            "Display Leaderboard",
+            "Quit to Main Menu",
+            "Quit game"
+        };
+        int n_options = 3;
+        int menu_start_row = 4;
 
-    enum {
-        PLAY_AGAIN,
-        DISPLAY_LEADERBOARD,
-        QUIT_MAIN_MENU,
-        QUIT_GAME
-    };
+        int res = menu_selection(popup_win, options, n_options, menu_start_row);
 
-    switch (res) {
-        case DISPLAY_LEADERBOARD: {
-            WINDOW *lb_w = newwin(win_height*2, win_width, starty, startx);
-            draw_borders(lb_w);
-            display_leaderboard(lb_w, &lb, name);
-            break;
+        enum {
+            DISPLAY_LEADERBOARD,
+            QUIT_MAIN_MENU,
+            QUIT_GAME
+        };
+
+        switch (res) {
+            case DISPLAY_LEADERBOARD: {
+                WINDOW *lb_w = newwin(win_height * 2, win_width, starty, startx);
+                draw_borders(lb_w);
+                display_leaderboard(lb_w, &lb, name);
+                werase(lb_w);
+                wrefresh(lb_w);
+                delwin(lb_w);
+                break;
+            }
+
+            case QUIT_MAIN_MENU:
+                delwin(popup_win);
+                destroy_leaderboard(&lb);
+                return;
+
+            case QUIT_GAME:
+                delwin(popup_win);
+                destroy_leaderboard(&lb);
+                endwin();
+                exit(0);
         }
 
-        default:
-            break;
-        }
+        delwin(popup_win);
+    }
 
     destroy_leaderboard(&lb);
-    delwin(popup_win);
 }
 
 void display_game(maze *m) {

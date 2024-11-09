@@ -33,13 +33,13 @@ void display_leaderboard(WINDOW *win, leaderboard *lb, const char *highlight_nam
     }
 
     wattron(win, A_REVERSE);
-    mvwprintw(win, height - 2, (width - strlen("Continue")) / 2, "Continue");
+    mvwprintw(win, height - 2, (width - strlen("OK")) / 2, "OK");
     wattroff(win, A_REVERSE);
 
     wrefresh(win);
 
     int ch;
-    while ((ch = wgetch(win)) != '\n' && ch != ENTER_KEY);
+    while ((ch = wgetch(win)) != '\n');
 }
 
 void add_player_to_leaderboard(leaderboard *lb, const char *name, int score) {

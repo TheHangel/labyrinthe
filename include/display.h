@@ -4,7 +4,11 @@
 #include <ncurses.h>
 #include "maze.h"
 
+extern int height;
+extern int width;
+
 void init_curses();
+void update_size();
 void draw_borders(WINDOW *win);
 int menu_selection(WINDOW* w, const char *options[], int n_options, int menu_start_row);
 void display_end_window(maze *m);

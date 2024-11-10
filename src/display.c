@@ -9,7 +9,8 @@
 #include "leaderboard.h"
 #include "messages.h"
 
-#define MAX_INPUT 50
+int height = 0;
+int width  = 0;
 
 void init_curses() {
     setlocale(LC_ALL, "");
@@ -37,6 +38,12 @@ void init_curses() {
     init_pair(PLAYER, COLOR_WHITE, COLOR_CYAN);
 
     init_pair(11, COLOR_WHITE, COLOR_BLACK);
+
+    update_size();
+}
+
+void update_size() {
+    getmaxyx(stdscr, height, width);
 }
 
 void draw_borders(WINDOW *win) {
@@ -79,9 +86,6 @@ int menu_selection(WINDOW* w, const char *options[], int n_options, int menu_sta
 }
 
 void display_end_window(maze *m) {
-    int height, width;
-    getmaxyx(stdscr, height, width);
-
     int win_height = 10;
     int win_width = 35;
     int starty = (height - win_height) / 2;
@@ -171,9 +175,6 @@ void display_end_window(maze *m) {
 }
 
 void display_game(maze *m) {
-    int height, width;
-    getmaxyx(stdscr, height, width);
-
     WINDOW *title_win = newwin(3, width, 0, 0);
     WINDOW *game_win = newwin(height - 6, width, 3, 0);
     WINDOW *player_data_win = newwin(3, width, height - 3, 0);
@@ -263,9 +264,6 @@ void draw_button(WINDOW *win, int y, int x, char *label) {
 }
 
 void display_message_window(const char *message) {
-    int height, width;
-    getmaxyx(stdscr, height, width);
-
     int win_height = 7;
     int win_width = strlen(message) + 6;
     if (win_width < 20) win_width = 20;
@@ -298,8 +296,6 @@ void display_message_window(const char *message) {
 maze *display_create_maze() {
     int win_height = 20;
     int win_width = 50;
-    int height, width;
-    getmaxyx(stdscr, height, width);
     int starty = (height - win_height) / 2;
     int startx = (width - win_width) / 2;
 
@@ -466,8 +462,6 @@ maze *display_create_maze() {
 }
 
 maze *display_maze_selection() {
-    int height, width;
-    getmaxyx(stdscr, height, width);
     int win_height = 12;
     int win_width = 35;
     int starty = (height - win_height) / 2;
@@ -522,9 +516,6 @@ maze *display_maze_selection() {
 }
 
 void display_main_menu() {
-    int height, width;
-    getmaxyx(stdscr, height, width);
-
     while (1) {
         WINDOW *win = newwin(height, width, 0, 0);
         draw_borders(win);

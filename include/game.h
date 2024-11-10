@@ -10,6 +10,8 @@ typedef int cell;
 #define MIN_SIZE 5
 #define MAX_SIZE 1024
 
+#define MAX_INPUT 50
+
 #define PLAYER   10
 #define PATH      0
 #define WALL     -1

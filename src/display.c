@@ -6,6 +6,7 @@
 #include "display.h"
 #include "game.h"
 #include "maze.h"
+#include "file.h"
 #include "leaderboard.h"
 #include "messages.h"
 
@@ -91,10 +92,7 @@ void display_end_window(maze *m) {
     int starty = (height - win_height) / 2;
     int startx = (width - win_width) / 2;
 
-    char* filename = malloc(strlen(m->name) + 12);
-    strcpy(filename, "data/");
-    strcat(filename, m->name);
-    strcat(filename, ".score");
+    char* filename = get_leaderboard_path(m);
 
     leaderboard lb = load_leaderboard_from_file(filename);
 
@@ -369,10 +367,7 @@ maze *display_create_maze() {
                     maze *m = new_maze(input_name, length, width);
                     generate_maze(m, d);
                     delwin(center_win);
-                    char* filename = malloc(strlen(input_name) + 10);
-                    strcpy(filename, "data/");
-                    strcat(filename, input_name);
-                    strcat(filename, ".cfg");
+                    char* filename = get_maze_path(m);
                     save_maze_to_file(filename, m);
                     free(filename);
                     return m;

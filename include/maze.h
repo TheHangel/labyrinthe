@@ -1,6 +1,7 @@
 #ifndef MAZE_H
 #define MAZE_H
 
+#include <ncurses.h>
 #include "game.h"
 #include "player.h"
 #include "monster.h"

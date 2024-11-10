@@ -51,6 +51,14 @@ void draw_borders(WINDOW *win) {
     box(win, 0, 0);
 }
 
+WINDOW* create_centered_window(int win_height, int win_width) {
+    int starty = (height - win_height) / 2;
+    int startx = (width - win_width) / 2;
+    WINDOW* w = newwin(win_height, win_width, starty, startx);
+    draw_borders(w);
+    return w;
+}
+
 int menu_selection(WINDOW* w, const char *options[], int n_options, int menu_start_row) {
     int choice = 0;
     int ch;
@@ -89,8 +97,6 @@ int menu_selection(WINDOW* w, const char *options[], int n_options, int menu_sta
 void display_end_window(maze *m) {
     int win_height = 10;
     int win_width = 35;
-    int starty = (height - win_height) / 2;
-    int startx = (width - win_width) / 2;
 
     char* filename = get_leaderboard_path(m->name);
 
@@ -107,8 +113,7 @@ void display_end_window(maze *m) {
     char name[MAX_INPUT_PLAYER] = "";
 
     if (is_winner) {
-        WINDOW *popup_win = newwin(win_height, win_width, starty, startx);
-        draw_borders(popup_win);
+        WINDOW *popup_win = create_centered_window(win_height, win_width);
         mvwprintw(popup_win, 2, (win_width - strlen(message)) / 2, message);
         mvwprintw(popup_win, 4, 1, LABEL_ENTER_NAME);
         echo();
@@ -129,8 +134,7 @@ void display_end_window(maze *m) {
     free(score_str);
 
     while (TRUE) {
-        WINDOW *popup_win = newwin(win_height, win_width, starty, startx);
-        draw_borders(popup_win);
+        WINDOW *popup_win = create_centered_window(win_height, win_width);
 
         mvwprintw(popup_win, 2, (win_width - strlen(message)) / 2, message);
         const char *options[] = {
@@ -145,8 +149,7 @@ void display_end_window(maze *m) {
 
         switch (res) {
             case END_DISPLAY_LEADERBOARD: {
-                WINDOW *lb_w = newwin(win_height * 2, win_width, starty, startx);
-                draw_borders(lb_w);
+                WINDOW *lb_w = create_centered_window(win_height * 2, win_width);
                 display_leaderboard(lb_w, &lb, name);
                 werase(lb_w);
                 wrefresh(lb_w);
@@ -173,8 +176,8 @@ void display_end_window(maze *m) {
 }
 
 void display_game(maze *m) {
-    WINDOW *title_win = newwin(3, width, 0, 0);
-    WINDOW *game_win = newwin(height - 6, width, 3, 0);
+    WINDOW *title_win       = newwin(3, width, 0, 0);
+    WINDOW *game_win        = newwin(height - 6, width, 3, 0);
     WINDOW *player_data_win = newwin(3, width, height - 3, 0);
 
     int has_moved = 1;
@@ -266,11 +269,7 @@ void display_message_window(const char *message) {
     int win_width = strlen(message) + 6;
     if (win_width < 20) win_width = 20;
 
-    int starty = (height - win_height) / 2;
-    int startx = (width - win_width) / 2;
-
-    WINDOW *msg_win = newwin(win_height, win_width, starty, startx);
-    box(msg_win, 0, 0);
+    WINDOW *msg_win = create_centered_window(win_height, win_width);
 
     mvwprintw(msg_win, 2, (win_width - strlen(message)) / 2, "%s", message);
 
@@ -294,11 +293,8 @@ void display_message_window(const char *message) {
 maze *display_create_maze() {
     int win_height = 20;
     int win_width = 50;
-    int starty = (height - win_height) / 2;
-    int startx = (width - win_width) / 2;
 
-    WINDOW *center_win = newwin(win_height, win_width, starty, startx);
-    box(center_win, 0, 0);
+    WINDOW *center_win = create_centered_window(win_height, win_width);
     wrefresh(center_win);
 
     keypad(center_win, TRUE);
@@ -464,11 +460,8 @@ maze *display_create_maze() {
 maze *display_maze_selection(maze_selection_mode mode) {
     int win_height = 12;
     int win_width = 35;
-    int starty = (height - win_height) / 2;
-    int startx = (width - win_width) / 2;
 
-    WINDOW *maze_win = newwin(win_height, win_width, starty, startx);
-    draw_borders(maze_win);
+    WINDOW *maze_win = create_centered_window(win_height, win_width);
     wrefresh(maze_win);
 
     int file_count;
@@ -516,8 +509,7 @@ maze *display_maze_selection(maze_selection_mode mode) {
 
             win_height = 10;
             win_width = 35;
-            WINDOW *lb_w = newwin(win_height * 2, win_width, starty, startx);
-            draw_borders(lb_w);
+            WINDOW *lb_w = create_centered_window(win_height * 2, win_width);
 
             display_leaderboard(lb_w, &lb, "");
             werase(lb_w);
@@ -542,9 +534,7 @@ void display_main_menu() {
 
         int win_height = 10;
         int win_width = 35;
-        int starty = (height - win_height) / 2;
-        int startx = (width - win_width) / 2;
-        WINDOW *sel_win = newwin(win_height, win_width, starty, startx);
+        WINDOW *sel_win = create_centered_window(win_height, win_width);
         draw_borders(sel_win);
 
         wrefresh(sel_win);

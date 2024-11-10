@@ -2,25 +2,30 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ncurses.h>
+#include "display.h"
 #include "leaderboard.h"
 
-void display_leaderboard(WINDOW *win, leaderboard *lb, const char *highlight_name) {
-    int width, height;
-    getmaxyx(win, height, width);
+int height = 0;
+int width  = 0;
+
+void display_leaderboard(leaderboard *lb, const char *highlight_name) {
+    int max_displayable = MAX_PLAYERS;
+    int win_height = (lb->count < max_displayable) ? lb->count + 6 : max_displayable + 6;
+    int win_width = 30;
+
+    WINDOW *win = create_centered_window(win_height, win_width);
 
     const char *title = "Leaderboard";
-    mvwprintw(win, 1, (width - strlen(title)) / 2, "%s", title);
+    mvwprintw(win, 1, (win_width - strlen(title)) / 2, "%s", title);
 
     int col_pseudo = 2;
-    int col_score = width - 12;
+    int col_score = win_width - 12;
     mvwprintw(win, 3, col_pseudo, "Players");
-    mvwprintw(win, 3, col_score , "Score");
+    mvwprintw(win, 3, col_score, "Score");
 
-    for (int i = 4; i < height - 1; i++) {
-        mvwaddch(win, i, col_score - 2, ACS_VLINE);
-    }
-
-    for (int i = 0; i < lb->count && i < height - 5; i++) {
+    // Limiter les lignes pour ne pas dépasser la hauteur de la fenêtre
+    int display_count = (lb->count < max_displayable) ? lb->count : max_displayable;
+    for (int i = 0; i < display_count; i++) {
         int y = 4 + i;
 
         if (highlight_name && strcmp(lb->players[i].name, highlight_name) == 0) {
@@ -28,19 +33,23 @@ void display_leaderboard(WINDOW *win, leaderboard *lb, const char *highlight_nam
         }
 
         mvwprintw(win, y, col_pseudo, "%-20s", lb->players[i].name);
-        mvwprintw(win, y, col_score , "%10d" , lb->players[i].score);
+        mvwprintw(win, y, col_score, "%10d", lb->players[i].score);
 
         wattroff(win, A_REVERSE);
     }
 
     wattron(win, A_REVERSE);
-    mvwprintw(win, height - 2, (width - strlen("OK")) / 2, "OK");
+    mvwprintw(win, win_height - 2, (win_width - strlen("OK")) / 2, "OK");
     wattroff(win, A_REVERSE);
 
     wrefresh(win);
 
     int ch;
     while ((ch = wgetch(win)) != '\n');
+
+    werase(win);
+    wrefresh(win);
+    delwin(win);
 }
 
 void add_player_to_leaderboard(leaderboard *lb, const char *name, int score) {

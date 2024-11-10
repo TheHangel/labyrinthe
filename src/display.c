@@ -10,9 +10,6 @@
 #include "leaderboard.h"
 #include "messages.h"
 
-int height = 0;
-int width  = 0;
-
 void init_curses() {
     setlocale(LC_ALL, "");
     initscr();
@@ -149,11 +146,7 @@ void display_end_window(maze *m) {
 
         switch (res) {
             case END_DISPLAY_LEADERBOARD: {
-                WINDOW *lb_w = create_centered_window(win_height * 2, win_width);
-                display_leaderboard(lb_w, &lb, name);
-                werase(lb_w);
-                wrefresh(lb_w);
-                delwin(lb_w);
+                display_leaderboard(&lb, name);
                 break;
             }
 
@@ -300,7 +293,7 @@ maze *display_create_maze() {
     char input_name  [MAX_INPUT] = "";
     char input_length[MAX_INPUT] = "";
     char input_width [MAX_INPUT] = "";
-    int checkbox_checked = 0;
+    checkbox hard_mode = 0;
     int choice = 0;
 
     WINDOW *textbox_name_win   = derwin(center_win, 3, win_width - 2, 2,  1);
@@ -312,7 +305,7 @@ maze *display_create_maze() {
     draw_textbox(textbox_name_win,   win_width - 4, LABEL_NAME,   input_name  );
     draw_textbox(textbox_length_win, win_width - 4, LABEL_LENGTH, input_length);
     draw_textbox(textbox_width_win,  win_width - 4, LABEL_WIDTH, input_width );
-    draw_checkbox(checkbox_win, 1, 1, checkbox_checked);
+    draw_checkbox(checkbox_win, 1, 1, hard_mode);
     draw_button(button_win, 1, 1, BTN_CREATE_MAZE);
 
     int ch;
@@ -337,8 +330,8 @@ maze *display_create_maze() {
             case ' ':
             case '\n':
                 if (choice == CREATE_CHECKBOX_DIFFICULTY) {
-                    checkbox_checked = !checkbox_checked;
-                    draw_checkbox(checkbox_win, 1, 1, checkbox_checked);
+                    hard_mode = !hard_mode;
+                    draw_checkbox(checkbox_win, 1, 1, hard_mode);
                 }
                 else if (choice == CREATE_BTN_CONFIRM && ch == '\n') {
                     int length = atoi(input_length);
@@ -358,7 +351,7 @@ maze *display_create_maze() {
                     refresh();
                     if (length % 2 == 0) length++;
                     if (width % 2 == 0) width++;
-                    difficulty d = checkbox_checked ? HARD : NORMAL;
+                    difficulty d = hard_mode ? HARD : NORMAL;
                     maze *m = new_maze(input_name, length, width);
                     generate_maze(m, d);
                     delwin(center_win);
@@ -431,10 +424,10 @@ maze *display_create_maze() {
 
         if (choice == CREATE_CHECKBOX_DIFFICULTY) {
             wattron(checkbox_win, A_REVERSE);
-            draw_checkbox(checkbox_win, 1, 1, checkbox_checked);
+            draw_checkbox(checkbox_win, 1, 1, hard_mode);
             wattroff(checkbox_win, A_REVERSE);
         } else {
-            draw_checkbox(checkbox_win, 1, 1, checkbox_checked);
+            draw_checkbox(checkbox_win, 1, 1, hard_mode);
         }
 
         if (choice == CREATE_BTN_CONFIRM) {
@@ -502,13 +495,7 @@ maze *display_maze_selection(maze_selection_mode mode) {
             char *filename = get_leaderboard_path(saves[res_maze]);
             leaderboard lb = load_leaderboard_from_file(filename);
 
-            int lb_win_height = win_height < 20 ? win_height * 2 : win_height;
-            WINDOW *lb_w = create_centered_window(lb_win_height, win_width);
-
-            display_leaderboard(lb_w, &lb, "");
-            werase(lb_w);
-            wrefresh(lb_w);
-            delwin(lb_w);
+            display_leaderboard(&lb, "");
         }
     }
 

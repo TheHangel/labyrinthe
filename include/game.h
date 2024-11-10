@@ -5,7 +5,10 @@ typedef struct player player;
 typedef struct monster monster;
 typedef struct maze maze;
 typedef struct leaderboard leaderboard;
+
 typedef int cell;
+typedef bool checkbox;
+typedef char* extension;
 
 #define MIN_SIZE    5
 #define MAX_SIZE 1024

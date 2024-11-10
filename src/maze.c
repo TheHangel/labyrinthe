@@ -390,7 +390,7 @@ maze* load_maze_from_file(const char *filename) {
     return m;
 }
 
-char** list_saves_files(const char *directory, int *file_count, char *extension) {
+char** list_saves_files(const char *directory, int *file_count, extension ext) {
     DIR *dir;
     struct dirent *entry;
     char **file_names = malloc(MAX_FILES * sizeof(char*));
@@ -404,7 +404,7 @@ char** list_saves_files(const char *directory, int *file_count, char *extension)
     while ((entry = readdir(dir)) != NULL) {
         if (entry->d_type == DT_REG) {
             char *dot = strrchr(entry->d_name, '.');
-            if (dot && strcmp(dot, extension) == 0) {
+            if (dot && strcmp(dot, ext) == 0) {
                 size_t name_len = dot - entry->d_name;
                 file_names[*file_count] = malloc((name_len + 1) * sizeof(char));
                 strncpy(file_names[*file_count], entry->d_name, name_len);

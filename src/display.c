@@ -559,7 +559,7 @@ void display_main_menu() {
             case PLAY: {
                 maze *m = display_maze_selection();
 
-                if (m == (maze*) -1) {  // Retour en arrière sans message d'erreur
+                if (m == (maze*) -1) { // Retour en arrière sans message d'erreur
                     break;
                 }
 

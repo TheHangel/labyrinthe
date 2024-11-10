@@ -183,12 +183,12 @@ void generate_maze(maze *m, difficulty d) {
     }
     if(d == HARD) {
         destroy_walls(m, length * width / 10);
+        place_monsters(m);
     }
     place_exit(m);
     place_key(m);
     place_treasures(m);
     place_traps(m);
-    place_monsters(m);
 }
 
 /**
@@ -268,7 +268,7 @@ int save_maze_to_file(const char *filename, maze *m) {
     FILE *file = fopen(filename, "wb");
     if (!file) return -1;
 
-    int name_length = strlen(m->name) + 1;  // +1 pour le caractère nul '\0'
+    int name_length = strlen(m->name) + 1;
     fwrite(&name_length, sizeof(int), 1, file);
     fwrite(m->name, sizeof(char), name_length, file);
 

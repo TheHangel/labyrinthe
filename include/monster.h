@@ -12,7 +12,7 @@ struct monster {
 };
 
 void place_monsters(maze *m);
-void display_monsters(maze *m, WINDOW *w);
+void display_monsters(maze *m, WINDOW* w, int offset_x, int offset_y, int view_width, int view_height);
 int move_ghost(monster *m, maze *mze);
 int move_ogre(monster *m, maze *mze);
 void move_monsters(maze *m);

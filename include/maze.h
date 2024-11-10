@@ -5,6 +5,9 @@
 #include "player.h"
 #include "monster.h"
 
+#define MIN_LENGTH 5
+#define MIN_WIDTH 5
+
 struct maze {
     char* name;
     cell **content;

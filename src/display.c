@@ -265,8 +265,7 @@ void display_message_window(const char *message) {
 
     mvwprintw(msg_win, 2, (win_width - strlen(message)) / 2, "%s", message);
 
-    const char *button_label = "[ OK ]";
-    mvwprintw(msg_win, 4, (win_width - strlen(button_label)) / 2, "%s", button_label);
+    mvwprintw(msg_win, 4, (win_width - strlen(LABEL_OK)) / 2, "%s", LABEL_OK);
 
     wrefresh(msg_win);
 

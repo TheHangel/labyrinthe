@@ -38,4 +38,11 @@
 #define MSG_DIMENSIONS_TOO_LOW  "Dimensions must be greater or equal to " TOSTRING(MIN_SIZE) "."
 #define MSG_DIMENSIONS_TOO_HIGH "Dimensions must be less or equal to "    TOSTRING(MAX_SIZE) "."
 
+// Leaderboard
+#define LABEL_LEADERBOARD       "Leaderboard"
+#define LABEL_PLAYERS           "Players"
+#define LABEL_SCORE             "Score"
+
+#define LABEL_OK                "OK"
+
 #endif

@@ -4,6 +4,7 @@
 #include <ncurses.h>
 #include "display.h"
 #include "leaderboard.h"
+#include "messages.h"
 
 int height = 0;
 int width  = 0;
@@ -15,15 +16,13 @@ void display_leaderboard(leaderboard *lb, const char *highlight_name) {
 
     WINDOW *win = create_centered_window(win_height, win_width);
 
-    const char *title = "Leaderboard";
-    mvwprintw(win, 1, (win_width - strlen(title)) / 2, "%s", title);
+    mvwprintw(win, 1, (win_width - strlen(LABEL_LEADERBOARD)) / 2, "%s", LABEL_LEADERBOARD);
 
     int col_pseudo = 2;
     int col_score = win_width - 12;
-    mvwprintw(win, 3, col_pseudo, "Players");
-    mvwprintw(win, 3, col_score, "Score");
+    mvwprintw(win, 3, col_pseudo, LABEL_PLAYERS);
+    mvwprintw(win, 3, col_score, LABEL_SCORE);
 
-    // Limiter les lignes pour ne pas dépasser la hauteur de la fenêtre
     int display_count = (lb->count < max_displayable) ? lb->count : max_displayable;
     for (int i = 0; i < display_count; i++) {
         int y = 4 + i;
@@ -39,7 +38,7 @@ void display_leaderboard(leaderboard *lb, const char *highlight_name) {
     }
 
     wattron(win, A_REVERSE);
-    mvwprintw(win, win_height - 2, (win_width - strlen("OK")) / 2, "OK");
+    mvwprintw(win, win_height - 2, (win_width - strlen(LABEL_OK)) / 2, LABEL_OK);
     wattroff(win, A_REVERSE);
 
     wrefresh(win);

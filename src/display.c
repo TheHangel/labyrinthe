@@ -104,7 +104,7 @@ void display_end_window(maze *m) {
     int is_winner = (score > last_score) || (lb.count < MAX_PLAYERS);
     const char *message = (is_winner) ? MSG_NEW_HIGH_SCORE : MSG_YOU_WIN;
 
-    char name[20] = "";
+    char name[MAX_INPUT_PLAYER] = "";
 
     if (is_winner) {
         WINDOW *popup_win = newwin(win_height, win_width, starty, startx);
@@ -112,7 +112,7 @@ void display_end_window(maze *m) {
         mvwprintw(popup_win, 2, (win_width - strlen(message)) / 2, message);
         mvwprintw(popup_win, 4, 1, LABEL_ENTER_NAME);
         echo();
-        wgetnstr(popup_win, name, 20);
+        wgetnstr(popup_win, name, MAX_INPUT_PLAYER);
         noecho();
 
         add_player_to_leaderboard(&lb, name, score);
@@ -144,7 +144,7 @@ void display_end_window(maze *m) {
         int res = menu_selection(popup_win, options, n_options, menu_start_row);
 
         switch (res) {
-            case DISPLAY_LEADERBOARD: {
+            case END_DISPLAY_LEADERBOARD: {
                 WINDOW *lb_w = newwin(win_height * 2, win_width, starty, startx);
                 draw_borders(lb_w);
                 display_leaderboard(lb_w, &lb, name);
@@ -154,12 +154,12 @@ void display_end_window(maze *m) {
                 break;
             }
 
-            case QUIT_MAIN_MENU:
+            case END_QUIT_MAIN_MENU:
                 delwin(popup_win);
                 destroy_leaderboard(&lb);
                 return;
 
-            case QUIT_GAME:
+            case END_QUIT_GAME:
                 delwin(popup_win);
                 destroy_leaderboard(&lb);
                 endwin();
@@ -520,13 +520,18 @@ void display_main_menu() {
 
         wrefresh(sel_win);
 
-        const char *options[] = { BTN_PLAY, BTN_HOW_TO_PLAY, BTN_QUIT_GAME };
-        int n_options = 3;
+        const char *options[] = {
+            BTN_PLAY,
+            BTN_DISPLAY_LEADERBOARD,
+            BTN_HOW_TO_PLAY,
+            BTN_QUIT_GAME
+        };
+        int n_options = 4;
         int menu_start_row = (win_height - n_options) / 2;
         int selection = menu_selection(sel_win, options, n_options, menu_start_row);
 
         switch (selection) {
-            case PLAY: {
+            case MAIN_PLAY || MAIN_DISPLAY_LEADERBOARD: {
                 maze *m = display_maze_selection();
 
                 if (m == (maze*) -1) { // Retour en arrière sans message d'erreur
@@ -543,11 +548,11 @@ void display_main_menu() {
                 break;
             }
 
-            case HOW_TO_PLAY:
+            case MAIN_HOW_TO_PLAY:
                 display_message_window(BTN_HOW_TO_PLAY_DIALOG);
                 break;
 
-            case QUIT:
+            case MAIN_QUIT:
                 delwin(win);
                 delwin(sel_win);
                 return;

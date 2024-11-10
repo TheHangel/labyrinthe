@@ -11,6 +11,7 @@ typedef int cell;
 #define MAX_SIZE 1024
 
 #define MAX_INPUT 50
+#define MAX_INPUT_PLAYER 20
 
 #define PLAYER   10
 #define PATH      0
@@ -39,17 +40,18 @@ typedef enum {
 } difficulty;
 
 // Main menu window
-enum {
-    PLAY,
-    HOW_TO_PLAY,
-    QUIT
+enum main_menu_options {
+    MAIN_PLAY,
+    MAIN_DISPLAY_LEADERBOARD,
+    MAIN_HOW_TO_PLAY,
+    MAIN_QUIT
 };
 
 // End game window
-enum {
-    DISPLAY_LEADERBOARD,
-    QUIT_MAIN_MENU,
-    QUIT_GAME
+enum end_game_options {
+    END_DISPLAY_LEADERBOARD,
+    END_QUIT_MAIN_MENU,
+    END_QUIT_GAME
 };
 
 direction get_direction_from_input(char key);

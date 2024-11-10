@@ -28,6 +28,8 @@ typedef int cell;
 
 #define GO_BACK (maze*) -1
 
+#define IS_VALID_CHAR(ch) ((ch) >= 32 && (ch) <= 126)
+
 typedef enum {
     UP,
     DOWN,
@@ -54,6 +56,14 @@ enum end_game_options {
     END_DISPLAY_LEADERBOARD,
     END_QUIT_MAIN_MENU,
     END_QUIT_GAME
+};
+
+enum create_menu_options {
+    CREATE_INPUT_NAME,
+    CREATE_INPUT_LENGTH,
+    CREATE_INPUT_WIDTH,
+    CREATE_CHECKBOX_DIFFICULTY,
+    CREATE_BTN_CONFIRM
 };
 
 // Maze selection mode

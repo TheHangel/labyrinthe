@@ -184,8 +184,8 @@ void display_game(maze *m) {
     getmaxyx(stdscr, height, width);
 
     WINDOW *title_win = newwin(3, width, 0, 0);
-    WINDOW *game_win = newwin(height - 10, width, 3, 0);
-    WINDOW *player_data_win = newwin(3, width, height - 7, 0);
+    WINDOW *game_win = newwin(height - 6, width, 3, 0);
+    WINDOW *player_data_win = newwin(3, width, height - 3, 0);
 
     int has_moved = 1;
     while (1) {

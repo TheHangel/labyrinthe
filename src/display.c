@@ -230,7 +230,6 @@ void display_title(WINDOW *win) {
     };
 
     int start_row = 1;
-    int width = getmaxx(win);
 
     for (int i = 0; i < 6; i++) {
         int start_col = (width / 2) - 38;

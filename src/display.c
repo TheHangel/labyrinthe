@@ -112,7 +112,7 @@ void display_end_window(maze *m) {
         WINDOW *popup_win = newwin(win_height, win_width, starty, startx);
         draw_borders(popup_win);
         mvwprintw(popup_win, 2, (win_width - strlen(message)) / 2, message);
-        mvwprintw(popup_win, 4, 1, MSG_ENTER_NAME);
+        mvwprintw(popup_win, 4, 1, LABEL_ENTER_NAME);
         echo();
         wgetnstr(popup_win, name, 20);
         noecho();
@@ -136,9 +136,9 @@ void display_end_window(maze *m) {
 
         mvwprintw(popup_win, 2, (win_width - strlen(message)) / 2, message);
         const char *options[] = {
-            MSG_DISPLAY_LEADERBOARD,
-            MSG_QUIT_TO_MAIN_MENU,
-            MSG_QUIT_GAME
+            BTN_DISPLAY_LEADERBOARD,
+            BTN_QUIT_TO_MAIN_MENU,
+            BTN_QUIT_GAME
         };
         int n_options = 3;
         int menu_start_row = 4;
@@ -335,7 +335,7 @@ maze *display_create_maze() {
     draw_textbox(textbox_length_win, win_width - 4, LABEL_LENGTH, input_length);
     draw_textbox(textbox_width_win, win_width - 4, LABEL_LENGTH, input_width);
     draw_checkbox(checkbox_win, 1, 1, checkbox_checked);
-    draw_button(button_win, 1, 1, LABEL_BUTTON_CREATE_MAZE);
+    draw_button(button_win, 1, 1, BTN_CREATE_MAZE);
 
     int ch;
     int cursor_pos_name = 0, cursor_pos_length = 0, cursor_pos_width = 0;
@@ -459,10 +459,10 @@ maze *display_create_maze() {
 
         if (choice == 4) {
             wattron(button_win, A_REVERSE);
-            draw_button(button_win, 1, 1, LABEL_BUTTON_CREATE_MAZE);
+            draw_button(button_win, 1, 1, BTN_CREATE_MAZE);
             wattroff(button_win, A_REVERSE);
         } else {
-            draw_button(button_win, 1, 1, LABEL_BUTTON_CREATE_MAZE);
+            draw_button(button_win, 1, 1, BTN_CREATE_MAZE);
         }
     }
 
@@ -495,7 +495,7 @@ maze *display_maze_selection() {
     for (int i = 0; i < file_count; i++) {
         menu_options[i] = saves[i];
     }
-    menu_options[file_count] = LABEL_BUTTON_CREATE_MAZE;
+    menu_options[file_count] = BTN_CREATE_MAZE;
 
     int res_maze = menu_selection(maze_win, menu_options, file_count + 1, menu_start_row_maze);
 
@@ -549,7 +549,7 @@ void display_main_menu() {
 
         wrefresh(sel_win);
 
-        const char *options[] = { MSG_PLAY, MSG_HOW_TO_PLAY, MSG_QUIT_GAME };
+        const char *options[] = { BTN_PLAY, BTN_HOW_TO_PLAY, BTN_QUIT_GAME };
         int n_options = 3;
         int menu_start_row = (win_height - n_options) / 2;
         int selection = menu_selection(sel_win, options, n_options, menu_start_row);
@@ -579,7 +579,7 @@ void display_main_menu() {
             }
 
             case HOW_TO_PLAY:
-                display_message_window(MSG_HOW_TO_PLAY_DIALOG);
+                display_message_window(BTN_HOW_TO_PLAY_DIALOG);
                 break;
 
             case QUIT:

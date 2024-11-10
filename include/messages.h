@@ -7,29 +7,30 @@
 #define TOSTRING(x) STRINGIFY(x)
 
 // Main menu
-#define MSG_PLAY               "Play"
-#define MSG_HOW_TO_PLAY        "How to play"
-#define MSG_HOW_TO_PLAY_DIALOG "Use ZQSD to move. Press ESC to quit."
-#define MSG_QUIT_GAME          "Quit game"
+#define BTN_PLAY               "Play"
+#define BTN_HOW_TO_PLAY        "How to play"
+#define BTN_HOW_TO_PLAY_DIALOG "Use ZQSD to move. Press ESC to quit."
+#define BTN_QUIT_GAME          "Quit game"
 
 // End game window - Score
 #define MSG_NEW_HIGH_SCORE     "NEW HIGH SCORE!"
 #define MSG_YOU_WIN            "YOU WIN!"
-#define MSG_ENTER_NAME         "Enter your name: "
+
+#define LABEL_ENTER_NAME       "Enter your name: "
 
 // End game window selection
-#define MSG_DISPLAY_LEADERBOARD "Display Leaderboard"
-#define MSG_QUIT_TO_MAIN_MENU   "Quit to Main Menu"
+#define BTN_DISPLAY_LEADERBOARD "Display Leaderboard"
+#define BTN_QUIT_TO_MAIN_MENU   "Quit to Main Menu"
 
-// Create maze window labels
+// Create maze window
 #define LABEL_NAME              "Name:"
 #define LABEL_LENGTH            "Length:"
 #define LABEL_WIDTH             "Width:"
 
 // Create maze and maze selection
-#define LABEL_BUTTON_CREATE_MAZE "Create maze"
+#define BTN_CREATE_MAZE         "Create maze"
 
-#define MSG_CANNOT_LOAD_MAZE     "Cannot load maze file."
+#define MSG_CANNOT_LOAD_MAZE    "Cannot load maze file."
 
 // Create maze window messages
 #define MSG_INVALID_DIMENSIONS  "Invalid Dimensions."

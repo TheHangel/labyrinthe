@@ -12,7 +12,7 @@ int main(void) {
 
     display_main_menu();
 
-    destroy_curses();
+    endwin();
 
     return EXIT_SUCCESS;
 }

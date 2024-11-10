@@ -39,10 +39,6 @@ void init_curses() {
     init_pair(11, COLOR_WHITE, COLOR_BLACK);
 }
 
-int destroy_curses() {
-    return endwin();
-}
-
 void draw_borders(WINDOW *win) {
     box(win, 0, 0);
 }

@@ -36,6 +36,20 @@ typedef enum {
     HARD
 } difficulty;
 
+// Main menu window
+enum {
+    PLAY,
+    HOW_TO_PLAY,
+    QUIT
+};
+
+// End game window
+enum {
+    DISPLAY_LEADERBOARD,
+    QUIT_MAIN_MENU,
+    QUIT_GAME
+};
+
 direction get_direction_from_input(char key);
 
 #endif

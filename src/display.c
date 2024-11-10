@@ -145,12 +145,6 @@ void display_end_window(maze *m) {
 
         int res = menu_selection(popup_win, options, n_options, menu_start_row);
 
-        enum {
-            DISPLAY_LEADERBOARD,
-            QUIT_MAIN_MENU,
-            QUIT_GAME
-        };
-
         switch (res) {
             case DISPLAY_LEADERBOARD: {
                 WINDOW *lb_w = newwin(win_height * 2, win_width, starty, startx);
@@ -553,12 +547,6 @@ void display_main_menu() {
         int n_options = 3;
         int menu_start_row = (win_height - n_options) / 2;
         int selection = menu_selection(sel_win, options, n_options, menu_start_row);
-
-        enum {
-            PLAY,
-            HOW_TO_PLAY,
-            QUIT
-        };
 
         switch (selection) {
             case PLAY: {

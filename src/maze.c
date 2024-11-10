@@ -194,9 +194,15 @@ void generate_maze(maze *m, difficulty d) {
 /**
  * Give maze (functionnal)
  */
-maze* new_maze(int length, int width) {
+maze* new_maze(char* name, int length, int width) {
     if(!(length % 2) || !(width % 2)) return NULL;
     maze* m = (maze*) malloc(sizeof(maze));
+    m->name = malloc(strlen(name) + 1);
+    if (!m->name) {
+        free(m);
+        return NULL;
+    }
+    strcpy(m->name, name);
     m->length = length;
     m->width = width;
     m->content = (cell**) malloc(length * sizeof(cell*));
@@ -220,6 +226,7 @@ void destroy_maze(maze *m) {
     destroy_cells(m);
     destroy_player(m);
     destroy_monsters(m);
+    free(m->name);
     free(m);
 }
 
@@ -261,6 +268,10 @@ int save_maze_to_file(const char *filename, maze *m) {
     FILE *file = fopen(filename, "wb");
     if (!file) return -1;
 
+    int name_length = strlen(m->name) + 1;  // +1 pour le caractère nul '\0'
+    fwrite(&name_length, sizeof(int), 1, file);
+    fwrite(m->name, sizeof(char), name_length, file);
+
     fwrite(&m->length, sizeof(int), 1, file);
     fwrite(&m->width, sizeof(int), 1, file);
 
@@ -282,6 +293,21 @@ maze* load_maze_from_file(const char *filename) {
 
     maze *m = (maze*) malloc(sizeof(maze));
     if (!m) {
+        fclose(file);
+        return NULL;
+    }
+
+    int name_length;
+    if (fread(&name_length, sizeof(int), 1, file) != 1) {
+        free(m);
+        fclose(file);
+        return NULL;
+    }
+
+    m->name = (char*) malloc(name_length);
+    if (!m->name || fread(m->name, sizeof(char), name_length, file) != (size_t)name_length) {
+        free(m->name);
+        free(m);
         fclose(file);
         return NULL;
     }

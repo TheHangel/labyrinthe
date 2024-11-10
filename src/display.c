@@ -90,7 +90,12 @@ void display_end_window(maze *m) {
     int starty = (height - win_height) / 2;
     int startx = (width - win_width) / 2;
 
-    leaderboard lb = load_leaderboard_from_file(LEADERBOARD_FILE);
+    char* filename = malloc(strlen(m->name) + 12);
+    strcpy(filename, "data/");
+    strcat(filename, m->name);
+    strcat(filename, ".score");
+
+    leaderboard lb = load_leaderboard_from_file(filename);
 
     player *p = m->player;
     int score = get_final_score(p);
@@ -113,7 +118,7 @@ void display_end_window(maze *m) {
 
         add_player_to_leaderboard(&lb, name, score);
         sort_leaderboard(&lb);
-        save_leaderboard_to_file(LEADERBOARD_FILE, &lb);
+        save_leaderboard_to_file(filename, &lb);
 
         werase(popup_win);
         draw_borders(popup_win);
@@ -121,6 +126,7 @@ void display_end_window(maze *m) {
         delwin(popup_win);
     }
 
+    free(filename);
     free(score_str);
 
     while (1) {
@@ -369,7 +375,7 @@ maze *display_create_maze() {
                     if (length % 2 == 0) length++;
                     if (width % 2 == 0) width++;
                     difficulty d = checkbox_checked ? HARD : NORMAL;
-                    maze *m = new_maze(length, width);
+                    maze *m = new_maze(input_name, length, width);
                     generate_maze(m, d);
                     delwin(center_win);
                     char* filename = malloc(strlen(input_name) + 10);

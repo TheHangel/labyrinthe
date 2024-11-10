@@ -294,7 +294,6 @@ maze *display_create_maze() {
     int win_width = 50;
 
     WINDOW *center_win = create_centered_window(win_height, win_width);
-    wrefresh(center_win);
 
     keypad(center_win, TRUE);
 
@@ -467,7 +466,6 @@ maze *display_maze_selection(maze_selection_mode mode) {
     if (win_height < min_height) win_height = min_height;
 
     WINDOW *maze_win = create_centered_window(win_height, win_width);
-    wrefresh(maze_win);
 
     int menu_start_row_maze = (win_height - file_count - 1) / 2;
 
@@ -532,9 +530,6 @@ void display_main_menu() {
         int win_height = 10;
         int win_width = 35;
         WINDOW *sel_win = create_centered_window(win_height, win_width);
-        draw_borders(sel_win);
-
-        wrefresh(sel_win);
 
         const char *options[] = {
             BTN_PLAY,

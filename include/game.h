@@ -1,8 +1,6 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include <ncurses.h>
-
 typedef struct player player;
 typedef struct monster monster;
 typedef struct maze maze;

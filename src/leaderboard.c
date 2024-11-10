@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ncurses.h>
 #include "leaderboard.h"
 
 void display_leaderboard(WINDOW *win, leaderboard *lb, const char *highlight_name) {

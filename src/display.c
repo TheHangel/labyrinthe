@@ -333,7 +333,7 @@ maze *display_create_maze() {
                 delwin(checkbox_win);
                 delwin(button_win);
                 delwin(center_win);
-                return (maze*) -1; // Indiquer un retour en arrière
+                return GO_BACK;
             case KEY_UP:
                 if (choice > 0) choice--;
                 break;
@@ -456,7 +456,7 @@ maze *display_create_maze() {
     return NULL;
 }
 
-maze *display_maze_selection(int mode) {
+maze *display_maze_selection(maze_selection_mode mode) {
     int win_height = 12;
     int win_width = 35;
     int starty = (height - win_height) / 2;
@@ -469,38 +469,35 @@ maze *display_maze_selection(int mode) {
     int file_count;
     char **saves = list_saves_files(DATA_PATH, &file_count);
     int menu_start_row_maze = (win_height - file_count - 1) / 2;
+    
+    const char *last_option = (mode == 0) ? BTN_CREATE_MAZE : BTN_BACK;
 
     const char *menu_options[file_count + 1];
     for (int i = 0; i < file_count; i++) {
         menu_options[i] = saves[i];
     }
-
-    if(mode == 0) {
-        menu_options[file_count] = BTN_CREATE_MAZE;
-    }
-    else {
-        menu_options[file_count] = BTN_BACK;
-    }
+    menu_options[file_count] = last_option;
 
     int res_maze = menu_selection(maze_win, menu_options, file_count + 1, menu_start_row_maze);
+    delwin(maze_win);
 
     maze *m = NULL;
     if (res_maze == file_count) {
-        if(mode == 0) {
+        if(mode == CREATE_MAZE_MODE) {
             m = display_create_maze();
             if(m == NULL) {
                 for (int i = 0; i < file_count; i++) {
                     free(saves[i]);
                 }
                 free(saves);
-                return (maze*) -1;
+                return GO_BACK;
             }
         }
         else {
-            return (maze*) -1;
+            return GO_BACK;
         }
     } else {
-        if(mode == 0) {
+        if(mode == CREATE_MAZE_MODE) {
             char *filename = get_maze_path(saves[res_maze]);
 
             m = load_maze_from_file(filename);
@@ -524,7 +521,6 @@ maze *display_maze_selection(int mode) {
         }
     }
 
-    delwin(maze_win);
     for (int i = 0; i < file_count; i++) {
         free(saves[i]);
     }
@@ -560,9 +556,9 @@ void display_main_menu() {
 
         switch (selection) {
             case MAIN_PLAY: {
-                maze *m = display_maze_selection(0);
+                maze *m = display_maze_selection(CREATE_MAZE_MODE);
 
-                if (m == (maze*) -1) { // Retour en arrière sans message d'erreur
+                if (m == GO_BACK) { // Retour en arrière sans message d'erreur
                     break;
                 }
 

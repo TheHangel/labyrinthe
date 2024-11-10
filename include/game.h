@@ -7,10 +7,10 @@ typedef struct maze maze;
 typedef struct leaderboard leaderboard;
 typedef int cell;
 
-#define MIN_SIZE 5
+#define MIN_SIZE    5
 #define MAX_SIZE 1024
 
-#define MAX_INPUT 50
+#define MAX_INPUT        50
 #define MAX_INPUT_PLAYER 20
 
 #define PLAYER   10
@@ -25,6 +25,8 @@ typedef int cell;
 
 #define ESCAPE_KEY 27
 #define ENTER_KEY  10
+
+#define GO_BACK (maze*) -1
 
 typedef enum {
     UP,
@@ -53,6 +55,12 @@ enum end_game_options {
     END_QUIT_MAIN_MENU,
     END_QUIT_GAME
 };
+
+// Maze selection mode
+typedef enum {
+    CREATE_MAZE_MODE,
+    VIEW_LEADERBOARD_MODE
+} maze_selection_mode;
 
 direction get_direction_from_input(char key);
 

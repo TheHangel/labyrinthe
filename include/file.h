@@ -10,7 +10,7 @@
 #define MAZE_EXTENSION        ".cfg"
 #define LEADERBOARD_EXTENSION ".score"
 
-char* get_maze_path(maze *m);
-char* get_leaderboard_path(maze *m);
+char* get_maze_path(char *maze_name);
+char* get_leaderboard_path(char *maze_name);
 
 #endif

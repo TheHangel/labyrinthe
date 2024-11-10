@@ -92,7 +92,7 @@ void display_end_window(maze *m) {
     int starty = (height - win_height) / 2;
     int startx = (width - win_width) / 2;
 
-    char* filename = get_leaderboard_path(m);
+    char* filename = get_leaderboard_path(m->name);
 
     leaderboard lb = load_leaderboard_from_file(filename);
 
@@ -367,7 +367,7 @@ maze *display_create_maze() {
                     maze *m = new_maze(input_name, length, width);
                     generate_maze(m, d);
                     delwin(center_win);
-                    char* filename = get_maze_path(m);
+                    char* filename = get_maze_path(m->name);
                     save_maze_to_file(filename, m);
                     free(filename);
                     return m;
@@ -489,12 +489,7 @@ maze *display_maze_selection() {
             return (maze*) -1;
         }
     } else {
-        size_t total_length = strlen("data/") + strlen(saves[res_maze]) + strlen(".cfg") + 1;
-        char *filename = malloc(total_length);
-
-        strcpy(filename, "data/");
-        strcat(filename, saves[res_maze]);
-        strcat(filename, ".cfg");
+        char *filename = get_maze_path(saves[res_maze]);
 
         m = load_maze_from_file(filename);
 

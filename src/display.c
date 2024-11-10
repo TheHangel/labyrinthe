@@ -457,19 +457,21 @@ maze *display_create_maze() {
 }
 
 maze *display_maze_selection(maze_selection_mode mode) {
-    int win_height = 12;
     int win_width = 35;
+    char *extension = (mode == CREATE_MAZE_MODE) ? MAZE_EXTENSION : LEADERBOARD_EXTENSION;
+
+    int file_count;
+    char **saves = list_saves_files(DATA_PATH, &file_count, extension);
+    int win_height = file_count + 4;
+    const int min_height = 12;
+    if (win_height < min_height) win_height = min_height;
 
     WINDOW *maze_win = create_centered_window(win_height, win_width);
     wrefresh(maze_win);
 
-    int file_count;
-    char* extension = (mode == CREATE_MAZE_MODE) ? MAZE_EXTENSION : LEADERBOARD_EXTENSION;
-    char **saves = list_saves_files(DATA_PATH, &file_count, extension);
     int menu_start_row_maze = (win_height - file_count - 1) / 2;
-    
-    const char *last_option = (mode == 0) ? BTN_CREATE_MAZE : BTN_BACK;
 
+    const char *last_option = (mode == CREATE_MAZE_MODE) ? BTN_CREATE_MAZE : BTN_BACK;
     const char *menu_options[file_count + 1];
     for (int i = 0; i < file_count; i++) {
         menu_options[i] = saves[i];
@@ -481,35 +483,30 @@ maze *display_maze_selection(maze_selection_mode mode) {
 
     maze *m = NULL;
     if (res_maze == file_count) {
-        if(mode == CREATE_MAZE_MODE) {
+        if (mode == CREATE_MAZE_MODE) {
             m = display_create_maze();
-            if(m == NULL) {
+            if (m == NULL) {
                 for (int i = 0; i < file_count; i++) {
                     free(saves[i]);
                 }
                 free(saves);
                 return GO_BACK;
             }
-        }
-        else {
+        } else {
             return GO_BACK;
         }
     } else {
-        if(mode == CREATE_MAZE_MODE) {
+        if (mode == CREATE_MAZE_MODE) {
             char *filename = get_maze_path(saves[res_maze]);
-
             m = load_maze_from_file(filename);
-
             free(filename);
-        }
-        else {
+        } else {
             char *filename = get_leaderboard_path(saves[res_maze]);
-
             leaderboard lb = load_leaderboard_from_file(filename);
 
-            win_height = 10;
-            win_width = 35;
-            WINDOW *lb_w = create_centered_window(win_height * 2, win_width);
+            // Affichage du leaderboard dans une fenêtre centrale avec ajustement de la hauteur
+            int lb_win_height = win_height < 20 ? win_height * 2 : win_height;
+            WINDOW *lb_w = create_centered_window(lb_win_height, win_width);
 
             display_leaderboard(lb_w, &lb, "");
             werase(lb_w);

@@ -311,7 +311,7 @@ maze *display_create_maze() {
 
     draw_textbox(textbox_name_win,   win_width - 4, LABEL_NAME,   input_name  );
     draw_textbox(textbox_length_win, win_width - 4, LABEL_LENGTH, input_length);
-    draw_textbox(textbox_width_win,  win_width - 4, LABEL_LENGTH, input_width );
+    draw_textbox(textbox_width_win,  win_width - 4, LABEL_WIDTH, input_width );
     draw_checkbox(checkbox_win, 1, 1, checkbox_checked);
     draw_button(button_win, 1, 1, BTN_CREATE_MAZE);
 
@@ -381,7 +381,7 @@ maze *display_create_maze() {
                 }
                 else if (choice == CREATE_INPUT_WIDTH && cursor_pos_width > 0) {
                     input_width[--cursor_pos_width] = '\0';
-                    draw_textbox(textbox_width_win, win_width - 4, LABEL_LENGTH, input_width);
+                    draw_textbox(textbox_width_win, win_width - 4, LABEL_WIDTH, input_width);
                 }
                 break;
             default:
@@ -399,7 +399,7 @@ maze *display_create_maze() {
                     else if (choice == CREATE_INPUT_WIDTH && cursor_pos_width < MAX_INPUT - 1) {
                         input_width[cursor_pos_width++] = ch;
                         input_width[cursor_pos_width] = '\0';
-                        draw_textbox(textbox_width_win, win_width - 4, LABEL_LENGTH, input_width);
+                        draw_textbox(textbox_width_win, win_width - 4, LABEL_WIDTH, input_width);
                     }
                 }
                 break;
@@ -423,10 +423,10 @@ maze *display_create_maze() {
 
         if (choice == CREATE_INPUT_WIDTH) {
             wattron(textbox_width_win, A_REVERSE);
-            draw_textbox(textbox_width_win, win_width - 4, LABEL_LENGTH, input_width);
+            draw_textbox(textbox_width_win, win_width - 4, LABEL_WIDTH, input_width);
             wattroff(textbox_width_win, A_REVERSE);
         } else {
-            draw_textbox(textbox_width_win, win_width - 4, LABEL_LENGTH, input_width);
+            draw_textbox(textbox_width_win, win_width - 4, LABEL_WIDTH, input_width);
         }
 
         if (choice == CREATE_CHECKBOX_DIFFICULTY) {
@@ -502,7 +502,6 @@ maze *display_maze_selection(maze_selection_mode mode) {
             char *filename = get_leaderboard_path(saves[res_maze]);
             leaderboard lb = load_leaderboard_from_file(filename);
 
-            // Affichage du leaderboard dans une fenêtre centrale avec ajustement de la hauteur
             int lb_win_height = win_height < 20 ? win_height * 2 : win_height;
             WINDOW *lb_w = create_centered_window(lb_win_height, win_width);
 
@@ -545,7 +544,7 @@ void display_main_menu() {
             case MAIN_PLAY: {
                 maze *m = display_maze_selection(CREATE_MAZE_MODE);
 
-                if (m == GO_BACK) { // Retour en arrière sans message d'erreur
+                if (m == GO_BACK) {
                     break;
                 }
 

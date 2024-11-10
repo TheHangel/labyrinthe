@@ -80,7 +80,7 @@ int move_ogre(monster *m, maze *mze) {
     int new_y = m->y + dy;
 
     if (new_x >= 0 && new_x < mze->width && new_y >= 0 && new_y < mze->length) {
-        if (mze->content[new_y][new_x] != WALL) {
+        if (mze->content[new_x][new_y] != WALL) {
             m->x = new_x;
             m->y = new_y;
         }
@@ -93,6 +93,16 @@ void move_monsters(maze *m) {
     for (int k = 0; k < m->n_monsters; k++) {
         monster *mon = &m->monsters[k];
         mon->move_monster(mon, m);
+    }
+}
+
+void load_monster_functions(maze *m) {
+    for (int i = 0; i < m->n_monsters; i++) {
+        if (m->monsters[i].type == M_GHOST) {
+            m->monsters[i].move_monster = move_ghost;
+        } else if (m->monsters[i].type == M_OGRE) {
+            m->monsters[i].move_monster = move_ogre;
+        }
     }
 }
 

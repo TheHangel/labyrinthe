@@ -16,6 +16,7 @@ void display_monsters(maze *m, WINDOW* w, int offset_x, int offset_y, int view_w
 int move_ghost(monster *m, maze *mze);
 int move_ogre(monster *m, maze *mze);
 void move_monsters(maze *m);
+void load_monster_functions(maze *m);
 void destroy_monsters(maze *m);
 
 #endif

@@ -4,6 +4,7 @@
 #include <dirent.h>
 #include <string.h>
 #include "maze.h"
+#include "monster.h"
 
 #define MAX_FILES 1024
 
@@ -272,16 +273,6 @@ void display(maze *m, WINDOW* w) {
     }
 
     display_monsters(m, w, offset_x, offset_y, view_width, view_height);
-}
-
-void load_monster_functions(maze *m) {
-    for (int i = 0; i < m->n_monsters; i++) {
-        if (m->monsters[i].type == M_GHOST) {
-            m->monsters[i].move_monster = move_ghost;
-        } else if (m->monsters[i].type == M_OGRE) {
-            m->monsters[i].move_monster = move_ogre;
-        }
-    }
 }
 
 int save_maze_to_file(const char *filename, maze *m) {

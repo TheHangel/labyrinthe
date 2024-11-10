@@ -464,7 +464,8 @@ maze *display_maze_selection(maze_selection_mode mode) {
     wrefresh(maze_win);
 
     int file_count;
-    char **saves = list_saves_files(DATA_PATH, &file_count);
+    char* extension = (mode == CREATE_MAZE_MODE) ? MAZE_EXTENSION : LEADERBOARD_EXTENSION;
+    char **saves = list_saves_files(DATA_PATH, &file_count, extension);
     int menu_start_row_maze = (win_height - file_count - 1) / 2;
     
     const char *last_option = (mode == 0) ? BTN_CREATE_MAZE : BTN_BACK;

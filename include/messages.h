@@ -29,6 +29,7 @@
 
 // Create maze and maze selection
 #define BTN_CREATE_MAZE         "Create maze"
+#define BTN_BACK                "Back"
 
 #define MSG_CANNOT_LOAD_MAZE    "Cannot load maze file."
 

@@ -456,7 +456,7 @@ maze *display_create_maze() {
     return NULL;
 }
 
-maze *display_maze_selection() {
+maze *display_maze_selection(int mode) {
     int win_height = 12;
     int win_width = 35;
     int starty = (height - win_height) / 2;
@@ -467,33 +467,61 @@ maze *display_maze_selection() {
     wrefresh(maze_win);
 
     int file_count;
-    char **saves = list_saves_files("data/", &file_count);
+    char **saves = list_saves_files(DATA_PATH, &file_count);
     int menu_start_row_maze = (win_height - file_count - 1) / 2;
 
     const char *menu_options[file_count + 1];
     for (int i = 0; i < file_count; i++) {
         menu_options[i] = saves[i];
     }
-    menu_options[file_count] = BTN_CREATE_MAZE;
+
+    if(mode == 0) {
+        menu_options[file_count] = BTN_CREATE_MAZE;
+    }
+    else {
+        menu_options[file_count] = BTN_BACK;
+    }
 
     int res_maze = menu_selection(maze_win, menu_options, file_count + 1, menu_start_row_maze);
 
     maze *m = NULL;
     if (res_maze == file_count) {
-        m = display_create_maze();
-        if(m == NULL) {
-            for (int i = 0; i < file_count; i++) {
-                free(saves[i]);
+        if(mode == 0) {
+            m = display_create_maze();
+            if(m == NULL) {
+                for (int i = 0; i < file_count; i++) {
+                    free(saves[i]);
+                }
+                free(saves);
+                return (maze*) -1;
             }
-            free(saves);
+        }
+        else {
             return (maze*) -1;
         }
     } else {
-        char *filename = get_maze_path(saves[res_maze]);
+        if(mode == 0) {
+            char *filename = get_maze_path(saves[res_maze]);
 
-        m = load_maze_from_file(filename);
+            m = load_maze_from_file(filename);
 
-        free(filename);
+            free(filename);
+        }
+        else {
+            char *filename = get_leaderboard_path(saves[res_maze]);
+
+            leaderboard lb = load_leaderboard_from_file(filename);
+
+            win_height = 10;
+            win_width = 35;
+            WINDOW *lb_w = newwin(win_height * 2, win_width, starty, startx);
+            draw_borders(lb_w);
+
+            display_leaderboard(lb_w, &lb, "");
+            werase(lb_w);
+            wrefresh(lb_w);
+            delwin(lb_w);
+        }
     }
 
     delwin(maze_win);
@@ -531,8 +559,8 @@ void display_main_menu() {
         int selection = menu_selection(sel_win, options, n_options, menu_start_row);
 
         switch (selection) {
-            case MAIN_PLAY || MAIN_DISPLAY_LEADERBOARD: {
-                maze *m = display_maze_selection();
+            case MAIN_PLAY: {
+                maze *m = display_maze_selection(0);
 
                 if (m == (maze*) -1) { // Retour en arrière sans message d'erreur
                     break;
@@ -545,6 +573,11 @@ void display_main_menu() {
 
                 display_game(m);
                 destroy_maze(m);
+                break;
+            }
+
+            case MAIN_DISPLAY_LEADERBOARD: {
+                display_maze_selection(1);
                 break;
             }
 

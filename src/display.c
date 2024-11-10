@@ -203,7 +203,7 @@ void display_game(maze *m) {
             move_monsters(m);
             if (check_player_pos(m)) break;
 
-            mvwprintw(title_win, 1, (width - 10) / 2, "Labyrinthe");
+            mvwprintw(title_win, 1, (width - strlen(m->name)) / 2, "%s", m->name);
             draw_borders(title_win);
             wrefresh(title_win);
 

@@ -112,7 +112,7 @@ void display_end_window(maze *m) {
 
     if (is_winner) {
         WINDOW *popup_win = create_centered_window(win_height, win_width);
-        mvwprintw(popup_win, 2, (win_width - strlen(message)) / 2, message);
+        mvwprintw(popup_win, 2, (win_width - strlen(message)) / 2, "%s", message);
         mvwprintw(popup_win, 4, 1, LABEL_ENTER_NAME);
         echo();
         wgetnstr(popup_win, name, MAX_INPUT_PLAYER);
@@ -134,7 +134,7 @@ void display_end_window(maze *m) {
     while (TRUE) {
         WINDOW *popup_win = create_centered_window(win_height, win_width);
 
-        mvwprintw(popup_win, 2, (win_width - strlen(message)) / 2, message);
+        mvwprintw(popup_win, 2, (win_width - strlen(message)) / 2, "%s", message);
         const char *options[] = {
             BTN_DISPLAY_LEADERBOARD,
             BTN_QUIT_TO_MAIN_MENU,

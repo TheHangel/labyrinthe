@@ -290,9 +290,9 @@ maze *display_create_maze() {
 
     keypad(center_win, TRUE);
 
-    char input_name  [MAX_INPUT] = "";
-    char input_length[MAX_INPUT] = "";
-    char input_width [MAX_INPUT] = "";
+    char input_name  [MAX_INPUT_TEXTBOX] = "";
+    char input_length[MAX_INPUT_TEXTBOX] = "";
+    char input_width [MAX_INPUT_TEXTBOX] = "";
     checkbox hard_mode = 0;
     int choice = 0;
 
@@ -383,17 +383,17 @@ maze *display_create_maze() {
                 break;
             default:
                 if (IS_VALID_CHAR(ch)) {
-                    if (choice == CREATE_INPUT_NAME && cursor_pos_name < MAX_INPUT - 1) {
+                    if (choice == CREATE_INPUT_NAME && cursor_pos_name < MAX_INPUT_TEXTBOX - 1) {
                         input_name[cursor_pos_name++] = ch;
                         input_name[cursor_pos_name] = '\0';
                         draw_textbox(textbox_name_win, win_width - 4, LABEL_NAME, input_name);
                     }
-                    else if (choice == CREATE_INPUT_LENGTH && cursor_pos_length < MAX_INPUT - 1) {
+                    else if (choice == CREATE_INPUT_LENGTH && cursor_pos_length < MAX_INPUT_TEXTBOX - 1) {
                         input_length[cursor_pos_length++] = ch;
                         input_length[cursor_pos_length] = '\0';
                         draw_textbox(textbox_length_win, win_width - 4, LABEL_LENGTH, input_length);
                     }
-                    else if (choice == CREATE_INPUT_WIDTH && cursor_pos_width < MAX_INPUT - 1) {
+                    else if (choice == CREATE_INPUT_WIDTH && cursor_pos_width < MAX_INPUT_TEXTBOX - 1) {
                         input_width[cursor_pos_width++] = ch;
                         input_width[cursor_pos_width] = '\0';
                         draw_textbox(textbox_width_win, win_width - 4, LABEL_WIDTH, input_width);

@@ -16,8 +16,8 @@ extern int width;
 #define MIN_SIZE    5
 #define MAX_SIZE 1024
 
-#define MAX_INPUT        50
-#define MAX_INPUT_PLAYER 20
+#define MAX_INPUT_TEXTBOX 50
+#define MAX_INPUT_PLAYER  20
 
 #define PLAYER   10
 #define PATH      0

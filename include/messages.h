@@ -35,6 +35,7 @@
 
 // Create maze window messages
 #define MSG_INVALID_DIMENSIONS  "Invalid Dimensions."
+#define MSG_INVALID_NAME        "Invalid Name."
 #define MSG_DIMENSIONS_TOO_LOW  "Dimensions must be greater or equal to " TOSTRING(MIN_SIZE) "."
 #define MSG_DIMENSIONS_TOO_HIGH "Dimensions must be less or equal to "    TOSTRING(MAX_SIZE) "."
 

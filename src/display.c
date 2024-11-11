@@ -347,6 +347,10 @@ maze *display_create_maze() {
                         display_message_window(MSG_DIMENSIONS_TOO_HIGH);
                         break;
                     }
+                    else if(!strlen(input_name)) {
+                        display_message_window(MSG_INVALID_NAME);
+                        break;
+                    }
                     refresh();
                     if (length % 2 == 0) length++;
                     if (width % 2 == 0) width++;

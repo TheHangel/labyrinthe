@@ -67,7 +67,6 @@ char** list_saves_files(const char *directory, int *file_count, extension ext) {
     return file_names;
 }
 
-
 int save_maze_to_file(const char *filename, maze *m) {
     FILE *file = fopen(filename, "wb");
     if (!file) return -1;
@@ -183,6 +182,23 @@ maze* load_maze_from_file(const char *filename) {
     return m;
 }
 
+int save_leaderboard_to_file(const char *filename, leaderboard *lb) {
+    FILE *file = fopen(filename, "wb");
+
+    if (file != NULL) {
+        fwrite(&lb->count, sizeof(int), 1, file);
+
+        for (int i = 0; i < lb->count; i++) {
+            int name_len = strlen(lb->players[i].name);
+            fwrite(&name_len, sizeof(int), 1, file);
+            fwrite(lb->players[i].name, sizeof(char), name_len, file);
+            fwrite(&lb->players[i].score, sizeof(int), 1, file);
+        }
+        return fclose(file);
+    }
+    return EXIT_FAILURE;
+}
+
 leaderboard load_leaderboard_from_file(const char *filename) {
     leaderboard lb = { .count = 0 };
     FILE *file = fopen(filename, "rb");
@@ -204,21 +220,4 @@ leaderboard load_leaderboard_from_file(const char *filename) {
     }
 
     return lb;
-}
-
-int save_leaderboard_to_file(const char *filename, leaderboard *lb) {
-    FILE *file = fopen(filename, "wb");
-
-    if (file != NULL) {
-        fwrite(&lb->count, sizeof(int), 1, file);
-
-        for (int i = 0; i < lb->count; i++) {
-            int name_len = strlen(lb->players[i].name);
-            fwrite(&name_len, sizeof(int), 1, file);
-            fwrite(lb->players[i].name, sizeof(char), name_len, file);
-            fwrite(&lb->players[i].score, sizeof(int), 1, file);
-        }
-        return fclose(file);
-    }
-    return EXIT_FAILURE;
 }

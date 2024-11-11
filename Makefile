@@ -1,6 +1,15 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -Iinclude
-LDFLAGS = -lncurses
+
+UNAME_S := $(shell uname -s)
+
+ifeq ($(UNAME_S), Linux)
+	LDFLAGS = -lncursesw
+endif
+
+ifeq ($(UNAME_S), Darwin)
+	LDFLAGS = -lncurses
+endif
 
 APP = bin/app
 

@@ -7,6 +7,9 @@
 #include "leaderboard.h"
 #include "display.h"
 
+int height = 0;
+int width  = 0;
+
 int main(void) {
     init_curses();
 

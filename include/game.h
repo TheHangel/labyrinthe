@@ -37,14 +37,6 @@ extern int width;
 #define IS_VALID_CHAR(ch) ((ch) >= 32 && (ch) <= 126)
 
 typedef enum {
-    UP,
-    DOWN,
-    LEFT,
-    RIGHT,
-    INVALID
-} direction;
-
-typedef enum {
     NORMAL,
     HARD
 } difficulty;
@@ -77,7 +69,5 @@ typedef enum {
     CREATE_MAZE_MODE,
     VIEW_LEADERBOARD_MODE
 } maze_selection_mode;
-
-direction get_direction_from_input(char key);
 
 #endif

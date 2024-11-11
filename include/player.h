@@ -3,6 +3,7 @@
 
 #include "game.h"
 #include "maze.h"
+#include "input.h"
 
 struct player {
     int x;

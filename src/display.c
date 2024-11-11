@@ -5,6 +5,7 @@
 #include <string.h>
 #include "display.h"
 #include "game.h"
+#include "input.h"
 #include "maze.h"
 #include "file.h"
 #include "leaderboard.h"

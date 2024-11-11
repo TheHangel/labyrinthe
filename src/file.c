@@ -3,6 +3,7 @@
 #include <string.h>
 #include "game.h"
 #include "maze.h"
+#include "leaderboard.h"
 #include "file.h"
 
 char* get_maze_path(char *maze_name) {
@@ -168,4 +169,44 @@ maze* load_maze_from_file(const char *filename) {
 
     load_monster_functions(m);
     return m;
+}
+
+leaderboard load_leaderboard_from_file(const char *filename) {
+    leaderboard lb = { .count = 0 };
+    FILE *file = fopen(filename, "rb");
+
+    if (file != NULL) {
+        fread(&lb.count, sizeof(int), 1, file);
+
+        for (int i = 0; i < lb.count; i++) {
+            int name_len;
+            fread(&name_len, sizeof(int), 1, file);
+
+            lb.players[i].name = malloc(name_len + 1);
+            fread(lb.players[i].name, sizeof(char), name_len, file);
+            lb.players[i].name[name_len] = '\0';
+
+            fread(&lb.players[i].score, sizeof(int), 1, file);
+        }
+        fclose(file);
+    }
+
+    return lb;
+}
+
+int save_leaderboard_to_file(const char *filename, leaderboard *lb) {
+    FILE *file = fopen(filename, "wb");
+
+    if (file != NULL) {
+        fwrite(&lb->count, sizeof(int), 1, file);
+
+        for (int i = 0; i < lb->count; i++) {
+            int name_len = strlen(lb->players[i].name);
+            fwrite(&name_len, sizeof(int), 1, file);
+            fwrite(lb->players[i].name, sizeof(char), name_len, file);
+            fwrite(&lb->players[i].score, sizeof(int), 1, file);
+        }
+        return fclose(file);
+    }
+    return EXIT_FAILURE;
 }

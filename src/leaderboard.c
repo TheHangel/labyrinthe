@@ -71,46 +71,6 @@ void add_player_to_leaderboard(leaderboard *lb, const char *name, int score) {
     }
 }
 
-leaderboard load_leaderboard_from_file(const char *filename) {
-    leaderboard lb = { .count = 0 };
-    FILE *file = fopen(filename, "rb");
-
-    if (file != NULL) {
-        fread(&lb.count, sizeof(int), 1, file);
-
-        for (int i = 0; i < lb.count; i++) {
-            int name_len;
-            fread(&name_len, sizeof(int), 1, file);
-
-            lb.players[i].name = malloc(name_len + 1);
-            fread(lb.players[i].name, sizeof(char), name_len, file);
-            lb.players[i].name[name_len] = '\0';
-
-            fread(&lb.players[i].score, sizeof(int), 1, file);
-        }
-        fclose(file);
-    }
-
-    return lb;
-}
-
-int save_leaderboard_to_file(const char *filename, leaderboard *lb) {
-    FILE *file = fopen(filename, "wb");
-
-    if (file != NULL) {
-        fwrite(&lb->count, sizeof(int), 1, file);
-
-        for (int i = 0; i < lb->count; i++) {
-            int name_len = strlen(lb->players[i].name);
-            fwrite(&name_len, sizeof(int), 1, file);
-            fwrite(lb->players[i].name, sizeof(char), name_len, file);
-            fwrite(&lb->players[i].score, sizeof(int), 1, file);
-        }
-        return fclose(file);
-    }
-    return EXIT_FAILURE;
-}
-
 int compare_scores(const void *a, const void *b) {
     player_score *playerA = (player_score *)a;
     player_score *playerB = (player_score *)b;

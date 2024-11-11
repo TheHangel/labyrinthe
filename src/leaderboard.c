@@ -2,12 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ncurses.h>
+#include "game.h"
 #include "display.h"
 #include "leaderboard.h"
 #include "messages.h"
-
-int height = 0;
-int width  = 0;
 
 void display_leaderboard(leaderboard *lb, const char *highlight_name) {
     int max_displayable = MAX_PLAYERS;

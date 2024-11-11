@@ -4,9 +4,6 @@
 #include <ncurses.h>
 #include "maze.h"
 
-extern int height;
-extern int width;
-
 void init_curses();
 void update_size();
 void draw_borders(WINDOW *win);

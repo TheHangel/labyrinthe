@@ -10,6 +10,9 @@ typedef int cell;
 typedef bool checkbox;
 typedef char* extension;
 
+extern int height;
+extern int width;
+
 #define MIN_SIZE    5
 #define MAX_SIZE 1024
 

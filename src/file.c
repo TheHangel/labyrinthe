@@ -1,10 +1,22 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include <dirent.h>
 #include <string.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 #include "game.h"
 #include "maze.h"
 #include "leaderboard.h"
 #include "file.h"
+
+int init_saves() {
+    struct stat st = {0};
+
+    if (stat(DATA_PATH, &st) == -1) {
+        return mkdir(DATA_PATH, 0755);
+    }
+    return EXIT_SUCCESS;
+}
 
 char* get_maze_path(char *maze_name) {
     size_t total_length = strlen(DATA_PATH) + strlen(maze_name) + strlen(MAZE_EXTENSION) + 1;

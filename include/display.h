@@ -4,7 +4,7 @@
 #include <ncurses.h>
 #include "maze.h"
 
-void init_curses();
+void init_display();
 void update_size();
 void draw_borders(WINDOW *win);
 WINDOW* create_centered_window(int win_height, int win_width);

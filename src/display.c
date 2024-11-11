@@ -11,7 +11,7 @@
 #include "leaderboard.h"
 #include "messages.h"
 
-void init_curses() {
+void init_display() {
     setlocale(LC_ALL, "");
     initscr();
     noecho();

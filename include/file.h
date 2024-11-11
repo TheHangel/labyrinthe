@@ -10,6 +10,7 @@
 #define MAZE_EXTENSION        ".cfg"
 #define LEADERBOARD_EXTENSION ".score"
 
+int init_saves();
 char* get_maze_path(char *maze_name);
 char* get_leaderboard_path(char *maze_name);
 char** list_saves_files(const char *directory, int *file_count, extension ext);

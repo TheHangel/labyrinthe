@@ -105,7 +105,7 @@ int display_player_data(player *p, WINDOW *w) {
 int get_final_score(player *p) {
     int moves = p->moves;
     int points = p->score;
-    int final_score = (points * 10) - moves;
+    int final_score = (points * 100) - moves;
     return final_score;
 }
 

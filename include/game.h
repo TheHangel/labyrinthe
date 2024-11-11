@@ -7,7 +7,7 @@ typedef struct maze maze;
 typedef struct leaderboard leaderboard;
 
 typedef int cell;
-typedef bool checkbox;
+typedef int checkbox;
 typedef char* extension;
 
 extern int height;

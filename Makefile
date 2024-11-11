@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -Iinclude
+CFLAGS = -Wall -Wextra -Iinclude -finput-charset=UTF-8
 
 UNAME_S := $(shell uname -s)
 

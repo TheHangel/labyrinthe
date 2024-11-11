@@ -13,6 +13,10 @@ endif
 
 APP = bin/app
 
+SEED ?= 0
+
+CONSTANTS = -DSEED=$(SEED)
+
 SRC_FILES = $(wildcard src/*.c)
 OBJ_FILES = $(patsubst src/%.c,bin/%.o,$(SRC_FILES))
 DEP_FILES = $(patsubst src/%.c,bin/%.d,$(SRC_FILES))
@@ -24,7 +28,7 @@ $(APP): $(OBJ_FILES)
 
 bin/%.o: src/%.c
 	@mkdir -p bin
-	$(CC) $(CFLAGS) -MMD -c $< -o $@
+	$(CC) $(CONSTANTS) $(CFLAGS) -MMD -c $< -o $@
 
 -include $(DEP_FILES)
 

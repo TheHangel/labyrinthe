@@ -12,27 +12,40 @@ ifeq ($(UNAME_S), Darwin)
 endif
 
 APP = bin/app
+TESTS = bin/tests
 
 SEED ?= 0
 
 CONSTANTS = -DSEED=$(SEED)
 
 SRC_FILES = $(wildcard src/*.c)
-OBJ_FILES = $(patsubst src/%.c,bin/%.o,$(SRC_FILES))
+OBJ_FILES = $(patsubst src/%.c,bin/%.o,$(filter-out src/main.c src/test/tests.c, $(SRC_FILES)))
 DEP_FILES = $(patsubst src/%.c,bin/%.d,$(SRC_FILES))
+
+TEST_SRC = src/test/tests.c
+TEST_OBJ = bin/tests.o
 
 all: $(APP)
 
-$(APP): $(OBJ_FILES)
-	$(CC) $(CFLAGS) -o $(APP) $(OBJ_FILES) $(LDFLAGS)
+$(APP): $(OBJ_FILES) bin/main.o
+	@mkdir -p bin
+	$(CC) $(CFLAGS) -o $(APP) $(OBJ_FILES) bin/main.o $(LDFLAGS)
 
 bin/%.o: src/%.c
+	@mkdir -p bin
+	$(CC) $(CONSTANTS) $(CFLAGS) -MMD -c $< -o $@
+
+tests: $(TEST_OBJ) $(OBJ_FILES)
+	@mkdir -p bin
+	$(CC) $(CFLAGS) -o $(TESTS) $(TEST_OBJ) $(OBJ_FILES) $(LDFLAGS)
+
+$(TEST_OBJ): $(TEST_SRC)
 	@mkdir -p bin
 	$(CC) $(CONSTANTS) $(CFLAGS) -MMD -c $< -o $@
 
 -include $(DEP_FILES)
 
 clean:
-	rm -rf bin/*.o bin/*.d $(APP)
+	rm -rf bin/*.o bin/*.d $(APP) $(TESTS)
 
-.PHONY: clean
+.PHONY: clean tests all

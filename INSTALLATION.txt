@@ -1,0 +1,31 @@
+# Installation Instructions for Labyrinthe
+
+## Prerequisites
+- Ensure that you have the following dependencies installed on your system:
+  - **GCC** (GNU Compiler Collection) or compatible C compiler
+  - **Make** (build automation tool)
+  - **ncurses library** (for terminal graphics, needed to display the game)
+
+On Ubuntu or Debian-based systems, you can install `ncurses` using:
+
+```bash
+sudo apt update
+sudo apt install libncurses5-dev libncursesw5-dev
+```
+
+On macOS, ncurses is usually pre-installed. If not, you can install it via Homebrew:
+
+```bash
+brew install ncurses
+```
+
+# Troubleshooting
+
+**ncurses Errors**: If the game fails to compile due to missing ncurses libraries, ensure libncurses5-dev or libncursesw5-dev is installed (see prerequisites).
+**Undefined SEED**: If using a specific seed, run with:
+
+```bash
+make SEED=<integer_value>
+```
+
+For further assistance, please contact the lead developer at <thibaud.lebrasseur@ecole.ensicaen.fr>.

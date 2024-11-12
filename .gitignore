@@ -56,5 +56,7 @@ bin/
 
 data/
 
+doc/
+
 .DS_STORE
 log.txt

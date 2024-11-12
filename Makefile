@@ -43,9 +43,12 @@ $(TEST_OBJ): $(TEST_SRC)
 	@mkdir -p bin
 	$(CC) $(CONSTANTS) $(CFLAGS) -MMD -c $< -o $@
 
+doc:
+	doxygen Doxyfile
+
 -include $(DEP_FILES)
 
 clean:
 	rm -rf bin/*.o bin/*.d $(APP) $(TESTS)
 
-.PHONY: clean tests all
+.PHONY: clean tests all doc

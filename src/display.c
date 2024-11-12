@@ -370,8 +370,8 @@ maze *display_create_maze() {
                     draw_checkbox(checkbox_win, 1, 1, hard_mode);
                     draw_button(button_win, 1, 1, BTN_CREATE_MAZE);
                     wrefresh(center_win);
-                    break;
                 }
+                break;
             case KEY_BACKSPACE:
             case 127:
             case 8:

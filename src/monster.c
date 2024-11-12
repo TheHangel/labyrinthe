@@ -33,9 +33,9 @@ void place_monsters(maze *m) {
         get_coords_from_cell(m, c, &x, &y);
 
         if (rand() % 2 == 0) {
-            *(m->monsters + i) = *create_ghost(x, y);
+            *(m->monsters + i) = *create_ghost(y, x);
         } else {
-            *(m->monsters + i) = *create_ogre(x, y);
+            *(m->monsters + i) = *create_ogre(y, x);
         }
     }
 }
@@ -64,7 +64,7 @@ int move_ghost(monster *m, maze *mze) {
     int new_x = m->x + dx;
     int new_y = m->y + dy;
 
-    if (new_x >= 0 && new_x < mze->width && new_y >= 0 && new_y < mze->length) {
+    if (new_x >= 0 && new_y < mze->width && new_y >= 0 && new_x < mze->length) {
         m->x = new_x;
         m->y = new_y;
     }
@@ -79,7 +79,7 @@ int move_ogre(monster *m, maze *mze) {
     int new_x = m->x + dx;
     int new_y = m->y + dy;
 
-    if (new_x >= 0 && new_x < mze->width && new_y >= 0 && new_y < mze->length) {
+    if (new_x >= 0 && new_y < mze->width && new_y >= 0 && new_x < mze->length) {
         if (mze->content[new_x][new_y] != WALL) {
             m->x = new_x;
             m->y = new_y;

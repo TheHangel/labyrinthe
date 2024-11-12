@@ -1,0 +1,12 @@
+# Authors of Labyrinthe
+
+Thibaud Lebrasseur <thibaud.lebrasseur@ecole.ensicaen.fr>
+Role: Developer
+Responsibilities: Maze generation, player mechanics, file handling, testing setup
+
+Contributors:
+ENSICAEN Students & Teachers
+
+---
+
+All contributions are owned by the respective authors. For inquiries or permissions, please contact Thibaud Lebrasseur.

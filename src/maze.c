@@ -64,12 +64,6 @@ int all_paths_connected(maze *m) {
     return 1;
 }
 
-void place_exit(maze *m) {
-    int length = m->length;
-    int width = m->width;
-    m->content[length - 1][width - 2] = EXIT;
-}
-
 cell* get_random_cell(maze *m, int (*condition)(int)) {
     int length = m->length;
     int width = m->width;
@@ -80,14 +74,6 @@ cell* get_random_cell(maze *m, int (*condition)(int)) {
         j = rand() % width;
     } while (!condition(m->content[i][j]));
     return &m->content[i][j];
-}
-
-int is_path(cell cell) {
-    return cell >= PATH;
-}
-
-int is_wall(cell cell) {
-    return cell == WALL;
 }
 
 cell* get_random_path(maze *m) {
@@ -113,6 +99,14 @@ void get_coords_from_cell(maze *m, cell *c, int *x, int *y) {
     }
 }
 
+int is_path(cell cell) {
+    return cell >= PATH;
+}
+
+int is_wall(cell cell) {
+    return cell == WALL;
+}
+
 int is_wall_a_border(maze *m, cell *c) {
     int length = m->length;
     int width = m->width;
@@ -135,6 +129,12 @@ void destroy_walls(maze *m, int n) {
             *c = PATH;
         }
     }
+}
+
+void place_exit(maze *m) {
+    int length = m->length;
+    int width = m->width;
+    m->content[length - 1][width - 2] = EXIT;
 }
 
 void place_key(maze *m) {
@@ -189,9 +189,6 @@ void generate_maze(maze *m, difficulty d) {
     place_traps(m);
 }
 
-/**
- * Give maze (functionnal)
- */
 maze* new_maze(char* name, int length, int width) {
     if(!(length % 2) || !(width % 2)) return NULL;
     maze* m = (maze*) malloc(sizeof(maze));

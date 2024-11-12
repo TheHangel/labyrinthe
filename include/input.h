@@ -13,7 +13,7 @@
 
 /**
  * @file input.h
- * @brief Header file for handling player input and converting it into directions.
+ * @brief Handling player input and converting it into directions.
  * 
  * @version 1.0.0
  * @date November 15, 2024

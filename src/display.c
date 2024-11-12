@@ -342,33 +342,36 @@ maze *display_create_maze() {
                     int width = atoi(input_width);
                     if (length == 0 || width == 0) {
                         display_message_window(MSG_INVALID_DIMENSIONS);
-                        break;
-                    }
-                    else if (length < MIN_SIZE || width < MIN_SIZE) {
+                    } else if (length < MIN_SIZE || width < MIN_SIZE) {
                         display_message_window(MSG_DIMENSIONS_TOO_LOW);
-                        break;
-                    }
-                    else if (length > MAX_SIZE || width > MAX_SIZE) {
+                    } else if (length > MAX_SIZE || width > MAX_SIZE) {
                         display_message_window(MSG_DIMENSIONS_TOO_HIGH);
-                        break;
-                    }
-                    else if(!strlen(input_name)) {
+                    } else if (!strlen(input_name)) {
                         display_message_window(MSG_INVALID_NAME);
-                        break;
+                    } else {
+                        refresh();
+                        if (length % 2 == 0) length++;
+                        if (width % 2 == 0) width++;
+                        difficulty d = hard_mode ? HARD : NORMAL;
+                        maze *m = new_maze(input_name, length, width);
+                        generate_maze(m, d);
+                        delwin(center_win);
+                        char* filename = get_maze_path(m->name);
+                        save_maze_to_file(filename, m);
+                        free(filename);
+                        return m;
                     }
-                    refresh();
-                    if (length % 2 == 0) length++;
-                    if (width % 2 == 0) width++;
-                    difficulty d = hard_mode ? HARD : NORMAL;
-                    maze *m = new_maze(input_name, length, width);
-                    generate_maze(m, d);
-                    delwin(center_win);
-                    char* filename = get_maze_path(m->name);
-                    save_maze_to_file(filename, m);
-                    free(filename);
-                    return m;
+
+                    werase(center_win);
+                    draw_borders(center_win);
+                    draw_textbox(textbox_name_win, win_width - 4, LABEL_NAME, input_name);
+                    draw_textbox(textbox_length_win, win_width - 4, LABEL_LENGTH, input_length);
+                    draw_textbox(textbox_width_win, win_width - 4, LABEL_WIDTH, input_width);
+                    draw_checkbox(checkbox_win, 1, 1, hard_mode);
+                    draw_button(button_win, 1, 1, BTN_CREATE_MAZE);
+                    wrefresh(center_win);
+                    break;
                 }
-                break;
             case KEY_BACKSPACE:
             case 127:
             case 8:

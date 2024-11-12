@@ -85,7 +85,7 @@ int is_player_on_monster(maze *m) {
     player *p = m->player;
     for (int i = 0; i < m->n_monsters; i++) {
         monster *mon = &m->monsters[i];
-        if (mon->x == p->y && mon->x == p->y) {
+        if (mon->x == p->x && mon->y == p->y) {
             return i + 1;
         }
     }

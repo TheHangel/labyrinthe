@@ -175,6 +175,8 @@ void display_game(maze *m) {
     WINDOW *player_data_win = newwin(3, width, height - 3, 0);
 
     int has_moved = 1;
+    int last_x = m->player->x, last_y = m->player->y;
+
     while (TRUE) {
         char c = getch();
         if (c == ESCAPE_KEY) {
@@ -194,12 +196,14 @@ void display_game(maze *m) {
             draw_borders(title_win);
             wrefresh(title_win);
 
-            wclear(game_win);
+            mvwprintw(game_win, last_y + 1, last_x * 2 + 1, "  ");
             display(m, game_win);
             draw_borders(game_win);
             wrefresh(game_win);
 
-            wclear(player_data_win);
+            last_x = m->player->x;
+            last_y = m->player->y;
+
             display_player_data(m->player, player_data_win);
             draw_borders(player_data_win);
             wrefresh(player_data_win);

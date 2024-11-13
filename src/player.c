@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <ncurses.h>
 #include "player.h"
+#include "_memory_.h"
 
 int move_player(maze *m, direction dir) {
     player *p = m->player;
@@ -116,5 +117,5 @@ char *convert_score_to_string(int score) {
 }
 
 void destroy_player(maze *m) {
-    free(m->player);
+    free_and_reset((void*)m->player);
 }

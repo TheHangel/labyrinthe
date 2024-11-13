@@ -2,6 +2,7 @@
 #include <ncurses.h>
 #include "monster.h"
 #include "maze.h"
+#include "_memory_.h"
 
 monster* create_monster(int x, int y, int type, int penalty, int (*move_monster)(monster *m, maze *mze)) {
     monster *m = malloc(sizeof(monster));
@@ -107,5 +108,5 @@ void load_monster_functions(maze *m) {
 }
 
 void destroy_monsters(maze *m) {
-    free(m->monsters);
+    free_and_reset((void*)m->monsters);
 }

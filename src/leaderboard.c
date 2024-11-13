@@ -4,6 +4,7 @@
 #include <ncurses.h>
 #include "game.h"
 #include "display.h"
+#include "_memory_.h"
 #include "leaderboard.h"
 #include "messages.h"
 
@@ -61,7 +62,7 @@ void add_player_to_leaderboard(leaderboard *lb, const char *name, int score) {
     else {
         player_score *last_player = &lb->players[lb->count - 1];
         if (score > last_player->score) {
-            free(last_player->name);
+            free_and_reset((void*)last_player->name);
             last_player->name = malloc(strlen(name) + 1);
             if (last_player->name != NULL) {
                 strcpy(last_player->name, name);
@@ -83,7 +84,7 @@ void sort_leaderboard(leaderboard *lb) {
 
 void destroy_leaderboard(leaderboard *lb) {
     for (int i = 0; i < lb->count; i++) {
-        free(lb->players[i].name);
+        free_and_reset((void*)lb->players[i].name);
     }
     lb->count = 0;
 }

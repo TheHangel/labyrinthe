@@ -44,7 +44,7 @@ char** list_saves_files(const char *directory, int *file_count, extension ext) {
     *file_count = 0;
 
     if ((dir = opendir(directory)) == NULL) {
-        free_and_reset((void*)file_names);
+        free_and_reset((void**)&file_names);
         return NULL;
     }
 
@@ -124,39 +124,39 @@ maze* load_maze_from_file(const char *filename) {
 
     int name_length;
     if (fread(&name_length, sizeof(int), 1, file) != 1) {
-        free_and_reset((void*)m);
+        free_and_reset((void**)&m);
         fclose(file);
         return NULL;
     }
 
     m->name = (char*) malloc(name_length);
     if (!m->name || fread(m->name, sizeof(char), name_length, file) != (size_t)name_length) {
-        free_and_reset((void*)m->name);
-        free_and_reset((void*)m);
+        free_and_reset((void**)&m->name);
+        free_and_reset((void**)&m);
         fclose(file);
         return NULL;
     }
 
     if (fread(&m->length, sizeof(int), 1, file) != 1 || fread(&m->width, sizeof(int), 1, file) != 1) {
         fclose(file);
-        free_and_reset((void*)m);
+        free_and_reset((void**)&m);
         return NULL;
     }
 
     m->content = (cell**) malloc(m->length * sizeof(cell*));
     if (!m->content) {
         fclose(file);
-        free_and_reset((void*)m);
+        free_and_reset((void**)&m);
         return NULL;
     }
     for (int i = 0; i < m->length; i++) {
         m->content[i] = (cell*) malloc(m->width * sizeof(cell));
         if (!m->content[i] || fread(m->content[i], sizeof(cell), m->width, file) != (size_t)m->width) {
             for (int j = 0; j <= i; j++) {
-                free_and_reset((void*)m->content[j]);
+                free_and_reset((void**)&m->content[j]);
             }
-            free_and_reset((void*)m->content);
-            free_and_reset((void*)m);
+            free_and_reset((void**)&m->content);
+            free_and_reset((void**)&m);
             fclose(file);
             return NULL;
         }
@@ -165,35 +165,35 @@ maze* load_maze_from_file(const char *filename) {
     m->player = (player*) malloc(sizeof(player));
     if (!m->player || fread(m->player, sizeof(player), 1, file) != 1) {
         for (int i = 0; i < m->length; i++) {
-            free_and_reset((void*)m->content[i]);
+            free_and_reset((void**)&m->content[i]);
         }
-        free_and_reset((void*)m->content);
-        free_and_reset((void*)m->player);
-        free_and_reset((void*)m);
+        free_and_reset((void**)&m->content);
+        free_and_reset((void**)&m->player);
+        free_and_reset((void**)&m);
         fclose(file);
         return NULL;
     }
 
     if (fread(&m->n_monsters, sizeof(int), 1, file) != 1) {
-        free_and_reset((void*)m->player);
+        free_and_reset((void**)&m->player);
         for (int i = 0; i < m->length; i++) {
-            free_and_reset((void*)m->content[i]);
+            free_and_reset((void**)&m->content[i]);
         }
-        free_and_reset((void*)m->content);
-        free_and_reset((void*)m);
+        free_and_reset((void**)&m->content);
+        free_and_reset((void**)&m);
         fclose(file);
         return NULL;
     }
 
     m->monsters = (monster*) malloc(m->n_monsters * sizeof(monster));
     if (!m->monsters || fread(m->monsters, sizeof(monster), m->n_monsters, file) != (size_t)m->n_monsters) {
-        free_and_reset((void*)m->monsters);
-        free_and_reset((void*)m->player);
+        free_and_reset((void**)&m->monsters);
+        free_and_reset((void**)&m->player);
         for (int i = 0; i < m->length; i++) {
-            free_and_reset((void*)m->content[i]);
+            free_and_reset((void**)&m->content[i]);
         }
-        free_and_reset((void*)m->content);
-        free_and_reset((void*)m);
+        free_and_reset((void**)&m->content);
+        free_and_reset((void**)&m);
         fclose(file);
         return NULL;
     }

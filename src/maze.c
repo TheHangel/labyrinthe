@@ -195,7 +195,7 @@ maze* new_maze(char* name, int length, int width) {
     maze* m = (maze*) malloc(sizeof(maze));
     m->name = malloc(strlen(name) + 1);
     if (!m->name) {
-        free_and_reset((void*)m);
+        free_and_reset((void**)&m);
         return NULL;
     }
     strcpy(m->name, name);
@@ -213,17 +213,17 @@ maze* new_maze(char* name, int length, int width) {
 
 void destroy_cells(maze *m) {
     for (int i = 0; i < m->length; i++) {
-        free_and_reset((void*)m->content[i]);
+        free_and_reset((void**)&m->content[i]);
     }
-    free_and_reset((void*)m->content);
+    free_and_reset((void**)&m->content);
 }
 
 void destroy_maze(maze *m) {
     destroy_cells(m);
     destroy_player(m);
     destroy_monsters(m);
-    free_and_reset((void*)m->name);
-    free_and_reset((void*)m);
+    free_and_reset((void**)&m->name);
+    free_and_reset((void**)&m);
 }
 
 void display(maze *m, WINDOW* w) {

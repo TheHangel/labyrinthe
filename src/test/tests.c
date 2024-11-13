@@ -90,7 +90,7 @@ MU_TEST(test_create_monster) {
     monster *ghost = create_ghost(1, 1);
     mu_check(ghost != NULL);
     mu_assert_int_eq(ghost->type, M_GHOST);
-    free_and_reset((void*)ghost);
+    free_and_reset((void**)&ghost);
 }
 
 MU_TEST(test_move_monster) {
@@ -98,7 +98,7 @@ MU_TEST(test_move_monster) {
     test_maze->content[2][2] = PATH;
     int moved = ogre->move_monster(ogre, test_maze);
     mu_check(moved == M_OGRE);
-    free_and_reset((void*)ogre);
+    free_and_reset((void**)&ogre);
 }
 
 MU_TEST(test_place_monsters) {

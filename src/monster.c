@@ -109,6 +109,6 @@ void load_monster_functions(maze *m) {
 
 void destroy_monsters(maze *m) {
     if(m->n_monsters > 0) {
-        free_and_reset((void*)m->monsters);
+        free_and_reset((void**)&m->monsters);
     }
 }

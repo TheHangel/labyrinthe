@@ -117,5 +117,5 @@ char *convert_score_to_string(int score) {
 }
 
 void destroy_player(maze *m) {
-    free_and_reset((void*)m->player);
+    free_and_reset((void**)&m->player);
 }

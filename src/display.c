@@ -129,8 +129,8 @@ void display_end_window(maze *m) {
         delwin(popup_win);
     }
 
-    free_and_reset((void*)filename);
-    free_and_reset((void*)score_str);
+    free_and_reset((void**)&filename);
+    free_and_reset((void**)&score_str);
 
     while (TRUE) {
         WINDOW *popup_win = create_centered_window(win_height, win_width);
@@ -361,7 +361,7 @@ maze *display_create_maze() {
                         delwin(center_win);
                         char* filename = get_maze_path(m->name);
                         save_maze_to_file(filename, m);
-                        free_and_reset((void*)filename);
+                        free_and_reset((void**)&filename);
                         return m;
                     }
 
@@ -492,9 +492,9 @@ maze *display_maze_selection(maze_selection_mode mode) {
             m = display_create_maze();
             if (m == NULL) {
                 for (int i = 0; i < file_count; i++) {
-                    free_and_reset((void*)saves[i]);
+                    free_and_reset((void**)&saves[i]);
                 }
-                free_and_reset((void*)saves);
+                free_and_reset((void**)&saves);
                 return GO_BACK;
             }
         } else {
@@ -504,7 +504,7 @@ maze *display_maze_selection(maze_selection_mode mode) {
         if (mode == CREATE_MAZE_MODE) {
             char *filename = get_maze_path(saves[res_maze]);
             m = load_maze_from_file(filename);
-            free_and_reset((void*)filename);
+            free_and_reset((void**)&filename);
         } else {
             char *filename = get_leaderboard_path(saves[res_maze]);
             leaderboard lb = load_leaderboard_from_file(filename);
@@ -514,9 +514,9 @@ maze *display_maze_selection(maze_selection_mode mode) {
     }
 
     for (int i = 0; i < file_count; i++) {
-        free_and_reset((void*)saves[i]);
+        free_and_reset((void**)&saves[i]);
     }
-    free_and_reset((void*)saves);
+    free_and_reset((void**)&saves);
 
     return m;
 }

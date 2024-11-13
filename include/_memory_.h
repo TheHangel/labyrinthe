@@ -26,6 +26,6 @@
  * 
  * @param ptr Pointer to the memory to free.
  */
-void free_and_reset(void *ptr);
+void free_and_reset(void **ptr);
 
 #endif

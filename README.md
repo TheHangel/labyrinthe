@@ -8,6 +8,7 @@ This project is a maze-based adventure game implemented in C with various gamepl
 ## Project Structure
 
 - **include/** : Contains header files for different components.
+  - `_memory_.h` : Header file for managing memory allocations.
   - `display.h` : Header file for display functions using `ncurses`.
   - `file.h` : Header file for file handling and save/load operations.
   - `input.h` : Header file for handling player input.
@@ -24,6 +25,7 @@ This project is a maze-based adventure game implemented in C with various gamepl
   - `input.c` : Functions for interpreting and processing user input.
   - `leaderboard.c` : Implementation of leaderboard functions to store and display player scores.
   - `maze.c` : Maze generation and manipulation functions.
+  - `memory.c` : Functions for managing memory allocations.
   - `monster.c` : Functions for managing monster behavior in the maze.
   - `player.c` : Functions for managing player actions and attributes.
   - `main.c` : Main file to run the game application.
@@ -57,7 +59,15 @@ make tests
 
 This will compile the test files from the test/ directory and the necessary source files into an executable located in bin/tests.
 
-The test executable is located in bin/test/test_caloric_intake.
+## Get the documentation
+
+To get the documentation, use the following command:
+
+```bash
+make doc
+```
+
+This will compile a documentation in the doc/ directory. To display the documentation, run doc/index.html in your browser.
 
 ## Cleaning Up
 

@@ -44,6 +44,7 @@ $(TEST_OBJ): $(TEST_SRC)
 	$(CC) $(CONSTANTS) $(CFLAGS) -MMD -c $< -o $@
 
 doc:
+	@mkdir -p doc
 	doxygen Doxyfile
 
 -include $(DEP_FILES)

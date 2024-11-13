@@ -49,7 +49,7 @@ void display_monsters(maze *m, WINDOW* w, int offset_x, int offset_y, int view_w
 
         if (monster_y >= offset_y && monster_y < offset_y + view_height &&
             monster_x >= offset_x && monster_x < offset_x + view_width) {
-            
+
             int color_pair = (mon->type == M_GHOST) ? -(M_GHOST) : -(M_OGRE);
             wattron(w, COLOR_PAIR(color_pair));
             mvwprintw(w, monster_y - offset_y + 1, (monster_x - offset_x) * 2 + 1, "  ");

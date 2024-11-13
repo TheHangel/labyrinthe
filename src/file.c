@@ -71,21 +71,42 @@ int save_maze_to_file(const char *filename, maze *m) {
     FILE *file = fopen(filename, "wb");
     if (!file) return -1;
 
-    int name_length = strlen(m->name) + 1;
-    fwrite(&name_length, sizeof(int), 1, file);
-    fwrite(m->name, sizeof(char), name_length, file);
-
-    fwrite(&m->length, sizeof(int), 1, file);
-    fwrite(&m->width, sizeof(int), 1, file);
-
-    for (int i = 0; i < m->length; i++) {
-        fwrite(m->content[i], sizeof(cell), m->width, file);
+    size_t name_length = strlen(m->name) + 1;
+    if (fwrite(&name_length, sizeof(int), 1, file) != 1) {
+        fclose(file);
+        return -1;
+    }
+    if (fwrite(m->name, sizeof(char), name_length, file) != name_length) {
+        fclose(file);
+        return -1;
     }
 
-    fwrite(m->player, sizeof(player), 1, file);
+    if (fwrite(&m->length, sizeof(int), 1, file) != 1 || fwrite(&m->width, sizeof(int), 1, file) != 1) {
+        fclose(file);
+        return -1;
+    }
 
-    fwrite(&m->n_monsters, sizeof(int), 1, file);
-    fwrite(m->monsters, sizeof(monster), m->n_monsters, file);
+    for (int i = 0; i < m->length; i++) {
+        if (m->content[i] == NULL || fwrite(m->content[i], sizeof(cell), (size_t)m->width, file) != (size_t)m->width) {
+            fclose(file);
+            return -1;
+        }
+    }
+
+    if (m->player && fwrite(m->player, sizeof(player), 1, file) != 1) {
+        fclose(file);
+        return -1;
+    }
+
+    if (fwrite(&m->n_monsters, sizeof(int), 1, file) != 1) {
+        fclose(file);
+        return -1;
+    }
+
+    if (m->n_monsters > 0 && m->monsters && fwrite(m->monsters, sizeof(monster), (size_t)m->n_monsters, file) != (size_t)m->n_monsters) {
+        fclose(file);
+        return -1;
+    }
 
     return fclose(file);
 }

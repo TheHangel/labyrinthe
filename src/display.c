@@ -190,7 +190,9 @@ void display_game(maze *m) {
         }
 
         if (has_moved) {
-            move_monsters(m);
+            if(m->n_monsters > 0){
+                move_monsters(m);
+            }
             if (check_player_pos(m)) break;
 
             mvwprintw(title_win, 1, (width - strlen(m->name)) / 2, "%s", m->name);

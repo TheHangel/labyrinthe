@@ -5,6 +5,7 @@
 #include "maze.h"
 #include "_memory_.h"
 #include "monster.h"
+#include "time.h"
 
 void brick_maze(maze *m) {
     int length = m->length;
@@ -167,6 +168,16 @@ void generate_maze(maze *m, difficulty d) {
     int length = m->length;
     int width = m->width;
     int directions[4][2] = {{0, 2}, {0, -2}, {2, 0}, {-2, 0}};
+
+    #ifdef SEED
+        #if SEED != 0
+            srand(SEED);
+        #else
+            srand(time(NULL));
+        #endif
+    #else
+        srand(time(NULL));
+    #endif
 
     while (!all_paths_connected(m)) {
         int i = rand() % (length / 2) * 2 + 1;

@@ -14,7 +14,6 @@ int width  = 0;
 int main(void) {
     init_display();
     init_saves();
-    srand(SEED);
 
     display_main_menu();
 

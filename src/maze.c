@@ -184,6 +184,9 @@ void generate_maze(maze *m, difficulty d) {
         destroy_walls(m, length * width / 10);
         place_monsters(m);
     }
+    else {
+        m->n_monsters = 0;
+    }
     place_exit(m);
     place_key(m);
     place_treasures(m);

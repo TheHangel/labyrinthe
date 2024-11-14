@@ -52,4 +52,7 @@ doc:
 clean:
 	rm -rf bin/*.o bin/*.d $(APP) $(TESTS)
 
-.PHONY: clean tests all doc
+distclean: clean
+	rm -rf bin doc data
+
+.PHONY: clean tests all doc distclean

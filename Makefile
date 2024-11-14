@@ -47,6 +47,9 @@ doc:
 	@mkdir -p doc
 	doxygen Doxyfile
 
+zip:
+	zip -r labyrinthe.zip *
+
 -include $(DEP_FILES)
 
 clean:
@@ -55,4 +58,4 @@ clean:
 distclean: clean
 	rm -rf bin doc data
 
-.PHONY: clean tests all doc distclean
+.PHONY: clean tests all doc distclean zip

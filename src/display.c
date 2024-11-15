@@ -21,6 +21,7 @@ void init_display() {
     keypad(stdscr, TRUE);
 
     timeout(100);
+    set_escdelay(0);
 
     start_color();
 
